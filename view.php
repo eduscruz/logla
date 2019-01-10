@@ -39,8 +39,11 @@ if ($id) {
     // $logla  = $DB->get_record('logla', array('id' => $cm->instance), '*', MUST_EXIST);
     $logla  = 1;
 } else if ($n) {
-    $logla  = $DB->get_record('logla', array('id' => $n), '*', MUST_EXIST);
-    $logla  = 2;
+
+    // $logla  = $DB->get_record('logla', array('id' => $n), '*', MUST_EXIST);
+    // $logla  = 2;
+
+    $logla      = $DB->get_record('logla', array('id'=>$n),'*', MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $logla->course), '*', MUST_EXIST);
     $cm         = get_coursemodule_from_instance('logla', $logla->id, $course->id, false, MUST_EXIST);
 } else {
@@ -60,7 +63,7 @@ $event->trigger();
 // Print the page header.
 
 $PAGE->set_url('/mod/logla/view.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($logla->name));
+// $PAGE->set_title(format_string($logla->name));
 $PAGE->set_heading(format_string($course->fullname));
 
 /*
@@ -74,44 +77,46 @@ $PAGE->set_heading(format_string($course->fullname));
 echo $OUTPUT->header();
 
 // Conditions to show the intro can change to look for own settings or whatever.
+/*
 if ($logla->intro) {
     echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');
 }
+*/
 
 // Replace the following lines with you own code.
 
 
-echo $OUTPUT->heading($_POST["selectPreMetacognition"]);
+// echo $OUTPUT->heading($_POST["selectPreMetacognition"]);
+
+echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');
 
 // Replace the following lines with you own code.
-$loglaresult = $DB->get_records('logla', array('coursemodule'=>$id));
+$loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
 
 echo $OUTPUT->heading('Resultados');
-echo $OUTPUT->heading('id');
+echo $OUTPUT->heading("Id:");
 echo $OUTPUT->heading($id);
-echo $OUTPUT->heading('Name');
-echo $OUTPUT->heading($loglaresult[1]->name);
+echo $OUTPUT->heading('Name:');
+echo $OUTPUT->heading($loglaresult->name);
 echo $OUTPUT->heading('Intro');
-echo $OUTPUT->heading($loglaresult[1]->intro);
+echo $OUTPUT->heading($loglaresult->intro);
 echo $OUTPUT->heading('Pre-Feedback');
-echo $OUTPUT->heading($loglaresult[1]->prefeedback);
+echo $OUTPUT->heading($loglaresult->prefeedback);
 echo $OUTPUT->heading('Pos-Feeedback');
-echo $OUTPUT->heading($loglaresult[1]->posfeedback);
+echo $OUTPUT->heading($loglaresult->posfeedback);
 echo $OUTPUT->heading('ID Pre-Feedback');
-echo $OUTPUT->heading($loglaresult[1]->idprefeedback);
+echo $OUTPUT->heading($loglaresult->idprefeedback);
 echo $OUTPUT->heading('ID Pos-Feeedback');
-echo $OUTPUT->heading($loglaresult[1]->idposfeedback);
+echo $OUTPUT->heading($loglaresult->idposfeedback);
 echo $OUTPUT->heading('ID Activity');
-echo $OUTPUT->heading($loglaresult[1]->idactivity);
+echo $OUTPUT->heading($loglaresult->idactivity);
 echo $OUTPUT->heading('ID Quiz');
-echo $OUTPUT->heading($loglaresult[1]->idquiz);
+echo $OUTPUT->heading($loglaresult->idquiz);
 echo $OUTPUT->heading('Average Pre-Feedback');
-echo $OUTPUT->heading($loglaresult[1]->prefeedbackavg);
+echo $OUTPUT->heading($loglaresult->prefeedbackavg);
 echo $OUTPUT->heading('Average Pos-Feeedback');
-echo $OUTPUT->heading($loglaresult[1]->posfeedbackavg);
-
-
+echo $OUTPUT->heading($loglaresult->posfeedbackavg);
 
 
 // Finish the page.

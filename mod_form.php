@@ -49,7 +49,7 @@ class mod_logla_mod_form extends moodleform_mod {
         $mform = $this->_form;
 
         // get course module id
-        $instacia = $PAGE->cm->id; 
+        // $instacia = $PAGE->cm->id; 
 
         // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -118,7 +118,7 @@ class mod_logla_mod_form extends moodleform_mod {
         // add radiobox
         $radioarray=array();
         $radioarray[] = $mform->createElement('radio', 'assignqactivity', '', get_string('Activity', 'logla'), 1);
-        $radioarray[] = $mform->createElement('radio', 'assignquiz', '', get_string('Quiz', 'logla'), 0);
+        $radioarray[] = $mform->createElement('radio', 'assignquiz', '', get_string('Quiz', 'logla'), 1);
         $mform->addGroup($radioarray, 'radioar', 'Activity Type', array(' '), false); 
         
         // add assign activity
@@ -139,4 +139,3 @@ class mod_logla_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 }
-

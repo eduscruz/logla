@@ -82,17 +82,16 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
     // You may have to add extra stuff in here.
 
     $logla->id = $DB->insert_record('logla', $logla);
-
-    $logla->prefeedback =$logla->PreMetacognition;
-    $logla->posfeedback =$logla->PosMetacognition;
-    $logla->idprefeedback =$logla->selectPreMetacognition;
-    $logla->idposfeedback =$logla->selectPosMetacognition;
-    $logla->idactivity = $logla->assignqactivity;
-    $logla->idquiz =$logla->assignquiz;
-    $logla->prefeedbackavg =$logla->selectActivity;
-    $logla->posfeedbackavg =$logla->selectQuiz;
-    
     logla_grade_item_update($logla);
+
+    $logla->prefeedback = $logla->PreMetacognition;
+    $logla->posfeedback = $logla->PosMetacognition;
+    $logla->idprefeedback = $logla->selectPreMetacognition;
+    $logla->idposfeedback = $logla->selectPosMetacognition;
+    $logla->idactivity = $logla->assignqactivity;
+    $logla->idquiz = $logla->assignquiz;
+    $logla->prefeedbackavg = 0;
+    $logla->posfeedbackavg = 0;
 
     return $logla->id;
 }
@@ -121,9 +120,7 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
     $logla->idposfeedback =$logla->selectPosMetacognition;
     $logla->idactivity = $logla->assignqactivity;
     $logla->idquiz =$logla->assignquiz;
-    $logla->prefeedbackavg =$logla->selectActivity;
-    $logla->posfeedbackavg =$logla->selectQuiz;
-    
+   
     $result = $DB->update_record('logla', $logla);
 
     logla_grade_item_update($logla);
