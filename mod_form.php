@@ -146,7 +146,8 @@ class mod_logla_mod_form extends moodleform_mod {
         // verify if $loglaresult is not empty and set default value from table
         if ($loglaresultexist)
             $mform->setDefault('selactivityquiz', $loglaresult->activityquiz);
-        
+        else
+            $mform->setDefault('selactivityquiz', 1);
       
         // add assign activity
         $selectActivity = $mform->addElement('select', 'selectActivity', get_string('Activity', 'logla'), $assingcombo);

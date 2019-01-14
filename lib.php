@@ -81,9 +81,6 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
 
     // You may have to add extra stuff in here.
 
-    $logla->id = $DB->insert_record('logla', $logla);
-    logla_grade_item_update($logla);
-
     $logla->prefeedback =$logla->PreMetacognition;
     $logla->posfeedback =$logla->PosMetacognition;
     $logla->idprefeedback =$logla->selectPreMetacognition;
@@ -93,6 +90,9 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
     $logla->idquiz =$logla->selectQuiz;
     $logla->prefeedbackavg = 0;
     $logla->posfeedbackavg = 0;
+
+    $logla->id = $DB->insert_record('logla', $logla);
+    logla_grade_item_update($logla);
 
     return $logla->id;
 }
