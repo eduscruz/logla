@@ -13,11 +13,11 @@
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="prefeedback" TYPE="TINYINT(4)" NOTNULL="false" SEQUENCE="false" COMMENT="include pre feedback"/>
-        <FIELD NAME="posfeedback" TYPE="TINYINT(4)" NOTNULL="false" SEQUENCE="false" COMMENT="include pos feedback"/>
+        <FIELD NAME="prefeedback" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="include pre feedback"/>
+        <FIELD NAME="posfeedback" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="include pos feedback"/>
         <FIELD NAME="idprefeedback" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Include id pre feedback"/>
         <FIELD NAME="idposfeedback" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Include id pos feedback"/>
-        <FIELD NAME="activityquiz" TYPE="TINYINT(4)" NOTNULL="false" SEQUENCE="false" COMMENT="include pre feedback"/>
+        <FIELD NAME="activityquiz" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="include pre feedback"/>
         <FIELD NAME="idactivity" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="id activity"/>
         <FIELD NAME="idquiz" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="id quiz"/>
         <FIELD NAME="prefeedbackavg" TYPE="number" LENGTH="4" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="pre feedback average"/>
