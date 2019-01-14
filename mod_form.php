@@ -49,7 +49,7 @@ class mod_logla_mod_form extends moodleform_mod {
         $mform = $this->_form;
 
         // get course module id
-        // $instacia = $PAGE->cm->id; 
+        $coursemodule = $PAGE->cm->id; 
 
         // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -105,30 +105,38 @@ class mod_logla_mod_form extends moodleform_mod {
             $quizcombo[$assign[$i]->id] = $quiz[$i]->name;
         }
 
+        $loglaresult = $DB->get_record('logla', array('coursemodule'=>$coursemodule));
+
         // add pre metacognition
-        $mform->addElement('checkbox', 'PreMetacognition', get_string('PreMetacognition', 'logla'), 'Enable Pre-Metacognition') ;
+        $mform->addElement('advcheckbox', 'PreMetacognition', get_string('PreMetacognition', 'logla'), 'Enable Pre-Metacognition', array(0,1)) ;
         $selectPre = $mform->addElement('select', 'selectPreMetacognition', get_string('PreFeedback', 'logla'), $fbcombo);
+        $selectPre->setSelected($loglaresult->idprefeedback);
         $selectPre->setMultiple(false);
+        
 
         // add pos metacognition
-        $mform->addElement('checkbox', 'PosMetacognition', get_string('PosMetacognition', 'logla'), 'Enable Pos-Metacognition') ;
+        $mform->addElement('advcheckbox', 'PosMetacognition', get_string('PosMetacognition', 'logla'), 'Enable Pos-Metacognition', array(0,1)) ;
         $selectPos = $mform->addElement('select', 'selectPosMetacognition', get_string('PosFeedback', 'logla'), $fbcombo);
+        $selectPos->setSelected($loglaresult->idposfeedback);
         $selectPos->setMultiple(false);
 
         // add radiobox
         $radioarray=array();
-        $radioarray[] = $mform->createElement('radio', 'assignqactivity', '', get_string('Activity', 'logla'), 1);
-        $radioarray[] = $mform->createElement('radio', 'assignquiz', '', get_string('Quiz', 'logla'), 1);
-        $mform->addGroup($radioarray, 'radioar', 'Activity Type', array(' '), false); 
-        
-        // add assign activity
-        $selectPos = $mform->addElement('select', 'selectActivity', get_string('Activity', 'logla'), $assingcombo);
-        $selectPos->setMultiple(false);        
+        $radioarray[] = $mform->createElement('radio', 'selactivityquiz', '', get_string('Activity', 'logla'), 1);
+        $radioarray[] = $mform->createElement('radio', 'selactivityquiz', '', get_string('Quiz', 'logla'), 0);
+        $mform->addGroup($radioarray, 'radioar', 'ActivityType', array(' '), false);
+      
+          // add assign activity
+        $selectActivity = $mform->addElement('select', 'selectActivity', get_string('Activity', 'logla'), $assingcombo);
+        $selectActivity->setSelected($loglaresult->idactivity);
+        $selectActivity->setMultiple(false);        
 
         // add quiz activity
-        $selectPos = $mform->addElement('select', 'selectQuiz', get_string('Quiz', 'logla'), $quizcombo);
-        $selectPos->setMultiple(false);        
+        $selectQuiz = $mform->addElement('select', 'selectQuiz', get_string('Quiz', 'logla'), $quizcombo);
+        $selectQuiz->setSelected($loglaresult->idquiz);
+        $selectQuiz->setMultiple(false);        
 
+  
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();
 

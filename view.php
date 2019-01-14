@@ -57,7 +57,7 @@ $event = \mod_logla\event\course_module_viewed::create(array(
     'context' => $PAGE->context,
 ));
 $event->add_record_snapshot('course', $PAGE->course);
-$event->add_record_snapshot($PAGE->cm->modname, $logla);
+// $event->add_record_snapshot($PAGE->cm->modname, $logla);
 $event->trigger();
 
 // Print the page header.
@@ -109,6 +109,8 @@ echo $OUTPUT->heading('ID Pre-Feedback');
 echo $OUTPUT->heading($loglaresult->idprefeedback);
 echo $OUTPUT->heading('ID Pos-Feeedback');
 echo $OUTPUT->heading($loglaresult->idposfeedback);
+echo $OUTPUT->heading('Activity or Quiz');
+echo $OUTPUT->heading($loglaresult->activityquiz);
 echo $OUTPUT->heading('ID Activity');
 echo $OUTPUT->heading($loglaresult->idactivity);
 echo $OUTPUT->heading('ID Quiz');
