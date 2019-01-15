@@ -6,8 +6,8 @@
   <TABLES>
     <TABLE NAME="logla" COMMENT="Default comment for logla, please edit me">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="coursemodule" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course module logla activity belongs to"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+        <FIELD NAME="coursemodule" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Course module logla activity belongs to"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name field for moodle instances"/>
         <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="General introduction of the logla activity"/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
@@ -24,22 +24,11 @@
         <FIELD NAME="posfeedbackavg" TYPE="number" LENGTH="4" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="pos feedback average"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="coursemodule" TYPE="foreign" FIELDS="coursemodule" REFTABLE="course_modules" REFFIELDS="id"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="coursemodule" UNIQUE="false" FIELDS="coursemodule"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
-  <TABLE NAME="logla_user_grades" COMMENT="Metacognitive user grades">
-    <FIELDS>
-      <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-      <FIELD NAME="idlogla" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-      <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="user id"/>
-      <FIELD NAME="pregrade" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Pre metacognition grade"/>
-      <FIELD NAME="posgrade" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Pos metacognition grade"/>
-    </FIELDS>
-    <KEYS>
-      <KEY NAME="id" TYPE="primary" FIELDS="id"/>
-      <KEY NAME="idlogla" TYPE="foreign" FIELDS="idlogla" REFTABLE="logla" REFFIELDS="id"/>
-    </KEYS>
-  </TABLE>
 </XMLDB>
