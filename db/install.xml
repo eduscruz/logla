@@ -28,18 +28,18 @@
         <KEY NAME="coursemodule" TYPE="foreign" FIELDS="coursemodule" REFTABLE="course_modules" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="logla_user_grades" COMMENT="Metacognitive user grades">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="idlogla" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="user id"/>
+        <FIELD NAME="pregrade" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Pre metacognition grade"/>
+        <FIELD NAME="posgrade" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Pos metacognition grade"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="idlogla" TYPE="foreign" FIELDS="idlogla" REFTABLE="logla" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
-  <TABLE NAME="logla_user_grades" COMMENT="Metacognitive user grades">
-    <FIELDS>
-      <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-      <FIELD NAME="idlogla" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-      <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="user id"/>
-      <FIELD NAME="pregrade" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Pre metacognition grade"/>
-      <FIELD NAME="posgrade" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Pos metacognition grade"/>
-    </FIELDS>
-    <KEYS>
-      <KEY NAME="id" TYPE="primary" FIELDS="id"/>
-      <KEY NAME="idlogla" TYPE="foreign" FIELDS="idlogla" REFTABLE="logla" REFFIELDS="id"/>
-    </KEYS>
-  </TABLE>
 </XMLDB>
