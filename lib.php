@@ -128,7 +128,7 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
 
     logla_grade_item_update($logla);
 
-    // logla_user_grades_add_instance($logla);
+    logla_user_grades_add_instance($logla);
 
     return $result;
 }
@@ -231,6 +231,7 @@ function calculate_kma($idfeedback, $iduser, $grade){
         $graderate = 3;
     }
 
+    // variable aux to calculate kma
     $auxabs = ($resultfeedback->anonymous_response) - $graderate;
 
     // verify if theauxabs is zero then chage to one
@@ -238,25 +239,10 @@ function calculate_kma($idfeedback, $iduser, $grade){
         $auxabs =1;
     }
 
+    // calculate the kma
     $kma = ($auxabs /2.0) * (-1.00);
-    $kma = (int)$kma;
-    
     
     return $kma;
-
-    // // verify if response is good
-    // if(($resultfeedback->anonymous_response) == 1){
-
-    // }
-    // // verify if response is regular
-    // else if(($resultfeedback->anonymous_response) == 2){
-
-    // }
-    // // verify if response is bad
-    // else(($resultfeedback->anonymous_response) == 3){
-
-    // }
-    
 }
 
 

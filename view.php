@@ -93,7 +93,7 @@ echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod
 // Replace the following lines with you own code.
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
-
+// basic information about logla
 echo $OUTPUT->heading('Resultados');
 echo $OUTPUT->heading("Id:");
 echo $OUTPUT->heading($id);
@@ -119,6 +119,18 @@ echo $OUTPUT->heading('Average Pre-Feedback');
 echo $OUTPUT->heading($loglaresult->prefeedbackavg);
 echo $OUTPUT->heading('Average Pos-Feeedback');
 echo $OUTPUT->heading($loglaresult->posfeedbackavg);
+
+$kmaresults = $DB->get_records('logla_user_grades', array('idlogla'=>$loglaresult->id));
+$countkmaresults = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id));
+
+for($i=1;$i<=$countkmaresults;$i++){
+    echo $OUTPUT->heading('userid :');
+    echo $OUTPUT->heading($kmaresults[$i]->userid);
+    echo $OUTPUT->heading('kma pre :');
+    echo $OUTPUT->heading($kmaresults[$i]->pregrade);
+    echo $OUTPUT->heading('kma pre :');
+    echo $OUTPUT->heading($kmaresults[$i]->pregrade); 
+}
 
 
 // Finish the page.
