@@ -80,7 +80,6 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
     $logla->timecreated = time();
 
     // You may have to add extra stuff in here.
-
     $logla->prefeedback =$logla->PreMetacognition;
     $logla->posfeedback =$logla->PosMetacognition;
     $logla->idprefeedback =$logla->selectPreMetacognition;
@@ -93,6 +92,8 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
 
     $logla->id = $DB->insert_record('logla', $logla);
     logla_grade_item_update($logla);
+
+    logla_user_grades_add_instance($logla);
 
     return $logla->id;
 }
@@ -127,8 +128,98 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
 
     logla_grade_item_update($logla);
 
+    // logla_user_grades_add_instance($logla);
+
     return $result;
 }
+
+
+// This function add user results in logla_user_grades
+function logla_user_grades_add_instance(stdClass $logla) {
+    global $DB;
+
+    $logla_user_grades = new stdClass();
+    
+    // if logla is set up as activity
+    if($logla->activityquiz){
+        // get grades records from database
+        $result = $DB->get_records('assign_grades', array('assignment'=>$logla->idactivity));
+        $resultcount = $DB->count_records('assign_grades', array('assignment'=>$logla->idactivity));
+        
+        // for each grade in activity (assignment)
+        for($i=1;$i<=$resultcount;$i++){
+            $logla_user_grades->idlogla = $logla->id;
+            $logla_user_grades->userid = $result[$i]->userid;
+            
+            // if logla as set up with prefeback
+            if($logla->prefeedback){
+                $logla_user_grades->pregrade = $i;
+            }
+            else{
+                $logla_user_grades->pregrade = null;
+            }
+
+            // if logla as set up with posfeback
+            if($logla->posfeedback){
+                $logla_user_grades->posgrade = $i;
+            }
+            else{
+                $logla_user_grades->posgrade = null;
+            }
+            
+            $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
+        }
+    }
+    // if logla is set up as quiz
+    else{
+        // get grades records from database
+        $result = $DB->get_records('quiz_grades', array('quiz'=>$logla->idquiz));
+        $resultcount = $DB->count_records('quiz_grades', array('quiz'=>$logla->idquiz));
+
+        // for each grade in activity (assignment)
+        for($i=1;$i<=$resultcount;$i++){
+            
+            $logla_user_grades->idlogla = $logla->id;
+            $logla_user_grades->userid = $result[$i]->userid;
+            
+            // if logla as set up with prefeback
+            if($logla->prefeedback){
+                $logla_user_grades->pregrade = $i;
+            }
+            else{
+                $logla_user_grades->pregrade = null;
+            }
+
+            // if logla as set up with posfeback
+            if($logla->posfeedback){
+                $logla_user_grades->posgrade = $i;
+            }
+            else{
+                $logla_user_grades->posgrade = null;
+            }
+
+            $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
+        }
+    }
+
+    return $logla_user_grades->id;
+}
+
+/*
+function kma(stdClass $logla)){
+
+        
+    $logla->prefeedback;
+    $logla->posfeedback;
+    $logla->idprefeedback;
+    $logla->idposfeedback;
+    $logla->activityquiz;
+    $logla->idactivity;
+    $logla->idquiz;
+    
+    // logla_grade_item_update($logla_user_grades);
+}
+*/
 
 /**
  * This standard function will check all instances of this module
