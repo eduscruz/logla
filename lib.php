@@ -152,8 +152,9 @@ function logla_user_grades_add_instance(stdClass $logla) {
             $logla_user_grades->userid = $result[$i]->userid;
             
             // if logla as set up with prefeback
-            if($logla->prefeedback){
-                $logla_user_grades->pregrade = $i;
+            if($logla->prefeedback){  
+                $kma = calculate_kma($logla->idprefeedback, $result[$i]->userid, $result[$i]->grade);          
+                $logla_user_grades->pregrade = $kma;
             }
             else{
                 $logla_user_grades->pregrade = null;
@@ -161,7 +162,8 @@ function logla_user_grades_add_instance(stdClass $logla) {
 
             // if logla as set up with posfeback
             if($logla->posfeedback){
-                $logla_user_grades->posgrade = $i;
+                $kma = calculate_kma($logla->idposfeedback, $result[$i]->userid, $result[$i]->grade);          
+                $logla_user_grades->posgrade = $kma;
             }
             else{
                 $logla_user_grades->posgrade = null;
@@ -184,7 +186,8 @@ function logla_user_grades_add_instance(stdClass $logla) {
             
             // if logla as set up with prefeback
             if($logla->prefeedback){
-                $logla_user_grades->pregrade = $i;
+                $kma = calculate_kma($logla->idprefeedback, $result[$i]->userid, $result[$i]->grade);          
+                $logla_user_grades->pregrade = $kma;
             }
             else{
                 $logla_user_grades->pregrade = null;
@@ -192,7 +195,8 @@ function logla_user_grades_add_instance(stdClass $logla) {
 
             // if logla as set up with posfeback
             if($logla->posfeedback){
-                $logla_user_grades->posgrade = $i;
+                $kma = calculate_kma($logla->idposfeedback, $result[$i]->userid, $result[$i]->grade);          
+                $logla_user_grades->posgrade = $kma;
             }
             else{
                 $logla_user_grades->posgrade = null;
@@ -205,21 +209,56 @@ function logla_user_grades_add_instance(stdClass $logla) {
     return $logla_user_grades->id;
 }
 
-/*
-function kma(stdClass $logla)){
 
-        
-    $logla->prefeedback;
-    $logla->posfeedback;
-    $logla->idprefeedback;
-    $logla->idposfeedback;
-    $logla->activityquiz;
-    $logla->idactivity;
-    $logla->idquiz;
+function calculate_kma($idfeedback, $iduser, $grade){
+
+    global $DB;
+
+    $resultfeedback = $DB->get_record('feedback_completed', array('feedback'=>$idfeedback, 'userid'=>$iduser));
     
-    // logla_grade_item_update($logla_user_grades);
+    $graderate = 0;
+
+    // estimate grade by rate 
+    if($grade >= 75){
+        $graderate = 1;
+    }
+    // verify if the response is regular
+    else if(($grade < 75) && ($grade >= 50)){
+        $graderate = 2;
+    }
+    // verify if the response is bad
+    else{
+        $graderate = 3;
+    }
+
+    $auxabs = ($resultfeedback->anonymous_response) - $graderate;
+
+    // verify if theauxabs is zero then chage to one
+    if($auxabs == 0){
+        $auxabs =1;
+    }
+
+    $kma = ($auxabs /2.0) * (-1.00);
+    $kma = (int)$kma;
+    
+    
+    return $kma;
+
+    // // verify if response is good
+    // if(($resultfeedback->anonymous_response) == 1){
+
+    // }
+    // // verify if response is regular
+    // else if(($resultfeedback->anonymous_response) == 2){
+
+    // }
+    // // verify if response is bad
+    // else(($resultfeedback->anonymous_response) == 3){
+
+    // }
+    
 }
-*/
+
 
 /**
  * This standard function will check all instances of this module

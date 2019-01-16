@@ -33,8 +33,8 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="idlogla" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="user id"/>
-        <FIELD NAME="pregrade" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Pre metacognition grade"/>
-        <FIELD NAME="posgrade" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Pos metacognition grade"/>
+        <FIELD NAME="pregrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pre metacognition grade"/>
+        <FIELD NAME="posgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
