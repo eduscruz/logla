@@ -128,17 +128,21 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
 
     logla_grade_item_update($logla);
 
-    logla_user_grades($logla);
+    logla_user_grades($logla, 1);
     
     return $result;
 }
 
 
 // This function add user results in logla_user_grades
-function logla_user_grades(stdClass $logla) {
+function logla_user_grades(stdClass $logla, $update = null) {
     global $DB;
 
     $logla_user_grades = new stdClass();
+
+    if($update){
+        logla_user_grades_delete($logla);
+    }
     
     // if logla is set up as activity
     if($logla->activityquiz){
@@ -155,6 +159,13 @@ function logla_user_grades(stdClass $logla) {
     return $logla_user_grades->id;
 }
 
+
+/**
+ * This function will insert all results of this module in the 
+ * table logla_user_grade
+ * @param int $courseid Course ID
+ * @return bool
+ */
 function logla_user_grades_add(stdClass $logla, $tablename, $fieldtable, $fieldlogla){
     global $DB;
     
@@ -190,7 +201,12 @@ function logla_user_grades_add(stdClass $logla, $tablename, $fieldtable, $fieldl
 
 }
 
-
+/**
+ * This function will calculte all instances of this module
+ *  *
+ * @param int $courseid Course ID
+ * @return bool
+ */
 function calculate_kma($idfeedback, $iduser, $grade){
 
     global $DB;
@@ -224,6 +240,14 @@ function calculate_kma($idfeedback, $iduser, $grade){
     $kma = ($auxabs /2.0) * (-1.00);
     
     return $kma;
+}
+
+
+function logla_user_grades_delete(stdClass $logla){
+    global $DB;
+    
+    $DB->delete_records('logla_user_grades', array('idlogla'=>$logla->id));
+    // $DB->get_recordset('logla_user_grades', array('idlogla'=>$logla->id));
 }
 
 
