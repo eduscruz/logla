@@ -93,7 +93,7 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
     $logla->id = $DB->insert_record('logla', $logla);
     logla_grade_item_update($logla);
 
-    logla_user_grades_add_instance($logla);
+    logla_user_grades($logla);
 
     return $logla->id;
 }
@@ -128,14 +128,14 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
 
     logla_grade_item_update($logla);
 
-    logla_user_grades_add_instance($logla);
+    logla_user_grades($logla);
     
     return $result;
 }
 
 
 // This function add user results in logla_user_grades
-function logla_user_grades_add_instance(stdClass $logla) {
+function logla_user_grades(stdClass $logla) {
     global $DB;
 
     $logla_user_grades = new stdClass();
@@ -143,103 +143,51 @@ function logla_user_grades_add_instance(stdClass $logla) {
     // if logla is set up as activity
     if($logla->activityquiz){
         
-        // get grades records from database
-
-        $rs = $DB->get_recordset('assign_grades', array('assignment'=>$logla->idactivity));
-
-        foreach ($rs as $record) {
-            $logla_user_grades->idlogla = $logla->id;
-            $logla_user_grades->userid = $record->userid;
-            
-            // if logla as set up with prefeback
-            if($logla->prefeedback){  
-                $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade);          
-                $logla_user_grades->pregrade = $kma;
-            }
-            else{
-                $logla_user_grades->pregrade = null;
-            }
-
-            // if logla as set up with posfeback
-            if($logla->posfeedback){
-                $kma = calculate_kma($logla->idposfeedback, $record->userid, $record->grade);          
-                $logla_user_grades->posgrade = $kma;
-            }
-            else{
-                $logla_user_grades->posgrade = null;
-            }
-            
-            $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
-        }
-        $rs->close(); 
+        // insert grades records in logla_user_grades
+        logla_user_grades_add($logla, 'assign_grades', 'assignment', 'idactivity');
     }
     // if logla is set up as quiz
     else{
-        // // get grades records from database
-        // $result = $DB->get_records('quiz_grades', array('quiz'=>$logla->idquiz));
-        // $resultcount = $DB->count_records('quiz_grades', array('quiz'=>$logla->idquiz));
-
-        // for each grade in activity (assignment)
-        $rs = $DB->get_recordset('quiz_grades', array('quiz'=>$logla->idquiz));
-
-        foreach ($rs as $record) {
-            $logla_user_grades->idlogla = $logla->id;
-            $logla_user_grades->userid = $record->userid;
-            
-            // if logla as set up with prefeback
-            if($logla->prefeedback){  
-                $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade);          
-                $logla_user_grades->pregrade = $kma;
-            }
-            else{
-                $logla_user_grades->pregrade = null;
-            }
-
-            // if logla as set up with posfeback
-            if($logla->posfeedback){
-                $kma = calculate_kma($logla->idposfeedback, $record->userid, $record->grade);          
-                $logla_user_grades->posgrade = $kma;
-            }
-            else{
-                $logla_user_grades->posgrade = null;
-            }
-            
-            $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
-        }
-        $rs->close();
-        
-        
-        
-        /*
-        for($i=1;$i<=$resultcount;$i++){
-            
-            $logla_user_grades->idlogla = $logla->id;
-            $logla_user_grades->userid = $result[$i]->userid;
-            
-            // if logla as set up with prefeback
-            if($logla->prefeedback){
-                $kma = calculate_kma($logla->idprefeedback, $result[$i]->userid, $result[$i]->grade);          
-                $logla_user_grades->pregrade = $kma;
-            }
-            else{
-                $logla_user_grades->pregrade = null;
-            }
-
-            // if logla as set up with posfeback
-            if($logla->posfeedback){
-                $kma = calculate_kma($logla->idposfeedback, $result[$i]->userid, $result[$i]->grade);          
-                $logla_user_grades->posgrade = $kma;
-            }
-            else{
-                $logla_user_grades->posgrade = null;
-            }
-
-            $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
-        }
-        */
+        // insert grades records in logla_user_grades
+        logla_user_grades_add($logla, 'quiz_grades', 'quiz', 'idquiz');    
     }
 
     return $logla_user_grades->id;
+}
+
+function logla_user_grades_add(stdClass $logla, $tablename, $fieldtable, $fieldlogla){
+    global $DB;
+    
+    $rs = $DB->get_recordset($tablename, array($fieldtable=>$logla->$fieldlogla));
+    
+
+    foreach ($rs as $record) {
+        // branco na atualizacao  ********************************************************************
+        $logla_user_grades->idlogla = $logla->id;
+        $logla_user_grades->userid = $record->userid;
+        
+        // if logla as set up with prefeback
+        if($logla->prefeedback){  
+            $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade);          
+            $logla_user_grades->pregrade = $kma;
+        }
+        else{
+            $logla_user_grades->pregrade = null;
+        }
+
+        // if logla as set up with posfeback
+        if($logla->posfeedback){
+            $kma = calculate_kma($logla->idposfeedback, $record->userid, $record->grade);          
+            $logla_user_grades->posgrade = $kma;
+        }
+        else{
+            $logla_user_grades->posgrade = null;
+        }
+        
+        $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
+    }
+    $rs->close(); 
+
 }
 
 

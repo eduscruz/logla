@@ -121,18 +121,6 @@ echo $OUTPUT->heading($loglaresult->prefeedbackavg);
 echo $OUTPUT->heading('Average Pos-Feeedback');
 echo $OUTPUT->heading($loglaresult->posfeedbackavg);
 
-
-$kmaresults = $DB->get_records('logla_user_grades', array('idlogla'=>$loglaresult->id));
-$countkmaresults = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id));
-
-for($i=1;$i<=$countkmaresults;$i++){
-    echo $OUTPUT->heading('userid :');
-    echo $OUTPUT->heading($kmaresults[$i]->userid);
-    echo $OUTPUT->heading('kma pre :');
-    echo $OUTPUT->heading($kmaresults[$i]->pregrade);
-    echo $OUTPUT->heading('kma pre :');
-    echo $OUTPUT->heading($kmaresults[$i]->pregrade); 
-}
 */
 
 echo $OUTPUT->heading('Userid, PreKMA, PosKMA');
