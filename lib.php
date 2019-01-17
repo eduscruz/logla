@@ -129,7 +129,7 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
     logla_grade_item_update($logla);
 
     logla_user_grades_add_instance($logla);
-
+    
     return $result;
 }
 
@@ -142,18 +142,18 @@ function logla_user_grades_add_instance(stdClass $logla) {
     
     // if logla is set up as activity
     if($logla->activityquiz){
-        // get grades records from database
-        $result = $DB->get_records('assign_grades', array('assignment'=>$logla->idactivity));
-        $resultcount = $DB->count_records('assign_grades', array('assignment'=>$logla->idactivity));
         
-        // for each grade in activity (assignment)
-        for($i=1;$i<=$resultcount;$i++){
+        // get grades records from database
+
+        $rs = $DB->get_recordset('assign_grades', array('assignment'=>$logla->idactivity));
+
+        foreach ($rs as $record) {
             $logla_user_grades->idlogla = $logla->id;
-            $logla_user_grades->userid = $result[$i]->userid;
+            $logla_user_grades->userid = $record->userid;
             
             // if logla as set up with prefeback
             if($logla->prefeedback){  
-                $kma = calculate_kma($logla->idprefeedback, $result[$i]->userid, $result[$i]->grade);          
+                $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade);          
                 $logla_user_grades->pregrade = $kma;
             }
             else{
@@ -162,7 +162,7 @@ function logla_user_grades_add_instance(stdClass $logla) {
 
             // if logla as set up with posfeback
             if($logla->posfeedback){
-                $kma = calculate_kma($logla->idposfeedback, $result[$i]->userid, $result[$i]->grade);          
+                $kma = calculate_kma($logla->idposfeedback, $record->userid, $record->grade);          
                 $logla_user_grades->posgrade = $kma;
             }
             else{
@@ -171,14 +171,46 @@ function logla_user_grades_add_instance(stdClass $logla) {
             
             $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
         }
+        $rs->close(); 
     }
     // if logla is set up as quiz
     else{
-        // get grades records from database
-        $result = $DB->get_records('quiz_grades', array('quiz'=>$logla->idquiz));
-        $resultcount = $DB->count_records('quiz_grades', array('quiz'=>$logla->idquiz));
+        // // get grades records from database
+        // $result = $DB->get_records('quiz_grades', array('quiz'=>$logla->idquiz));
+        // $resultcount = $DB->count_records('quiz_grades', array('quiz'=>$logla->idquiz));
 
         // for each grade in activity (assignment)
+        $rs = $DB->get_recordset('quiz_grades', array('quiz'=>$logla->idquiz));
+
+        foreach ($rs as $record) {
+            $logla_user_grades->idlogla = $logla->id;
+            $logla_user_grades->userid = $record->userid;
+            
+            // if logla as set up with prefeback
+            if($logla->prefeedback){  
+                $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade);          
+                $logla_user_grades->pregrade = $kma;
+            }
+            else{
+                $logla_user_grades->pregrade = null;
+            }
+
+            // if logla as set up with posfeback
+            if($logla->posfeedback){
+                $kma = calculate_kma($logla->idposfeedback, $record->userid, $record->grade);          
+                $logla_user_grades->posgrade = $kma;
+            }
+            else{
+                $logla_user_grades->posgrade = null;
+            }
+            
+            $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
+        }
+        $rs->close();
+        
+        
+        
+        /*
         for($i=1;$i<=$resultcount;$i++){
             
             $logla_user_grades->idlogla = $logla->id;
@@ -204,6 +236,7 @@ function logla_user_grades_add_instance(stdClass $logla) {
 
             $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
         }
+        */
     }
 
     return $logla_user_grades->id;

@@ -94,6 +94,7 @@ echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
 // basic information about logla
+/*
 echo $OUTPUT->heading('Resultados');
 echo $OUTPUT->heading("Id:");
 echo $OUTPUT->heading($id);
@@ -120,6 +121,7 @@ echo $OUTPUT->heading($loglaresult->prefeedbackavg);
 echo $OUTPUT->heading('Average Pos-Feeedback');
 echo $OUTPUT->heading($loglaresult->posfeedbackavg);
 
+
 $kmaresults = $DB->get_records('logla_user_grades', array('idlogla'=>$loglaresult->id));
 $countkmaresults = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id));
 
@@ -131,7 +133,20 @@ for($i=1;$i<=$countkmaresults;$i++){
     echo $OUTPUT->heading('kma pre :');
     echo $OUTPUT->heading($kmaresults[$i]->pregrade); 
 }
+*/
 
+echo $OUTPUT->heading('Userid, PreKMA, PosKMA');
+
+$rs = $DB->get_recordset('logla_user_grades', array('idlogla'=>$loglaresult->id));
+foreach ($rs as $record) {
+    $texto = $record->userid;
+    $texto .= ", ";
+    $texto .= $record->pregrade;
+    $texto .= ", ";
+    $texto .= $record->posgrade; 
+    echo $OUTPUT->heading($texto);
+}
+$rs->close();
 
 // Finish the page.
 echo $OUTPUT->footer();
