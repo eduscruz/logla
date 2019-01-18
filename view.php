@@ -80,16 +80,29 @@ if ($logla->intro) {
 // Replace the following lines with you own code.
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
-
-// logla_basic_information($logla);
-
 // if user can edit logla then show all results
 if ($PAGE->user_allowed_editing()) {
 
-    echo $OUTPUT->heading('Userid, PreKMA, PosKMA');
-    $rs = $DB->get_recordset('logla_user_grades', array('idlogla'=>$loglaresult->id));
+    // SQL query to select tables logla_user_grades and user
+    $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
+    $sql .= ' mdl_user.email, mdl_logla_user_grades.pregrade, mdl_logla_user_grades.posgrade';
+    $sql .= ' FROM mdl_logla_user_grades';
+    $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
+    $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
+
+    // print results of sql query
+    echo $OUTPUT->heading('Userid, Username, Firstname, Lastname, E-mail, PreKMA, PosKMA');
+    $rs = $DB->get_recordset_sql($sql, array($loglaresult->id));
     foreach ($rs as $record) {
         $texto = $record->userid;
+        $texto .= ", ";
+        $texto .= $record->username;
+        $texto .= ", ";
+        $texto .= $record->firstname;
+        $texto .= ", ";
+        $texto .= $record->lastname;
+        $texto .= ", ";
+        $texto .= $record->email;
         $texto .= ", ";
         $texto .= $record->pregrade;
         $texto .= ", ";
@@ -97,17 +110,75 @@ if ($PAGE->user_allowed_editing()) {
         echo $OUTPUT->heading($texto);
     }
     $rs->close();
+
+    // Additional information about this instance
+    // echo $OUTPUT->heading(logla_basic_information($logla,$id));
+
 } else {
     // if user can not edit logla then show only own result
     $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
-    echo $OUTPUT->heading('Userid, PreKMA, PosKMA');
-    $texto = $user_grade_result->userid;
-    $texto .= ", ";
-    $texto .= $user_grade_result->pregrade;
-    $texto .= ", ";
-    $texto .= $user_grade_result->posgrade; 
-    echo $OUTPUT->heading($texto);
+    $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
+
+    // if exist results from userid
+    if($user_grade_resultcount){
+        
+        $texto = "Sua avaliação pre-metacognitiva foi: ";
+        // if $user_grade_result->pregrade != null
+        if($user_grade_result->pregrade != null){
+            $texto .= $user_grade_result->pregrade;
+        }
+        else{
+            $texto .= 'nao avaliado';
+        }
+        
+        $texto .= "<br>Sua avaliação pos-metacognitiva foi:  ";
+        // if $user_grade_result->posgrade != null
+        if($user_grade_result->posgrade != null){
+            $texto .= $user_grade_result->posgrade;
+        }
+        else{
+            $texto .= 'nao avaliado';
+        }
+        echo $OUTPUT->heading($texto);
+    } 
+    // if not exist results from userid
+    else {
+        echo $OUTPUT->heading('Feedback nao preenchido ainda ou nota da atividade/quiz ainda não avaliada');
+    }
 }
 
 // Finish the page.
 echo $OUTPUT->footer();
+
+function logla_basic_information(stdClass $logla, $id){
+    // basic information about logla
+    global $DB, $OUTPUT;
+	$loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
+    $information ='<br><br>Information about this logla instance';
+    $information .="<br><br>Id: ";
+    $information .=$id;
+    $information .='<br>Name: ';
+    $information .=$loglaresult->name;
+    $information .='<br>Intro: ';
+    $information .=$loglaresult->intro;
+    $information .='<br>Pre-Feedback: ';
+    $information .=$loglaresult->prefeedback;
+    $information .='<br>Pos-Feeedback: ';
+    $information .=$loglaresult->posfeedback;
+    $information .='<br>ID Pre-Feedback: ';
+    $information .=$loglaresult->idprefeedback;
+    $information .='<br>ID Pos-Feeedback: ';
+    $information .=$loglaresult->idposfeedback;
+    $information .='<br>Activity or Quiz: ';
+    $information .=$loglaresult->activityquiz;
+    $information .='<br>ID Activity: ';
+    $information .=$loglaresult->idactivity;
+    $information .='<br>ID Quiz: ';
+    $information .=$loglaresult->idquiz;
+    $information .='<br>Average Pre-Feedback: ';
+    $information .=$loglaresult->prefeedbackavg;
+    $information .='<br>Average Pos-Feeedback: ';
+    $information .=$loglaresult->posfeedbackavg;
+
+    return $information;
+}

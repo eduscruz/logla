@@ -247,7 +247,6 @@ function logla_user_grades_delete(stdClass $logla){
     global $DB;
     
     $DB->delete_records('logla_user_grades', array('idlogla'=>$logla->id));
-    // $DB->get_recordset('logla_user_grades', array('idlogla'=>$logla->id));
 }
 
 
