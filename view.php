@@ -27,6 +27,8 @@
 
 // Replace logla with the name of your module and remove this line.
 
+global $COURSE, $USER;
+
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
@@ -36,13 +38,8 @@ $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should b
 if ($id) {
     $cm         = get_coursemodule_from_id('logla', $id, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    // $logla  = $DB->get_record('logla', array('id' => $cm->instance), '*', MUST_EXIST);
-    $logla  = 1;
+    $logla  = $DB->get_record('logla', array('id' => $cm->instance), '*', MUST_EXIST);
 } else if ($n) {
-
-    // $logla  = $DB->get_record('logla', array('id' => $n), '*', MUST_EXIST);
-    // $logla  = 2;
-
     $logla      = $DB->get_record('logla', array('id'=>$n),'*', MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $logla->course), '*', MUST_EXIST);
     $cm         = get_coursemodule_from_instance('logla', $logla->id, $course->id, false, MUST_EXIST);
@@ -57,13 +54,12 @@ $event = \mod_logla\event\course_module_viewed::create(array(
     'context' => $PAGE->context,
 ));
 $event->add_record_snapshot('course', $PAGE->course);
-// $event->add_record_snapshot($PAGE->cm->modname, $logla);
+$event->add_record_snapshot($PAGE->cm->modname, $logla);
 $event->trigger();
 
 // Print the page header.
-
 $PAGE->set_url('/mod/logla/view.php', array('id' => $cm->id));
-// $PAGE->set_title(format_string($logla->name));
+$PAGE->set_title(format_string($logla->name));
 $PAGE->set_heading(format_string($course->fullname));
 
 /*
@@ -77,64 +73,41 @@ $PAGE->set_heading(format_string($course->fullname));
 echo $OUTPUT->header();
 
 // Conditions to show the intro can change to look for own settings or whatever.
-/*
 if ($logla->intro) {
     echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');
 }
-*/
-
-// Replace the following lines with you own code.
-
-
-// echo $OUTPUT->heading($_POST["selectPreMetacognition"]);
-
-echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');
 
 // Replace the following lines with you own code.
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
-// basic information about logla
-/*
-echo $OUTPUT->heading('Resultados');
-echo $OUTPUT->heading("Id:");
-echo $OUTPUT->heading($id);
-echo $OUTPUT->heading('Name:');
-echo $OUTPUT->heading($loglaresult->name);
-echo $OUTPUT->heading('Intro');
-echo $OUTPUT->heading($loglaresult->intro);
-echo $OUTPUT->heading('Pre-Feedback');
-echo $OUTPUT->heading($loglaresult->prefeedback);
-echo $OUTPUT->heading('Pos-Feeedback');
-echo $OUTPUT->heading($loglaresult->posfeedback);
-echo $OUTPUT->heading('ID Pre-Feedback');
-echo $OUTPUT->heading($loglaresult->idprefeedback);
-echo $OUTPUT->heading('ID Pos-Feeedback');
-echo $OUTPUT->heading($loglaresult->idposfeedback);
-echo $OUTPUT->heading('Activity or Quiz');
-echo $OUTPUT->heading($loglaresult->activityquiz);
-echo $OUTPUT->heading('ID Activity');
-echo $OUTPUT->heading($loglaresult->idactivity);
-echo $OUTPUT->heading('ID Quiz');
-echo $OUTPUT->heading($loglaresult->idquiz);
-echo $OUTPUT->heading('Average Pre-Feedback');
-echo $OUTPUT->heading($loglaresult->prefeedbackavg);
-echo $OUTPUT->heading('Average Pos-Feeedback');
-echo $OUTPUT->heading($loglaresult->posfeedbackavg);
 
-*/
+// logla_basic_information($logla);
 
-echo $OUTPUT->heading('Userid, PreKMA, PosKMA');
+// if user can edit logla then show all results
+if ($PAGE->user_allowed_editing()) {
 
-$rs = $DB->get_recordset('logla_user_grades', array('idlogla'=>$loglaresult->id));
-foreach ($rs as $record) {
-    $texto = $record->userid;
+    echo $OUTPUT->heading('Userid, PreKMA, PosKMA');
+    $rs = $DB->get_recordset('logla_user_grades', array('idlogla'=>$loglaresult->id));
+    foreach ($rs as $record) {
+        $texto = $record->userid;
+        $texto .= ", ";
+        $texto .= $record->pregrade;
+        $texto .= ", ";
+        $texto .= $record->posgrade; 
+        echo $OUTPUT->heading($texto);
+    }
+    $rs->close();
+} else {
+    // if user can not edit logla then show only own result
+    $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
+    echo $OUTPUT->heading('Userid, PreKMA, PosKMA');
+    $texto = $user_grade_result->userid;
     $texto .= ", ";
-    $texto .= $record->pregrade;
+    $texto .= $user_grade_result->pregrade;
     $texto .= ", ";
-    $texto .= $record->posgrade; 
+    $texto .= $user_grade_result->posgrade; 
     echo $OUTPUT->heading($texto);
 }
-$rs->close();
 
 // Finish the page.
 echo $OUTPUT->footer();
