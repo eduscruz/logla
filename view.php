@@ -31,6 +31,7 @@ global $COURSE, $USER;
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/view_kma_results_form.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should be named as the first character of the module.
@@ -38,7 +39,7 @@ $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should b
 if ($id) {
     $cm         = get_coursemodule_from_id('logla', $id, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $logla  = $DB->get_record('logla', array('id' => $cm->instance), '*', MUST_EXIST);
+    $logla      = $DB->get_record('logla', array('id' => $cm->instance), '*', MUST_EXIST);
 } else if ($n) {
     $logla      = $DB->get_record('logla', array('id'=>$n),'*', MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $logla->course), '*', MUST_EXIST);
@@ -68,6 +69,7 @@ $PAGE->set_heading(format_string($course->fullname));
  * $PAGE->set_focuscontrol('some-html-id');
  * $PAGE->add_body_class('logla-'.$somevar);
  */
+$PAGE->set_cacheable(false);
 
 // Output starts here.
 echo $OUTPUT->header();
@@ -77,12 +79,15 @@ if ($logla->intro) {
     echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');
 }
 
+
 // Replace the following lines with you own code.
+
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
 // if user can edit logla then show all results
 if ($PAGE->user_allowed_editing()) {
 
+    /*
     // SQL query to select tables logla_user_grades and user
     $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
     $sql .= ' mdl_user.email, mdl_logla_user_grades.pregrade, mdl_logla_user_grades.posgrade';
@@ -113,7 +118,7 @@ if ($PAGE->user_allowed_editing()) {
 
     // Additional information about this instance
     // echo $OUTPUT->heading(logla_basic_information($logla,$id));
-
+    */
 } else {
     // if user can not edit logla then show only own result
     $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
@@ -146,6 +151,29 @@ if ($PAGE->user_allowed_editing()) {
         echo $OUTPUT->heading('Feedback nao preenchido ainda ou nota da atividade/quiz ainda não avaliada');
     }
 }
+
+
+
+//Instantiate simplehtml_form 
+$mform = new view_kma_results_form();
+ 
+//Form processing and displaying is done here
+if ($mform->is_cancelled()) {
+    //Handle form cancel operation, if cancel button is present on form
+} else if ($fromform = $mform->get_data()) {
+    //In this case you process validated data. $mform->get_data() returns data posted in form.
+} else {
+    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+    // or on the first display of the form.
+
+    //Set default data (if any)
+    // $mform->setdata($logla);
+    //displays the form
+    $mform->display();
+}
+
+
+
 
 // Finish the page.
 echo $OUTPUT->footer();
