@@ -84,10 +84,11 @@ if ($logla->intro) {
 
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
+/*
 // if user can edit logla then show all results
 if ($PAGE->user_allowed_editing()) {
 
-    /*
+    
     // SQL query to select tables logla_user_grades and user
     $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
     $sql .= ' mdl_user.email, mdl_logla_user_grades.pregrade, mdl_logla_user_grades.posgrade';
@@ -118,7 +119,7 @@ if ($PAGE->user_allowed_editing()) {
 
     // Additional information about this instance
     // echo $OUTPUT->heading(logla_basic_information($logla,$id));
-    */
+    
 } else {
     // if user can not edit logla then show only own result
     $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
@@ -151,6 +152,7 @@ if ($PAGE->user_allowed_editing()) {
         echo $OUTPUT->heading('Feedback nao preenchido ainda ou nota da atividade/quiz ainda não avaliada');
     }
 }
+*/
 
 
 

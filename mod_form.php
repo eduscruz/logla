@@ -86,6 +86,7 @@ class mod_logla_mod_form extends moodleform_mod {
             $feedbackname[ ] = $feedback[$i]->name;
             $fbcombo[$feedback[$i]->id] = $feedback[$i]->name;
         }
+        asort($fbcombo);
 
         // get assign record from database
         $countassign = $DB->count_records('assign', array('course'=>$COURSE->id)); 
@@ -95,6 +96,7 @@ class mod_logla_mod_form extends moodleform_mod {
             $assignname[ ] = $assign[$i]->name;
             $assingcombo[$assign[$i]->id] = $assign[$i]->name;
         }
+        asort($assingcombo);
 
         // get quiz record from database
         $countquiz = $DB->count_records('quiz', array('course'=>$COURSE->id)); 
@@ -104,6 +106,7 @@ class mod_logla_mod_form extends moodleform_mod {
             $quizname[ ] = $quiz[$i]->name;
             $quizcombo[$assign[$i]->id] = $quiz[$i]->name;
         }
+        asort($quizcombo);
 
         //create an object from logla table
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$coursemodule));
