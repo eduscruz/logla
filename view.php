@@ -81,80 +81,7 @@ if ($logla->intro) {
 
 
 // Replace the following lines with you own code.
-
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
-
-/*
-// if user can edit logla then show all results
-if ($PAGE->user_allowed_editing()) {
-
-    
-    // SQL query to select tables logla_user_grades and user
-    $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
-    $sql .= ' mdl_user.email, mdl_logla_user_grades.pregrade, mdl_logla_user_grades.posgrade';
-    $sql .= ' FROM mdl_logla_user_grades';
-    $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
-    $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
-
-    // print results of sql query
-    echo $OUTPUT->heading('Userid, Username, Firstname, Lastname, E-mail, PreKMA, PosKMA');
-    $rs = $DB->get_recordset_sql($sql, array($loglaresult->id));
-    foreach ($rs as $record) {
-        $texto = $record->userid;
-        $texto .= ", ";
-        $texto .= $record->username;
-        $texto .= ", ";
-        $texto .= $record->firstname;
-        $texto .= ", ";
-        $texto .= $record->lastname;
-        $texto .= ", ";
-        $texto .= $record->email;
-        $texto .= ", ";
-        $texto .= $record->pregrade;
-        $texto .= ", ";
-        $texto .= $record->posgrade; 
-        echo $OUTPUT->heading($texto);
-    }
-    $rs->close();
-
-    // Additional information about this instance
-    // echo $OUTPUT->heading(logla_basic_information($logla,$id));
-    
-} else {
-    // if user can not edit logla then show only own result
-    $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
-    $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
-
-    // if exist results from userid
-    if($user_grade_resultcount){
-        
-        $texto = "Sua avaliação pre-metacognitiva foi: ";
-        // if $user_grade_result->pregrade != null
-        if($user_grade_result->pregrade != null){
-            $texto .= $user_grade_result->pregrade;
-        }
-        else{
-            $texto .= 'nao avaliado';
-        }
-        
-        $texto .= "<br>Sua avaliação pos-metacognitiva foi:  ";
-        // if $user_grade_result->posgrade != null
-        if($user_grade_result->posgrade != null){
-            $texto .= $user_grade_result->posgrade;
-        }
-        else{
-            $texto .= 'nao avaliado';
-        }
-        echo $OUTPUT->heading($texto);
-    } 
-    // if not exist results from userid
-    else {
-        echo $OUTPUT->heading('Feedback nao preenchido ainda ou nota da atividade/quiz ainda não avaliada');
-    }
-}
-*/
-
-
 
 //Instantiate simplehtml_form 
 $mform = new view_kma_results_form();
@@ -164,6 +91,7 @@ if ($mform->is_cancelled()) {
     //Handle form cancel operation, if cancel button is present on form
 } else if ($fromform = $mform->get_data()) {
     //In this case you process validated data. $mform->get_data() returns data posted in form.
+    echo $OUTPUT->box('Submetido');
 } else {
     // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
     // or on the first display of the form.
@@ -173,9 +101,6 @@ if ($mform->is_cancelled()) {
     //displays the form
     $mform->display();
 }
-
-
-
 
 // Finish the page.
 echo $OUTPUT->footer();

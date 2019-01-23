@@ -52,30 +52,21 @@ class view_kma_results_form extends moodleform {
 
         //create an logla objetct of instance
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
-
-        // TESTE MFORM
-        // $mform->addElement('text', 'email', get_string('Quiz', 'logla')); // Add elements to your form
-        // $mform->setType('email', PARAM_NOTAGS);                   //Set type of element
-        // $mform->setDefault('email', 'Please enter email');        //Default value
-        // // $mform->addElement('static', 'description', 'teste1', $this->_customdata['intro']); 
-        // $mform->addElement('static', 'description', 'teste2', $id);
+       
+        // inicialize mform
+        $mform = $this->_form;  
         
-        $mform = $this->_form; // Don't forget the underscore! 
+        //add section header
+        $header1 = $loglaresult->name;
+        $header1 .= ' Result';
+        $mform->addElement('header', 'loglafieldset', $header1);
 
         // if user can edit logla then show all results
         if ($PAGE->user_allowed_editing()) {
-            // SQL query to select tables logla_user_grades and user
-            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
-            $sql .= ' mdl_user.email, mdl_logla_user_grades.pregrade, mdl_logla_user_grades.posgrade';
-            $sql .= ' FROM mdl_logla_user_grades';
-            $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
-            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
 
-            // print results of sql query
-            
-            
-            $mform->addElement('html', '<div class="table-responsive">');
-            $mform->addElement('html', '<table class="tableKMA">');
+            // print results in the table           
+            $mform->addElement('html', '<div>');
+            $mform->addElement('html', '<table>');
             $mform->addElement('html', '<tr>');
             $mform->addElement('html', '<th>Userid</th>');
             $mform->addElement('html', '<th>Username</th>');
@@ -85,7 +76,15 @@ class view_kma_results_form extends moodleform {
             $mform->addElement('html', '<th>PreKMA</th>');
             $mform->addElement('html', '<th>PosKMA</th>');
             $mform->addElement('html', '</tr>');
+
+            // SQL query to select tables logla_user_grades and user
+            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
+            $sql .= ' mdl_user.email, mdl_logla_user_grades.pregrade, mdl_logla_user_grades.posgrade';
+            $sql .= ' FROM mdl_logla_user_grades';
+            $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
+            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
             $rs = $DB->get_recordset_sql($sql, array($loglaresult->id));
+            // print results in the table      
             foreach ($rs as $record) {
                 $mform->addElement('html', '<tr>');
                 $mform->addElement('html', "<td>$record->userid</td>");
@@ -98,6 +97,89 @@ class view_kma_results_form extends moodleform {
                 $mform->addElement('html', '</tr>');
             }
             $rs->close();
+            
+            // SQL query to average pre-kma and pos-kma grade per user on this logla instance
+            $sql  = 'SELECT AVG(mdl_logla_user_grades.pregrade) AS pregrade, AVG(mdl_logla_user_grades.posgrade) AS posgrade FROM mdl_logla_user_grades';
+            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
+            $kmaavg = $DB->get_record_sql($sql, array($loglaresult->id));
+
+            // print results in the table 
+            $mform->addElement('html', '<tr>');
+            $mform->addElement('html', "<td>Average</td>");
+            $mform->addElement('html', "<td></td><td></td><td></td><td></td>");
+            $mform->addElement('html', "<td>$kmaavg->pregrade</td>");
+            $mform->addElement('html', "<td>$kmaavg->posgrade</td>");
+            $mform->addElement('html', '</table>');
+            $mform->addElement('html', '</div>');
+
+            //add section header
+            $header2 = 'General Metacognition Results';
+            $mform->addElement('header', 'loglafieldset', $header2);
+
+            // SQL query to average pre-kma and pos-kma grade per user on all logla instances
+            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
+            $sql .= '  mdl_user.email, AVG(mdl_logla_user_grades.pregrade) AS pregrade, AVG(mdl_logla_user_grades.posgrade) AS posgrade';
+            $sql .= ' FROM mdl_logla_user_grades';
+            $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
+            $sql .= ' GROUP BY mdl_logla_user_grades.userid';
+   
+            // Auxiliary variables
+            $prekmaavg = 0;
+            $poskmaavg = 0;
+            $iprekmaavg = 0;
+            $iposkmaavg = 0;
+
+            // print results in the table 
+            $mform->addElement('html', '<div>');
+            $mform->addElement('html', '<table>');
+            $mform->addElement('html', '<tr>');
+            $mform->addElement('html', '<th>Userid</th>');
+            $mform->addElement('html', '<th>Username</th>');
+            $mform->addElement('html', '<th>Firstname</th>');
+            $mform->addElement('html', '<th>Lastname</th>');
+            $mform->addElement('html', '<th>E-mail</th>');
+            $mform->addElement('html', '<th>PreKMA</th>');
+            $mform->addElement('html', '<th>PosKMA</th>');
+            $mform->addElement('html', '</tr>');
+            $rs = $DB->get_recordset_sql($sql);
+            foreach ($rs as $record) {
+                $mform->addElement('html', '<tr>');
+                $mform->addElement('html', "<td>$record->userid</td>");
+                $mform->addElement('html', "<td>$record->username</td>");
+                $mform->addElement('html', "<td>$record->firstname</td>");
+                $mform->addElement('html', "<td>$record->lastname</td>");
+                $mform->addElement('html', "<td>$record->email</td>");
+                $mform->addElement('html', "<td>$record->pregrade</td>");
+                $mform->addElement('html', "<td>$record->posgrade</td>");
+                $mform->addElement('html', '</tr>');
+
+                // Checks if result is not null
+                if ($record->pregrade != null){
+                    $prekmaavg += $record->pregrade;
+                    ++$iprekmaavg;
+                }
+                if ($record->posgrade != null){
+                    $poskmaavg += $record->posgrade;  
+                    ++$iposkmaavg;        
+                }
+
+            }
+            $rs->close();
+
+            // checks if the result is not null to average
+            if($prekmaavg != 0){
+                $prekmaavg = $prekmaavg / $iprekmaavg;
+            }
+            if($poskmaavg != 0){
+                $poskmaavg = $poskmaavg / $iposkmaavg;
+            }
+
+            // print results in the table 
+            $mform->addElement('html', '<tr>');
+            $mform->addElement('html', "<td>Average</td>");
+            $mform->addElement('html', "<td></td><td></td><td></td><td></td>");
+            $mform->addElement('html', "<td>$prekmaavg</td>");
+            $mform->addElement('html', "<td>$poskmaavg</td>");
             $mform->addElement('html', '</table>');
             $mform->addElement('html', '</div>');
 
@@ -110,18 +192,18 @@ class view_kma_results_form extends moodleform {
             // if exist results from userid
             if($user_grade_resultcount){
                 
-                $texto = "Sua avaliação pre-metacognitiva foi: <br>";
+                $texto = "Sua avaliação pre-metacognitiva foi: ";
                 // if $user_grade_result->pregrade != null
                 if($user_grade_result->pregrade != null){
                     $texto .= $user_grade_result->pregrade;
-                    $texto .= "<br>";
-                    // $mform->addElement('static', 'description', 'teste1', $texto);
-                    echo $OUTPUT->box($texto);
+                    // $texto .= "<br>";
+                    $mform->addElement('static', 'description', 'teste1', $texto);
+                    // echo $OUTPUT->box($texto);
                 }
                 else{
                     $texto .= 'nao avaliado <br>';
-                    // $mform->addElement('static', 'description', 'teste2', $texto);
-                    echo $OUTPUT->box($texto);
+                    $mform->addElement('static', 'description', 'teste2', $texto);
+                    // echo $OUTPUT->box($texto);
                 }
                 
                 $texto = "Sua avaliação pos-metacognitiva foi:  ";
@@ -129,45 +211,65 @@ class view_kma_results_form extends moodleform {
                 if($user_grade_result->posgrade != null){
                     $texto .= $user_grade_result->posgrade;
                     $texto .= "<br>";
-                    // $mform->addElement('static', 'description', 'teste3', $texto);
-                    echo $OUTPUT->box($texto);
+                    $mform->addElement('static', 'description', 'teste3', $texto);
+                    // echo $OUTPUT->box($texto);
                 }
                 else{
                     $texto .= 'nao avaliado <br>';
-                    // $mform->addElement('static', 'description', 'teste4', $texto);
-                    echo $OUTPUT->box($texto);
+                    $mform->addElement('static', 'description', 'teste4', $texto);
+                    // echo $OUTPUT->box($texto);
                 }
             } 
             // if not exist results from userid
             else {
                 $texto = 'Feedback nao preenchido ainda ou nota da atividade/quiz ainda não avaliada';
-                // $mform->addElement('static', 'description', 'teste5', $texto);
-                echo $OUTPUT->box($texto);
+                $mform->addElement('static', 'description', 'teste5', $texto);
+                // echo $OUTPUT->box($texto);
             }
+
+            //add section header
+            $header2 = 'General Metacognition Results';
+            $mform->addElement('header', 'loglafieldset', $header2);
+
+            // SQL query to select tables logla_user_grades and user
+            $sql  = 'SELECT AVG(mdl_logla_user_grades.pregrade) AS pregrade, AVG(mdl_logla_user_grades.posgrade) AS posgrade';
+            $sql .= ' FROM mdl_logla_user_grades';
+            $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
+            $sql .= ' WHERE mdl_logla_user_grades.userid = ?';
+            $sql .= ' GROUP BY mdl_logla_user_grades.userid';
+
+            // Auxiliary variables
+            // $prekmaavg = 0;
+            // $poskmaavg = 0;
+            // $iprekmaavg = 0;
+            // $iposkmaavg = 0;
+
+            // print results of sql query
+            // $rs = $DB->get_recordset_sql($sql, array($loglaresult->id));
+            $kmageneral = $DB->get_record_sql($sql, array($USER->id));
+
+            // if(($kmageneral->pregrade != 0){
+            //     $prekmaavg = $prekmaavg / $interator;
+            // }
+            // if($kmageneral->posgrade != 0){
+            //     $poskmaavg = $poskmaavg / $interator;
+            // }
+
+            $texto = "Sua avaliação pre-metacognitiva geral foi:  ";
+            $mform->addElement('static', 'description', $texto, $kmageneral->pregrade);
+            $texto = "Sua avaliação pos-metacognitiva geral foi:  ";
+            $mform->addElement('static', 'description', $texto, $kmageneral->posgrade);
+
         }
 
     }
 
-    /*
-    public function __construct($logla){
-        global $CFG;
- 
-        $mform = $this->_form; // Don't forget the underscore! 
-
-        if ($this->logla->intro) {
-            // echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');      
-        }
-    }
-    */
 
     //Custom validation should be added here
     function validation($data, $files) {
         return array();
     }
 
-    // function setdata(stdClass $logla){
-    //     $this->logla = $logla;
-    // }
 }
 
 
