@@ -21,7 +21,7 @@
  * if you like, and it can span multiple lines.
  *
  * @package    mod_logla
- * @copyright  2018 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
+ * @copyright  2019 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -33,7 +33,6 @@ require_once("$CFG->libdir/formslib.php");
 
 
 // include css
-// $style = $CFG->dirroot.'/mod/logla/style.css';
 $style = '/mod/logla/style.css';
 $PAGE->requires->css($style);
 
@@ -99,16 +98,20 @@ class view_kma_results_form extends moodleform {
             $rs->close();
             
             // SQL query to average pre-kma and pos-kma grade per user on this logla instance
-            $sql  = 'SELECT AVG(mdl_logla_user_grades.pregrade) AS pregrade, AVG(mdl_logla_user_grades.posgrade) AS posgrade FROM mdl_logla_user_grades';
+            $sql  = 'SELECT AVG(mdl_logla_user_grades.pregrade) AS pregrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.posgrade) AS posgrade FROM mdl_logla_user_grades';
             $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
             $kmaavg = $DB->get_record_sql($sql, array($loglaresult->id));
 
             // print results in the table 
+            $mform->addElement('html', '<tfoot>');
             $mform->addElement('html', '<tr>');
             $mform->addElement('html', "<td>Average</td>");
             $mform->addElement('html', "<td></td><td></td><td></td><td></td>");
             $mform->addElement('html', "<td>$kmaavg->pregrade</td>");
             $mform->addElement('html', "<td>$kmaavg->posgrade</td>");
+            $mform->addElement('html', '</tr>');
+            $mform->addElement('html', '</tfoot>');
             $mform->addElement('html', '</table>');
             $mform->addElement('html', '</div>');
 
@@ -117,8 +120,9 @@ class view_kma_results_form extends moodleform {
             $mform->addElement('header', 'loglafieldset', $header2);
 
             // SQL query to average pre-kma and pos-kma grade per user on all logla instances
-            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
-            $sql .= '  mdl_user.email, AVG(mdl_logla_user_grades.pregrade) AS pregrade, AVG(mdl_logla_user_grades.posgrade) AS posgrade';
+            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname,';
+            $sql .= ' mdl_user.lastname,  mdl_user.email, AVG(mdl_logla_user_grades.pregrade) AS pregrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.posgrade) AS posgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
             $sql .= ' GROUP BY mdl_logla_user_grades.userid';
@@ -162,8 +166,8 @@ class view_kma_results_form extends moodleform {
                     $poskmaavg += $record->posgrade;  
                     ++$iposkmaavg;        
                 }
-
             }
+            
             $rs->close();
 
             // checks if the result is not null to average
@@ -175,17 +179,20 @@ class view_kma_results_form extends moodleform {
             }
 
             // print results in the table 
+            $mform->addElement('html', '<tfoot>');
             $mform->addElement('html', '<tr>');
             $mform->addElement('html', "<td>Average</td>");
             $mform->addElement('html', "<td></td><td></td><td></td><td></td>");
             $mform->addElement('html', "<td>$prekmaavg</td>");
             $mform->addElement('html', "<td>$poskmaavg</td>");
+            $mform->addElement('html', '</tr>');
+            $mform->addElement('html', '</tfoot>');
             $mform->addElement('html', '</table>');
             $mform->addElement('html', '</div>');
-
  
-        } else {
-            // if user can not edit logla then show only own result
+        } 
+        // if user can not edit logla then show only own result
+        else {
             $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
             $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
         
@@ -238,32 +245,22 @@ class view_kma_results_form extends moodleform {
             $sql .= ' WHERE mdl_logla_user_grades.userid = ?';
             $sql .= ' GROUP BY mdl_logla_user_grades.userid';
 
-            // Auxiliary variables
-            // $prekmaavg = 0;
-            // $poskmaavg = 0;
-            // $iprekmaavg = 0;
-            // $iposkmaavg = 0;
-
             // print results of sql query
-            // $rs = $DB->get_recordset_sql($sql, array($loglaresult->id));
             $kmageneral = $DB->get_record_sql($sql, array($USER->id));
 
-            // if(($kmageneral->pregrade != 0){
-            //     $prekmaavg = $prekmaavg / $interator;
-            // }
-            // if($kmageneral->posgrade != 0){
-            //     $poskmaavg = $poskmaavg / $interator;
-            // }
-
+            // print average results from user
             $texto = "Sua avaliação pre-metacognitiva geral foi:  ";
             $mform->addElement('static', 'description', $texto, $kmageneral->pregrade);
             $texto = "Sua avaliação pos-metacognitiva geral foi:  ";
             $mform->addElement('static', 'description', $texto, $kmageneral->posgrade);
 
+            // summit button
+            $this->add_action_buttons();
+
         }
 
+        return $loglaresult->userid;
     }
-
 
     //Custom validation should be added here
     function validation($data, $files) {
@@ -271,5 +268,3 @@ class view_kma_results_form extends moodleform {
     }
 
 }
-
-

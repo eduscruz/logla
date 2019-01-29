@@ -21,7 +21,7 @@
  * if you like, and it can span multiple lines.
  *
  * @package    mod_logla
- * @copyright  2018 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
+ * @copyright  2019 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -89,9 +89,18 @@ $mform = new view_kma_results_form();
 //Form processing and displaying is done here
 if ($mform->is_cancelled()) {
     //Handle form cancel operation, if cancel button is present on form
+    // $returnurl = '/course/view.php';
+    // redirect($returnurl)
+    // $PAGE->set_url('/mod/logla/view.php', array('id' => $cm->id))
+    // echo $OUTPUT->box('cancel');
+
 } else if ($fromform = $mform->get_data()) {
     //In this case you process validated data. $mform->get_data() returns data posted in form.
+    echo $OUTPUT->box('pegou dados');
+} else if ($mform->is_submitted()) {
     echo $OUTPUT->box('Submetido');
+    // In the simplest case just redirect to the view page.
+    redirect('view.php?id='.$id);
 } else {
     // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
     // or on the first display of the form.
