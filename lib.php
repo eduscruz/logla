@@ -87,8 +87,8 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
     $logla->activityquiz = $logla->selactivityquiz;
     $logla->idactivity = $logla->selectActivity;
     $logla->idquiz =$logla->selectQuiz;
-    $logla->prefeedbackavg = 0;
-    $logla->posfeedbackavg = 0;
+    $logla->prefbkmaavg = 0;
+    $logla->posfbkmaavg = 0;
 
     $logla->id = $DB->insert_record('logla', $logla);
     logla_grade_item_update($logla);
@@ -180,19 +180,19 @@ function logla_user_grades_add(stdClass $logla, $tablename, $fieldtable, $fieldl
         // if logla as set up with prefeback
         if($logla->prefeedback){  
             $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade);          
-            $logla_user_grades->pregrade = $kma;
+            $logla_user_grades->prekmagrade = $kma;
         }
         else{
-            $logla_user_grades->pregrade = null;
+            $logla_user_grades->prekmagrade = null;
         }
 
         // if logla as set up with posfeback
         if($logla->posfeedback){
             $kma = calculate_kma($logla->idposfeedback, $record->userid, $record->grade);          
-            $logla_user_grades->posgrade = $kma;
+            $logla_user_grades->poskmagrade = $kma;
         }
         else{
-            $logla_user_grades->posgrade = null;
+            $logla_user_grades->poskmagrade = null;
         }
         
         $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);

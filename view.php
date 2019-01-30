@@ -140,9 +140,9 @@ function logla_basic_information(stdClass $logla, $id){
     $information .='<br>ID Quiz: ';
     $information .=$loglaresult->idquiz;
     $information .='<br>Average Pre-Feedback: ';
-    $information .=$loglaresult->prefeedbackavg;
+    $information .=$loglaresult->prefbkmaavg;
     $information .='<br>Average Pos-Feeedback: ';
-    $information .=$loglaresult->posfeedbackavg;
+    $information .=$loglaresult->posfbkmaavg;
 
     return $information;
 }
