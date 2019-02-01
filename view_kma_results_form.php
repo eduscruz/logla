@@ -74,11 +74,14 @@ class view_kma_results_form extends moodleform {
             $mform->addElement('html', '<th>E-mail</th>');
             $mform->addElement('html', '<th>PreKMA</th>');
             $mform->addElement('html', '<th>PosKMA</th>');
+            $mform->addElement('html', '<th>PreKMB</th>');
+            $mform->addElement('html', '<th>PosKMB</th>');
             $mform->addElement('html', '</tr>');
 
             // SQL query to select tables logla_user_grades and user
             $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
-            $sql .= ' mdl_user.email, mdl_logla_user_grades.prekmagrade, mdl_logla_user_grades.poskmagrade';
+            $sql .= ' mdl_user.email, mdl_logla_user_grades.prekmagrade, mdl_logla_user_grades.poskmagrade,';
+            $sql .= ' mdl_logla_user_grades.prekmbgrade, mdl_logla_user_grades.poskmbgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
             $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
@@ -93,13 +96,18 @@ class view_kma_results_form extends moodleform {
                 $mform->addElement('html', "<td>$record->email</td>");
                 $mform->addElement('html', "<td>$record->prekmagrade</td>");
                 $mform->addElement('html', "<td>$record->poskmagrade</td>");
+                $mform->addElement('html', "<td>$record->prekmbgrade</td>");
+                $mform->addElement('html', "<td>$record->poskmbgrade</td>");
                 $mform->addElement('html', '</tr>');
             }
             $rs->close();
             
             // SQL query to average pre-kma and pos-kma grade per user on this logla instance
             $sql  = 'SELECT AVG(mdl_logla_user_grades.prekmagrade) AS prekmagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade FROM mdl_logla_user_grades';
+            $sql .= ' AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.prekmbgrade) AS prekmbgrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.poskmbgrade) AS poskmbgrade';
+            $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
             $kmaavg = $DB->get_record_sql($sql, array($loglaresult->id));
 
@@ -110,6 +118,8 @@ class view_kma_results_form extends moodleform {
             $mform->addElement('html', "<td></td><td></td><td></td><td></td>");
             $mform->addElement('html', "<td>$kmaavg->prekmagrade</td>");
             $mform->addElement('html', "<td>$kmaavg->poskmagrade</td>");
+            $mform->addElement('html', "<td>$kmaavg->prekmbgrade</td>");
+            $mform->addElement('html', "<td>$kmaavg->poskmbgrade</td>");
             $mform->addElement('html', '</tr>');
             $mform->addElement('html', '</tfoot>');
             $mform->addElement('html', '</table>');
@@ -122,7 +132,9 @@ class view_kma_results_form extends moodleform {
             // SQL query to average pre-kma and pos-kma grade per user on all logla instances
             $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname,';
             $sql .= ' mdl_user.lastname,  mdl_user.email, AVG(mdl_logla_user_grades.prekmagrade) AS prekmagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade';
+            $sql .= ' AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.prekmbgrade) AS prekmbgrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.poskmbgrade) AS poskmbgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
             $sql .= ' GROUP BY mdl_logla_user_grades.userid';
@@ -130,8 +142,12 @@ class view_kma_results_form extends moodleform {
             // Auxiliary variables
             $prekmaavg = 0;
             $poskmaavg = 0;
+            $prekmbavg = 0;
+            $poskmbavg = 0;
             $iprekmaavg = 0;
             $iposkmaavg = 0;
+            $iprekmbavg = 0;
+            $iposkmbavg = 0;
 
             // print results in the table 
             $mform->addElement('html', '<div>');
@@ -144,6 +160,8 @@ class view_kma_results_form extends moodleform {
             $mform->addElement('html', '<th>E-mail</th>');
             $mform->addElement('html', '<th>PreKMA</th>');
             $mform->addElement('html', '<th>PosKMA</th>');
+            $mform->addElement('html', '<th>PreKMB</th>');
+            $mform->addElement('html', '<th>PosKMB</th>');
             $mform->addElement('html', '</tr>');
             $rs = $DB->get_recordset_sql($sql);
             foreach ($rs as $record) {
@@ -155,6 +173,8 @@ class view_kma_results_form extends moodleform {
                 $mform->addElement('html', "<td>$record->email</td>");
                 $mform->addElement('html', "<td>$record->prekmagrade</td>");
                 $mform->addElement('html', "<td>$record->poskmagrade</td>");
+                $mform->addElement('html', "<td>$record->prekmbgrade</td>");
+                $mform->addElement('html', "<td>$record->poskmbgrade</td>");
                 $mform->addElement('html', '</tr>');
 
                 // Checks if result is not null
@@ -165,6 +185,14 @@ class view_kma_results_form extends moodleform {
                 if ($record->poskmagrade != null){
                     $poskmaavg += $record->poskmagrade;  
                     ++$iposkmaavg;        
+                }
+                if ($record->prekmbgrade != null){
+                    $prekmbavg += $record->prekmbgrade;
+                    ++$iprekmbavg;
+                }
+                if ($record->poskmbgrade != null){
+                    $poskmbavg += $record->poskmbgrade;  
+                    ++$iposkmbavg;        
                 }
             }
             
@@ -177,6 +205,12 @@ class view_kma_results_form extends moodleform {
             if($poskmaavg != 0){
                 $poskmaavg = $poskmaavg / $iposkmaavg;
             }
+            if($prekmbavg != 0){
+                $prekmbavg = $prekmbavg / $iprekmbavg;
+            }
+            if($poskmbavg != 0){
+                $poskmbavg = $poskmbavg / $iposkmbavg;
+            }
 
             // print results in the table 
             $mform->addElement('html', '<tfoot>');
@@ -185,6 +219,8 @@ class view_kma_results_form extends moodleform {
             $mform->addElement('html', "<td></td><td></td><td></td><td></td>");
             $mform->addElement('html', "<td>$prekmaavg</td>");
             $mform->addElement('html', "<td>$poskmaavg</td>");
+            $mform->addElement('html', "<td>$prekmbavg</td>");
+            $mform->addElement('html', "<td>$poskmbavg</td>");
             $mform->addElement('html', '</tr>');
             $mform->addElement('html', '</tfoot>');
             $mform->addElement('html', '</table>');
@@ -199,6 +235,8 @@ class view_kma_results_form extends moodleform {
             // if exist results from userid
             if($user_grade_resultcount){
                 
+
+                /*
                 $texto = "Sua avaliação pre-metacognitiva foi: ";
                 // if $user_grade_result->prekmagrade != null
                 if($user_grade_result->prekmagrade != null){
@@ -227,6 +265,26 @@ class view_kma_results_form extends moodleform {
                     // echo $OUTPUT->box($texto);
                 }
             } 
+            */
+
+                $mform->addElement('html', '<div>');
+                $mform->addElement('html', '<table>');
+                $mform->addElement('html', '<tr>');
+                $mform->addElement('html', '<th>Pre KMA</th>');
+                $mform->addElement('html', '<th>Pos KMA</th>');
+                $mform->addElement('html', '<th>Pre KMA</th>');
+                $mform->addElement('html', '<th>Pos KMA</th>');
+                $mform->addElement('html', '</tr>');
+                $mform->addElement('html', '<tr>');
+                $mform->addElement('html', "<td>$user_grade_result->prekmagrade</td>");
+                $mform->addElement('html', "<td>$user_grade_result->poskmagrade</td>");
+                $mform->addElement('html', "<td>$user_grade_result->prekmbgrade</td>");
+                $mform->addElement('html', "<td>$user_grade_result->poskmbgrade</td>");
+                $mform->addElement('html', '</tr>');
+                $mform->addElement('html', '</div>');
+                $mform->addElement('html', '</table>');
+
+            }
             // if not exist results from userid
             else {
                 $texto = 'Feedback nao preenchido ainda ou nota da atividade/quiz ainda não avaliada';
@@ -239,7 +297,8 @@ class view_kma_results_form extends moodleform {
             $mform->addElement('header', 'loglafieldset', $header2);
 
             // SQL query to select tables logla_user_grades and user
-            $sql  = 'SELECT AVG(mdl_logla_user_grades.prekmagrade) AS prekmagrade, AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade';
+            $sql  = 'SELECT AVG(mdl_logla_user_grades.prekmagrade) AS prekmagrade, AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.prekmbgrade) AS prekmbgrade, AVG(mdl_logla_user_grades.poskmbgrade) AS poskmbgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
             $sql .= ' WHERE mdl_logla_user_grades.userid = ?';
@@ -249,10 +308,28 @@ class view_kma_results_form extends moodleform {
             $kmageneral = $DB->get_record_sql($sql, array($USER->id));
 
             // print average results from user
-            $texto = "Sua avaliação pre-metacognitiva geral foi:  ";
-            $mform->addElement('static', 'description', $texto, $kmageneral->prekmagrade);
-            $texto = "Sua avaliação pos-metacognitiva geral foi:  ";
-            $mform->addElement('static', 'description', $texto, $kmageneral->poskmagrade);
+
+            // $texto = "Sua avaliação pre-metacognitiva geral foi:  ";
+            // $mform->addElement('static', 'description', $texto, $kmageneral->prekmagrade);
+            // $texto = "Sua avaliação pos-metacognitiva geral foi:  ";
+            // $mform->addElement('static', 'description', $texto, $kmageneral->poskmagrade);
+
+            $mform->addElement('html', '<div>');
+            $mform->addElement('html', '<table>');
+            $mform->addElement('html', '<tr>');
+            $mform->addElement('html', '<th>Pre KMA</th>');
+            $mform->addElement('html', '<th>Pos KMA</th>');
+            $mform->addElement('html', '<th>Pre KMA</th>');
+            $mform->addElement('html', '<th>Pos KMA</th>');
+            $mform->addElement('html', '</tr>');
+            $mform->addElement('html', '<tr>');
+            $mform->addElement('html', "<td>$kmageneral->prekmagrade</td>");
+            $mform->addElement('html', "<td>$kmageneral->poskmagrade</td>");
+            $mform->addElement('html', "<td>$kmageneral->prekmbgrade</td>");
+            $mform->addElement('html', "<td>$kmageneral->poskmbgrade</td>");
+            $mform->addElement('html', '</tr>');
+            $mform->addElement('html', '</div>');
+            $mform->addElement('html', '</table>');
 
             // summit button
             $this->add_action_buttons();
@@ -263,10 +340,9 @@ class view_kma_results_form extends moodleform {
             // $buttonarray[] = $mform->createElement('reset', 'resetbutton', 'revert');
             // $buttonarray[] = $mform->createElement('cancel');
             // $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
-
         }
 
-        return $USER->id;
+        return $loglaresult->id;
     }
 
     //Custom validation should be added here

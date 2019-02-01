@@ -181,18 +181,24 @@ function logla_user_grades_add(stdClass $logla, $tablename, $fieldtable, $fieldl
         if($logla->prefeedback){  
             $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade);          
             $logla_user_grades->prekmagrade = $kma;
+            $kmb = calculate_kmb($logla->idprefeedback, $record->userid, $record->grade);          
+            $logla_user_grades->prekmbgrade = $kmb;
         }
         else{
             $logla_user_grades->prekmagrade = null;
+            $logla_user_grades->prekmbgrade = null;
         }
 
         // if logla as set up with posfeback
         if($logla->posfeedback){
             $kma = calculate_kma($logla->idposfeedback, $record->userid, $record->grade);          
             $logla_user_grades->poskmagrade = $kma;
+            $kmb = calculate_kmb($logla->idposfeedback, $record->userid, $record->grade);          
+            $logla_user_grades->poskmbgrade = $kmb; 
         }
         else{
             $logla_user_grades->poskmagrade = null;
+            $logla_user_grades->poskmbgrade = null;
         }
         
         $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
@@ -229,17 +235,60 @@ function calculate_kma($idfeedback, $iduser, $grade){
     }
 
     // variable aux to calculate kma
-    $auxabs = ($resultfeedback->anonymous_response) - $graderate;
+    $auxabs = abs(($resultfeedback->anonymous_response) - $graderate);
 
     // verify if theauxabs is zero then chage to one
     if($auxabs == 0){
-        $auxabs =1;
+        $auxabs = 1;
     }
 
     // calculate the kma
     $kma = ($auxabs /2.0) * (-1.00);
     
     return $kma;
+}
+
+
+/**
+ * This function will calculte all instances of this module
+ *  *
+ * @param int $courseid Course ID
+ * @return bool
+ */
+function calculate_kmb($idfeedback, $iduser, $grade){
+
+    global $DB;
+
+    $resultfeedback = $DB->get_record('feedback_completed', array('feedback'=>$idfeedback, 'userid'=>$iduser));
+    
+    $graderate = 0;
+
+    // estimate grade by rate 
+    if($grade >= 75){
+        $graderate = 1;
+    }
+    // verify if the response is regular
+    else if(($grade < 75) && ($grade >= 50)){
+        $graderate = 2;
+    }
+    // verify if the response is bad
+    else{
+        $graderate = 3;
+    }
+
+    // variable aux to calculate kma
+    $auxabs = ($resultfeedback->anonymous_response) - $graderate;
+
+    // verify if theauxabs is zero then chage to one
+    if($auxabs == 0){
+        $kmb = 0;
+    }
+    else{
+        // calculate the kmb
+        $kmb = ($auxabs /2.0);
+    }
+    
+    return $kmb;
 }
 
 
