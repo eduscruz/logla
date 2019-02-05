@@ -156,7 +156,7 @@ function logla_user_grades(stdClass $logla, $update = null) {
         logla_user_grades_add($logla, 'quiz_grades', 'quiz', 'idquiz');    
     }
 
-    return $logla_user_grades->id;
+    // return $logla_user_grades->id;
 }
 
 

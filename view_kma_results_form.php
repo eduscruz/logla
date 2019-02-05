@@ -25,8 +25,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Replace logla with the name of your module and remove this line.
 
+require_once(dirname(__FILE__).'/lib.php');
 
 //moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
@@ -51,7 +51,10 @@ class view_kma_results_form extends moodleform {
 
         //create an logla objetct of instance
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
-       
+
+        // update results of all instances before show result
+        logla_user_grades($loglaresult, 1);
+        
         // inicialize mform
         $mform = $this->_form;  
         
@@ -231,6 +234,8 @@ class view_kma_results_form extends moodleform {
         else {
             $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
             $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
+
+
         
             // if exist results from userid
             if($user_grade_resultcount){
