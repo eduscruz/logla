@@ -31,10 +31,10 @@ global $COURSE, $USER;
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/view_kma_results_form.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should be named as the first character of the module.
+
 
 if ($id) {
     $cm         = get_coursemodule_from_id('logla', $id, 0, false, MUST_EXIST);
@@ -46,8 +46,7 @@ if ($id) {
     $cm         = get_coursemodule_from_instance('logla', $logla->id, $course->id, false, MUST_EXIST);
 } else {
     error('You must specify a course_module ID or an instance ID');
-    // $returnurl = '/course/view.php?id=2';
-    // redirect($returnurl);
+    // echo $OUTPUT->box('erro');
 }
 
 
@@ -57,6 +56,7 @@ $event = \mod_logla\event\course_module_viewed::create(array(
     'objectid' => $PAGE->cm->instance,
     'context' => $PAGE->context,
 ));
+
 $event->add_record_snapshot('course', $PAGE->course);
 $event->add_record_snapshot($PAGE->cm->modname, $logla);
 $event->trigger();
@@ -66,29 +66,48 @@ $PAGE->set_url('/mod/logla/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($logla->name));
 $PAGE->set_heading(format_string($course->fullname));
 
+
 /*
  * Other things you may want to set - remove if not needed.
  * $PAGE->set_cacheable(false);
  * $PAGE->set_focuscontrol('some-html-id');
  * $PAGE->add_body_class('logla-'.$somevar);
  */
-$PAGE->set_cacheable(false);
 
 // Output starts here.
 echo $OUTPUT->header();
 
-// Conditions to show the intro can change to look for own settings or whatever.
-if ($logla->intro) {
-    echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');
+//Instantiate simplehtml_form 
+$mform = $this->_form;
+
+$data = $mform->get_submitted_data();
+
+//Form processing and displaying is done here
+if ($mform->is_cancelled()) {
+    //Handle form cancel operation, if cancel button is present on form
+    // $returnurl = '/course/view.php?id='.$id;
+    // redirect($returnurl);
+    // $PAGE->set_url('/mod/logla/view.php', array('id' => $cm->id))
+    echo $OUTPUT->box('cancel');
+} 
+else if ($fromform = $mform->get_data()) {
+    //In this case you process validated data. $mform->get_data() returns data posted in form.
+    echo $OUTPUT->box('pegou dados');
+} else if ($mform->is_submitted()) {
+    // echo $OUTPUT->box('Submetido');
+    // In the simplest case just redirect to the view page.
+    echo $OUTPUT->box('submitido');
+} else {
+    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+    // or on the first display of the form.
+    echo $OUTPUT->box('nada');
 }
 
 
-// Get data from logla where id equals id instance
-$loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
-//Instantiate simplehtml_form 
-$mform = new view_kma_results_form('/mod/logla/process.php');
-$mform->display();
+// $mostra  = logla_basic_information($loglaresult, $id); 
+echo $OUTPUT->heading('o curso e :'.$course);
+
 
 // Finish the page.
 echo $OUTPUT->footer();

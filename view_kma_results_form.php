@@ -27,6 +27,7 @@
 
 
 require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 
 //moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
@@ -240,38 +241,6 @@ class view_kma_results_form extends moodleform {
             // if exist results from userid
             if($user_grade_resultcount){
                 
-
-                /*
-                $texto = "Sua avaliação pre-metacognitiva foi: ";
-                // if $user_grade_result->prekmagrade != null
-                if($user_grade_result->prekmagrade != null){
-                    $texto .= $user_grade_result->prekmagrade;
-                    // $texto .= "<br>";
-                    $mform->addElement('static', 'description', 'teste1', $texto);
-                    // echo $OUTPUT->box($texto);
-                }
-                else{
-                    $texto .= 'nao avaliado <br>';
-                    $mform->addElement('static', 'description', 'teste2', $texto);
-                    // echo $OUTPUT->box($texto);
-                }
-                
-                $texto = "Sua avaliação pos-metacognitiva foi:  ";
-                // if $user_grade_result->poskmagrade != null
-                if($user_grade_result->poskmagrade != null){
-                    $texto .= $user_grade_result->poskmagrade;
-                    $texto .= "<br>";
-                    $mform->addElement('static', 'description', 'teste3', $texto);
-                    // echo $OUTPUT->box($texto);
-                }
-                else{
-                    $texto .= 'nao avaliado <br>';
-                    $mform->addElement('static', 'description', 'teste4', $texto);
-                    // echo $OUTPUT->box($texto);
-                }
-            } 
-            */
-
                 $mform->addElement('html', '<div>');
                 $mform->addElement('html', '<table>');
                 $mform->addElement('html', '<tr>');
@@ -337,22 +306,25 @@ class view_kma_results_form extends moodleform {
             $mform->addElement('html', '</table>');
 
             // summit button
-            $this->add_action_buttons();
-
-            // //normally you use add_action_buttons instead of this code
-            // $buttonarray=array();
-            // $buttonarray[] = $mform->createElement('submit', 'submitbutton', 'savechanges');
-            // $buttonarray[] = $mform->createElement('reset', 'resetbutton', 'revert');
-            // $buttonarray[] = $mform->createElement('cancel');
-            // $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+            $this->add_action_buttons();    
         }
-
-        return $loglaresult->id;
+       
     }
 
     //Custom validation should be added here
     function validation($data, $files) {
         return array();
     }
+
+    
+    function is_cancelled(){
+        // $id = optional_param('id', 0, PARAM_INT); 
+        $returnurl = '/course/view.php?id=2';
+        redirect($returnurl);
+        // GLOBAL  $OUTPUT;
+
+        // echo $OUTPUT->heading('CANCELOU VIEW KMA');
+    }
+    
 
 }
