@@ -46,8 +46,6 @@ if ($id) {
     $cm         = get_coursemodule_from_instance('logla', $logla->id, $course->id, false, MUST_EXIST);
 } else {
     error('You must specify a course_module ID or an instance ID');
-    // $returnurl = '/course/view.php?id=2';
-    // redirect($returnurl);
 }
 
 
@@ -86,9 +84,32 @@ if ($logla->intro) {
 // Get data from logla where id equals id instance
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
-//Instantiate simplehtml_form 
-$mform = new view_kma_results_form('/mod/logla/process.php');
-$mform->display();
+// $mform = new view_kma_results_form('/mod/logla/process.php');
+$mform = new view_kma_results_form();
+
+//Form processing and displaying is done here
+if ($mform->is_cancelled()) {
+    //Handle form cancel operation, if cancel button is present on form
+    // $returnurl = '/course/view.php?id='.$id;
+    // redirect($returnurl);
+    echo $OUTPUT->box('cancel');
+} 
+else if ($fromform = $mform->get_data()) {
+    //In this case you process validated data. $mform->get_data() returns data posted in form.
+    echo $OUTPUT->box('pegou dados');
+} else if ($mform->is_submitted()) {
+    // In the simplest case just redirect to the view page.
+    echo $OUTPUT->box('submitido');
+} else {
+    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+    // or on the first display of the form.
+    $mform->display();
+}
+
+
+
+
+
 
 // Finish the page.
 echo $OUTPUT->footer();

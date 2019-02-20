@@ -25,13 +25,36 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Replace logla with the name of your module and remove this line.
-
-global $COURSE, $USER;
-
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once($CFG->dirroot.'/course/moodleform_mod.php');
+require_once(dirname(__FILE__).'/view_kma_results_form.php');
 
+global $COURSE, $USER, $PAGE, $CFG, $DB, $OUTPUT;
+
+// get course module id
+// $coursemodule = $PAGE->cm->id; 
+// $coursemodule = $COURSE->id;
+// $iduser = $USER->id;
+// $cm = $PAGE->cm->id;
+$id = optional_param('id', 0, PARAM_INT);
+echo $OUTPUT->box($id);
+$n  = optional_param('n', 0, PARAM_INT);
+echo $OUTPUT->box($n);
+
+// $course     = $DB->get_record('course', array('id' => $coursemodule), '*', MUST_EXIST);
+// $logla      = $DB->get_record('logla', array('id' => $cm), '*', MUST_EXIST);
+
+// echo $OUTPUT->box($COURSE->id);
+// echo $OUTPUT->box($USER->id);
+// echo $OUTPUT->box($PAGE->cm->id);
+// echo $OUTPUT->box(print_r($PAGE->cm->id));
+
+// $course     = $DB->get_record('course', array('id' => $coursemodule), '*', MUST_EXIST);
+// $logla      = $DB->get_record('logla', array('id' => $cm), '*', MUST_EXIST);
+
+
+/*
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should be named as the first character of the module.
 
@@ -65,7 +88,7 @@ $event->trigger();
 $PAGE->set_url('/mod/logla/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($logla->name));
 $PAGE->set_heading(format_string($course->fullname));
-
+*/
 
 /*
  * Other things you may want to set - remove if not needed.

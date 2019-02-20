@@ -32,7 +32,6 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 //moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
 
-
 // include css
 $style = '/mod/logla/style.css';
 $PAGE->requires->css($style);
@@ -63,6 +62,11 @@ class view_kma_results_form extends moodleform {
         $header1 = $loglaresult->name;
         $header1 .= ' Result';
         $mform->addElement('header', 'loglafieldset', $header1);
+        
+        // binds this instance to the logla id
+        $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
+        $mform->setDefault('id', $id);
 
         // if user can edit logla then show all results
         if ($PAGE->user_allowed_editing()) {
@@ -317,14 +321,14 @@ class view_kma_results_form extends moodleform {
     }
 
     
-    function is_cancelled(){
-        // $id = optional_param('id', 0, PARAM_INT); 
-        $returnurl = '/course/view.php?id=2';
-        redirect($returnurl);
-        // GLOBAL  $OUTPUT;
+    // function is_cancelled(){
+    //     // $id = optional_param('id', 0, PARAM_INT); 
+    //     $returnurl = '/course/view.php?id=2';
+    //     redirect($returnurl);
+    //     // GLOBAL  $OUTPUT;
 
-        // echo $OUTPUT->heading('CANCELOU VIEW KMA');
-    }
+    //     // echo $OUTPUT->heading('CANCELOU VIEW KMA');
+    // }
     
 
 }
