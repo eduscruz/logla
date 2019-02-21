@@ -31,6 +31,7 @@ global $COURSE, $USER;
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/view_results_form.php');
 require_once(dirname(__FILE__).'/view_kma_results_form.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
@@ -84,26 +85,35 @@ if ($logla->intro) {
 // Get data from logla where id equals id instance
 $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
-// $mform = new view_kma_results_form('/mod/logla/process.php');
-$mform = new view_kma_results_form();
 
-//Form processing and displaying is done here
-if ($mform->is_cancelled()) {
-    //Handle form cancel operation, if cancel button is present on form
-    // $returnurl = '/course/view.php?id='.$id;
-    // redirect($returnurl);
-    echo $OUTPUT->box('cancel');
-} 
-else if ($fromform = $mform->get_data()) {
-    //In this case you process validated data. $mform->get_data() returns data posted in form.
-    echo $OUTPUT->box('pegou dados');
-} else if ($mform->is_submitted()) {
-    // In the simplest case just redirect to the view page.
-    echo $OUTPUT->box('submitido');
-} else {
-    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-    // or on the first display of the form.
+// if user had edit permission (teacher) 
+if ($PAGE->user_allowed_editing()){
+    // form to teacher/manager
+    $mform = new view_results_form();
     $mform->display();
+}
+else{ 
+    //if user is student 
+    $mform = new view_kma_results_form();
+
+    //Form processing and displaying is done here
+    if ($mform->is_cancelled()) {
+        //Handle form cancel operation, if cancel button is present on form
+        // $returnurl = '/course/view.php?id='.$id;
+        // redirect($returnurl);
+        echo $OUTPUT->box('cancel');
+    } 
+    else if ($fromform = $mform->get_data()) {
+        //In this case you process validated data. $mform->get_data() returns data posted in form.
+        echo $OUTPUT->box('pegou dados');
+    } else if ($mform->is_submitted()) {
+        // In the simplest case just redirect to the view page.
+        echo $OUTPUT->box('submitido');
+    } else {
+        // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+        // or on the first display of the form.
+        $mform->display();
+    }
 }
 
 
