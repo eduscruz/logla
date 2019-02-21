@@ -107,10 +107,6 @@ else if ($fromform = $mform->get_data()) {
 }
 
 
-
-
-
-
 // Finish the page.
 echo $OUTPUT->footer();
 

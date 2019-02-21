@@ -39,6 +39,10 @@
         <FIELD NAME="poskmagrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
         <FIELD NAME="prekmbgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pre metacognition grade"/>
         <FIELD NAME="poskmbgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
+        <FIELD NAME="mcp1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Metacognition pre self-regulation"/>
+        <FIELD NAME="performace1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Self performace"/>
+        <FIELD NAME="ep1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Estimation pos performace"/>
+        <FIELD NAME="Selfregulation" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Selfregulation"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
