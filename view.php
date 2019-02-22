@@ -27,12 +27,15 @@
 
 // Replace logla with the name of your module and remove this line.
 
-global $COURSE, $USER;
+global $COURSE, $USER, $DB;
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/view_results_form.php');
 require_once(dirname(__FILE__).'/view_kma_results_form.php');
+require_once(dirname(__FILE__).'/view_prestudent_form.php');
+require_once(dirname(__FILE__).'/view_posstudent_form.php');
+
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should be named as the first character of the module.
@@ -77,13 +80,13 @@ $PAGE->set_cacheable(false);
 echo $OUTPUT->header();
 
 // Conditions to show the intro can change to look for own settings or whatever.
-if ($logla->intro) {
-    echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');
-}
+// if ($logla->intro) {
+//     echo $OUTPUT->box(format_module_intro('logla', $logla, $cm->id), 'generalbox mod_introbox', 'loglaintro');
+// }
 
 
 // Get data from logla where id equals id instance
-$loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
+// $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
 
 // if user had edit permission (teacher) 
@@ -92,30 +95,62 @@ if ($PAGE->user_allowed_editing()){
     $mform = new view_results_form();
     $mform->display();
 }
+//if user is student 
 else{ 
-    //if user is student 
-    $mform = new view_kma_results_form();
+       
+    // if prefeedback is set on logla settings 
+    if($logla->prefeedback){
+        $mform = new view_prestudent_form();
 
-    //Form processing and displaying is done here
-    if ($mform->is_cancelled()) {
-        //Handle form cancel operation, if cancel button is present on form
-        // $returnurl = '/course/view.php?id='.$id;
-        // redirect($returnurl);
-        echo $OUTPUT->box('cancel');
-    } 
-    else if ($fromform = $mform->get_data()) {
-        //In this case you process validated data. $mform->get_data() returns data posted in form.
-        echo $OUTPUT->box('pegou dados');
-    } else if ($mform->is_submitted()) {
-        // In the simplest case just redirect to the view page.
-        echo $OUTPUT->box('submitido');
-    } else {
-        // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-        // or on the first display of the form.
-        $mform->display();
+        //Form processing and displaying is done here
+        if ($mform->is_cancelled()) {
+            //Handle form cancel operation, if cancel button is present on form
+            // $returnurl = '/course/view.php?id='.$id;
+            // redirect($returnurl);
+            echo $OUTPUT->box('cancel certo');
+        } 
+        else if ($fromform = $mform->get_data()) {
+            //In this case you process validated data. $mform->get_data() returns data posted in form.
+            echo $OUTPUT->box('pegou dados');
+        } else if ($mform->is_submitted()) {
+            // In the simplest case just redirect to the view page.
+            echo $OUTPUT->box('submitido');
+        } else {
+            // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+            // or on the first display of the form.
+            $mform->display();
+        }
     }
-}
+    // if posfeedback is only set on logla settings
+    else{
+         
+        if($logla->posfeedback){
+            $mform = new view_posstudent_form();
 
+            //Form processing and displaying is done here
+            if ($mform->is_cancelled()) {
+                echo $OUTPUT->box('cancel');
+            } 
+            else if ($fromform = $mform->get_data()) {
+                //In this case you process validated data. $mform->get_data() returns data posted in form.
+                echo $OUTPUT->box('pegou dados');
+            } else if ($mform->is_submitted()) {
+                // In the simplest case just redirect to the view page.
+                echo $OUTPUT->box('submitido');
+            } else {
+                // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+                // or on the first display of the form.
+                $mform->display();
+            }
+        }
+        else{
+            echo $OUTPUT->box('atividade sem configuracao');  
+        }
+    }
+
+
+
+}
 
 // Finish the page.
 echo $OUTPUT->footer();
