@@ -54,22 +54,40 @@ class view_prestudent_form extends moodleform {
 
         // update results of all instances before show result
         logla_user_grades($loglaresult, 1);
-        
+
+        //create an logla_user_grade objetct of instance
+        $logla_user_grade = $DB->get_record('logla_user_grades', array('idlogla' => $loglaresult->id, 'userid' => $USER->id ));
+
         // inicialize mform
         $mform = $this->_form;  
         
-        //add section header
-        $header1 = $loglaresult->name;
-        $header1 .= ' Result';
-        $mform->addElement('header', 'loglafieldset', $header1);
-        
-        // binds this instance to the logla id
+        // binds this instance to the logla coursemodule
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
         $mform->setDefault('id', $id);
-     
+   
+        // binds this instance to the  logla_user_grade id
+        $mform->addElement('hidden', 'loglauserid');
+        $mform->setType('loglauserid', PARAM_INT);
+        $mform->setDefault('loglauserid', $logla_user_grade->id);
+
+        // binds this instance to the  user id
+        $mform->addElement('hidden', 'userid');
+        $mform->setType('userid', PARAM_INT);
+        $mform->setDefault('userid', $USER->id);
+
+        // binds this instance to the  user id
+        $mform->addElement('hidden', 'loglaid');
+        $mform->setType('loglaid', PARAM_INT);
+        $mform->setDefault('loglaid', $loglaresult->id);
+
         // if pos-feedback is not set show awnser of student and corret result
         if(!$loglaresult->posfeedback){
+
+            //add section header                -------------------  traduzir
+            $header1 = 'Your answer:';
+            $mform->addElement('header', 'loglafieldset', $header1);
+
             // if quiz
             if(!$loglaresult->activityquiz){
                 
@@ -131,16 +149,22 @@ class view_prestudent_form extends moodleform {
 
                 $question = $assign->intro;
                 $useranswer = $assignanswer->onlinetext;
-                $rightanswer = 'right answer fake';
+                $rightanswer = $loglaresult->intro;
             }
             
             $mform->addElement('html', '<p>The question: '.$question);
-            $mform->addElement('html', '<p>Your answer: '.$useranswer);
-            $mform->addElement('html', '<p>the right answer: '.$rightanswer);
+            $mform->addElement('html', '<p>'.$useranswer);
+
+            $header4 = 'Right answer:';
+            $mform->addElement('header', 'loglafieldset', $header4);
+            $mform->addElement('html', '<p>'.$rightanswer);
         }
 
+        $header1 = $loglaresult->name;
+        $header1 .= ' Result';
+        $mform->addElement('header', 'loglafieldset', $header1);
 
-        /*
+        
         $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
         $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
    
@@ -210,14 +234,48 @@ class view_prestudent_form extends moodleform {
         $mform->addElement('html', '</tr>');
         $mform->addElement('html', '</div>');
         $mform->addElement('html', '</table>');
-        */
+        
 
+        // add header activity
+        $header3 = 'Acitivity';
+        $mform->addElement('header', 'loglafieldset', $header3);
+       
+        $mform->addElement('html', '<p>'.get_string('textactivity1', 'logla'));
+        $mform->addElement('html', '<p>'.get_string('textactivity2', 'logla'));
+        
+        // add radiobox previous avaliation
+        $radioarray=array();
+        $radioarray[] = $mform->createElement('radio', 'selactprevious', '', get_string('high', 'logla'), 0);
+        $radioarray[] = $mform->createElement('radio', 'selactprevious', '', get_string('medium', 'logla'), 1);
+        $radioarray[] = $mform->createElement('radio', 'selactprevious', '', get_string('low', 'logla'), 2);
+        $mform->addGroup($radioarray, 'mcp1', get_string('textactivity4', 'logla'), array(' '), false);
+        $mform->setDefault('selactprevious', 2);
+        
+        // add radiobox real status
+        $radioarray=array();
+        $radioarray[] = $mform->createElement('radio', 'realstatus', '', get_string('high', 'logla'), 0);
+        $radioarray[] = $mform->createElement('radio', 'realstatus', '', get_string('medium', 'logla'), 1);
+        $radioarray[] = $mform->createElement('radio', 'realstatus', '', get_string('low', 'logla'), 2);
+        $mform->addGroup($radioarray, 'performace1',  get_string('textactivity5', 'logla'), array(' '), false);
+        $mform->setDefault('realstatus', 2);
+
+        $mform->addElement('html', '<p>'.get_string('textactivity3', 'logla'));
+        
+        // add radiobox selfregulation
+        $radioarray=array();
+        $radioarray[] = $mform->createElement('radio', 'selfregulation', '', get_string('decreasing', 'logla'), 0);
+        $radioarray[] = $mform->createElement('radio', 'selfregulation', '', get_string('increasing', 'logla'), 1);
+        $radioarray[] = $mform->createElement('radio', 'selfregulation', '', get_string('constant', 'logla'), 2);
+        $radioarray[] = $mform->createElement('radio', 'selfregulation', '', get_string('random', 'logla'), 3);
+        $radioarray[] = $mform->createElement('radio', 'selfregulation', '', get_string('undefined', 'logla'), 4);
+        $mform->addGroup($radioarray, 'ep1', get_string('textactivity6', 'logla'), array(' '), false);
+        $mform->setDefault('selfregulation', 4);
+        
         // summit button
         $this->add_action_buttons();    
         
-       
     }
-
+    
     //Custom validation should be added here
     function validation($data, $files) {
         return array();

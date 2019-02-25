@@ -107,11 +107,13 @@ else{
             //Handle form cancel operation, if cancel button is present on form
             // $returnurl = '/course/view.php?id='.$id;
             // redirect($returnurl);
-            echo $OUTPUT->box('cancel certo');
+            echo $OUTPUT->box('cancel1');
         } 
         else if ($fromform = $mform->get_data()) {
             //In this case you process validated data. $mform->get_data() returns data posted in form.
             echo $OUTPUT->box('pegou dados');
+            echo $OUTPUT->box(print_r($fromform));
+            logla_user_grades_update($fromform);
         } else if ($mform->is_submitted()) {
             // In the simplest case just redirect to the view page.
             echo $OUTPUT->box('submitido');
@@ -129,10 +131,11 @@ else{
 
             //Form processing and displaying is done here
             if ($mform->is_cancelled()) {
-                echo $OUTPUT->box('cancel');
+                echo $OUTPUT->box('cancel2');
             } 
             else if ($fromform = $mform->get_data()) {
                 //In this case you process validated data. $mform->get_data() returns data posted in form.
+                echo $OUTPUT->box(print_r($fromform));
                 echo $OUTPUT->box('pegou dados');
             } else if ($mform->is_submitted()) {
                 // In the simplest case just redirect to the view page.

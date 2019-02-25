@@ -136,7 +136,30 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
 }
 
 
-// This function add user results in logla_user_grades
+/*
+* This function add user results in logla_user_grades
+* @param stdClass $logla_user An object from the form in view.php
+* @param mod_logla_mod_form $mform The form instance itself (if needed)
+* @return boolean Success/Fail
+*/
+function logla_user_grades_update(stdClass $logla_user_grade) {
+    global $DB;
+
+    $temp = $DB->get_record('logla_user_grades', array('idlogla' => $logla_user_grade->loglaid, 'userid' => $logla_user_grade->userid ));
+    $temp->mcp1 = $logla_user_grade->selactprevious;
+    $temp->performace1 = $logla_user_grade->realstatus;
+    $temp->ep1 = $logla_user_grade->selfregulation;
+
+    $DB->update_record('logla_user_grades', $temp, $bulk=false);
+}
+
+
+/*
+* This function add user results in logla_user_grades
+* @param stdClass $logla An object from the form in mod_form.php
+* @param mod_logla_mod_form $mform The form instance itself (if needed)
+* @return boolean Success/Fail
+*/
 function logla_user_grades(stdClass $logla, $update = null) {
     global $DB;
 
