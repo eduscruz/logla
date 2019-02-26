@@ -166,37 +166,7 @@ class view_prestudent_form extends moodleform {
         else{
             $mform->setDefault('loglauserid', 0);
         }
-   
-        /*
-        // if exist results from userid
-        if($user_grade_resultcount){
-            
-            $mform->addElement('html', '<div>');
-            $mform->addElement('html', '<table>');
-            $mform->addElement('html', '<tr>');
-            $mform->addElement('html', '<th>Pre KMA</th>');
-            $mform->addElement('html', '<th>Pos KMA</th>');
-            $mform->addElement('html', '<th>Pre KMA</th>');
-            $mform->addElement('html', '<th>Pos KMA</th>');
-            $mform->addElement('html', '</tr>');
-            $mform->addElement('html', '<tr>');
-            $mform->addElement('html', "<td>$user_grade_result->prekmagrade</td>");
-            $mform->addElement('html', "<td>$user_grade_result->poskmagrade</td>");
-            $mform->addElement('html', "<td>$user_grade_result->prekmbgrade</td>");
-            $mform->addElement('html', "<td>$user_grade_result->poskmbgrade</td>");
-            $mform->addElement('html', '</tr>');
-            $mform->addElement('html', '</div>');
-            $mform->addElement('html', '</table>');
-
-        }
-        // if not exist results from userid
-        else {
-            $texto = 'Feedback nao preenchido ainda ou nota da atividade/quiz ainda não avaliada';
-            $mform->addElement('static', 'description', 'teste5', $texto);
-            // echo $OUTPUT->box($texto);
-        }
-        */
-
+  
         //add section header
         $header2 = 'General Metacognition Results';
         $mform->addElement('header', 'loglafieldset', $header2);

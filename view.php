@@ -35,6 +35,7 @@ require_once(dirname(__FILE__).'/view_results_form.php');
 require_once(dirname(__FILE__).'/view_kma_results_form.php');
 require_once(dirname(__FILE__).'/view_prestudent_form.php');
 require_once(dirname(__FILE__).'/view_posstudent_form.php');
+require_once(dirname(__FILE__).'/view_levelstudent_form.php');
 
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
@@ -110,16 +111,34 @@ else{
         } 
         else if ($fromform = $mform->get_data()) {
             //In this case you process validated data. $mform->get_data() returns data posted in form.
-            echo $OUTPUT->box(print_r($fromform));
 
-            // update results of all instances before show result
-            // logla_user_grades($loglaresult, 1);
+            // insert new record in logla_user_grades
             if($fromform->loglauserid == 0){
                 logla_user_grades_add($fromform);
             }
+            // update record in logla_user_grades
             else{
                 logla_user_grades_update($fromform);
             }
+
+            // new instance for new view after student answer
+            $mform = new view_levelstudent_form();
+            $mform->display();
+
+            
+            //Form processing and displaying is done here
+            if ($mform->is_cancelled()) {
+                //Handle form cancel operation, if cancel button is present on form
+                $returnurl = '/course/view.php?id='.$course->id;
+                redirect($returnurl);
+            } 
+            else if ($fromform = $mform->get_data()) {
+                //In this case you process validated data. $mform->get_data() returns data posted in form.
+                $returnurl = '/course/view.php?id='.$course->id;
+                redirect($returnurl);
+            }
+
+
         } else if ($mform->is_submitted()) {
             // In the simplest case just redirect to the view page.
             echo $OUTPUT->box('submitido');
@@ -143,7 +162,6 @@ else{
             } 
             else if ($fromform = $mform->get_data()) {
                 //In this case you process validated data. $mform->get_data() returns data posted in form.
-                echo $OUTPUT->box(print_r($fromform));
                 echo $OUTPUT->box('pegou dados');
             } else if ($mform->is_submitted()) {
                 // In the simplest case just redirect to the view page.
