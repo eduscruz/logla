@@ -42,7 +42,6 @@ class view_prestudent_form extends moodleform {
     /** @var stdClass the logla record that contains */
     public $logla;
 
-
     //Add elements to form
     public function definition() {
 
@@ -52,12 +51,6 @@ class view_prestudent_form extends moodleform {
         //create an logla objetct of instance
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
-        // update results of all instances before show result
-        logla_user_grades($loglaresult, 1);
-
-        //create an logla_user_grade objetct of instance
-        $logla_user_grade = $DB->get_record('logla_user_grades', array('idlogla' => $loglaresult->id, 'userid' => $USER->id ));
-
         // inicialize mform
         $mform = $this->_form;  
         
@@ -66,11 +59,6 @@ class view_prestudent_form extends moodleform {
         $mform->setType('id', PARAM_INT);
         $mform->setDefault('id', $id);
    
-        // binds this instance to the  logla_user_grade id
-        $mform->addElement('hidden', 'loglauserid');
-        $mform->setType('loglauserid', PARAM_INT);
-        $mform->setDefault('loglauserid', $logla_user_grade->id);
-
         // binds this instance to the  user id
         $mform->addElement('hidden', 'userid');
         $mform->setType('userid', PARAM_INT);
@@ -160,14 +148,26 @@ class view_prestudent_form extends moodleform {
             $mform->addElement('html', '<p>'.$rightanswer);
         }
 
-        $header1 = $loglaresult->name;
-        $header1 .= ' Result';
-        $mform->addElement('header', 'loglafieldset', $header1);
+        // // add name logla header
+        // $header1 = $loglaresult->name;
+        // $header1 .= ' Result';
+        // $mform->addElement('header', 'loglafieldset', $header1);
 
         
         $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
         $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
+
+        // binds this instance to the  logla_user_grade id
+        $mform->addElement('hidden', 'loglauserid');
+        $mform->setType('loglauserid', PARAM_INT);
+        if ($user_grade_result) {
+            $mform->setDefault('loglauserid', $user_grade_result->id);        
+        }
+        else{
+            $mform->setDefault('loglauserid', 0);
+        }
    
+        /*
         // if exist results from userid
         if($user_grade_resultcount){
             
@@ -195,6 +195,7 @@ class view_prestudent_form extends moodleform {
             $mform->addElement('static', 'description', 'teste5', $texto);
             // echo $OUTPUT->box($texto);
         }
+        */
 
         //add section header
         $header2 = 'General Metacognition Results';
@@ -211,31 +212,30 @@ class view_prestudent_form extends moodleform {
         // print results of sql query
         $kmageneral = $DB->get_record_sql($sql, array($USER->id));
 
-        // print average results from user
+        // if $kmageneral is not empty
+        if ($kmageneral) {
+            $mform->addElement('html', '<div>');
+            $mform->addElement('html', '<table>');
+            $mform->addElement('html', '<tr>');
+            $mform->addElement('html', '<th>Pre KMA</th>');
+            $mform->addElement('html', '<th>Pos KMA</th>');
+            $mform->addElement('html', '<th>Pre KMA</th>');
+            $mform->addElement('html', '<th>Pos KMA</th>');
+            $mform->addElement('html', '</tr>');
+            $mform->addElement('html', '<tr>');
+            $mform->addElement('html', "<td>$kmageneral->prekmagrade</td>");
+            $mform->addElement('html', "<td>$kmageneral->poskmagrade</td>");
+            $mform->addElement('html', "<td>$kmageneral->prekmbgrade</td>");
+            $mform->addElement('html', "<td>$kmageneral->poskmbgrade</td>");
+            $mform->addElement('html', '</tr>');
+            $mform->addElement('html', '</div>');
+            $mform->addElement('html', '</table>');
+        }
+        else {
+            $mform->addElement('html', '<p> AINDA NAO FEZ NENHUMA AVALIACAO DO LOGLA');
+        }
 
-        // $texto = "Sua avaliação pre-metacognitiva geral foi:  ";
-        // $mform->addElement('static', 'description', $texto, $kmageneral->prekmagrade);
-        // $texto = "Sua avaliação pos-metacognitiva geral foi:  ";
-        // $mform->addElement('static', 'description', $texto, $kmageneral->poskmagrade);
-
-        $mform->addElement('html', '<div>');
-        $mform->addElement('html', '<table>');
-        $mform->addElement('html', '<tr>');
-        $mform->addElement('html', '<th>Pre KMA</th>');
-        $mform->addElement('html', '<th>Pos KMA</th>');
-        $mform->addElement('html', '<th>Pre KMA</th>');
-        $mform->addElement('html', '<th>Pos KMA</th>');
-        $mform->addElement('html', '</tr>');
-        $mform->addElement('html', '<tr>');
-        $mform->addElement('html', "<td>$kmageneral->prekmagrade</td>");
-        $mform->addElement('html', "<td>$kmageneral->poskmagrade</td>");
-        $mform->addElement('html', "<td>$kmageneral->prekmbgrade</td>");
-        $mform->addElement('html', "<td>$kmageneral->poskmbgrade</td>");
-        $mform->addElement('html', '</tr>');
-        $mform->addElement('html', '</div>');
-        $mform->addElement('html', '</table>');
         
-
         // add header activity
         $header3 = 'Acitivity';
         $mform->addElement('header', 'loglafieldset', $header3);
@@ -249,7 +249,12 @@ class view_prestudent_form extends moodleform {
         $radioarray[] = $mform->createElement('radio', 'selactprevious', '', get_string('medium', 'logla'), 1);
         $radioarray[] = $mform->createElement('radio', 'selactprevious', '', get_string('low', 'logla'), 2);
         $mform->addGroup($radioarray, 'mcp1', get_string('textactivity4', 'logla'), array(' '), false);
-        $mform->setDefault('selactprevious', 2);
+        if($user_grade_result){
+            $mform->setDefault('selactprevious', $user_grade_result->mcp1);
+        }
+        else{
+            $mform->setDefault('selactprevious', 2);
+        }
         
         // add radiobox real status
         $radioarray=array();
@@ -257,7 +262,13 @@ class view_prestudent_form extends moodleform {
         $radioarray[] = $mform->createElement('radio', 'realstatus', '', get_string('medium', 'logla'), 1);
         $radioarray[] = $mform->createElement('radio', 'realstatus', '', get_string('low', 'logla'), 2);
         $mform->addGroup($radioarray, 'performace1',  get_string('textactivity5', 'logla'), array(' '), false);
-        $mform->setDefault('realstatus', 2);
+        if($user_grade_result){
+            $mform->setDefault('realstatus', $user_grade_result->performace1);
+        }
+        else{
+            $mform->setDefault('realstatus', 2);
+        }
+        
 
         $mform->addElement('html', '<p>'.get_string('textactivity3', 'logla'));
         
@@ -269,16 +280,19 @@ class view_prestudent_form extends moodleform {
         $radioarray[] = $mform->createElement('radio', 'selfregulation', '', get_string('random', 'logla'), 3);
         $radioarray[] = $mform->createElement('radio', 'selfregulation', '', get_string('undefined', 'logla'), 4);
         $mform->addGroup($radioarray, 'ep1', get_string('textactivity6', 'logla'), array(' '), false);
-        $mform->setDefault('selfregulation', 4);
+        if($user_grade_result){
+            $mform->setDefault('selfregulation', $user_grade_result->ep1);
+        }
+        else{
+            $mform->setDefault('selfregulation', 4);
+        }
         
         // summit button
         $this->add_action_buttons();    
-        
     }
     
     //Custom validation should be added here
     function validation($data, $files) {
         return array();
     }
-
 }

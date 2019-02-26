@@ -53,7 +53,7 @@ class view_results_form extends moodleform {
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
         // update results of all instances before show result
-        logla_user_grades($loglaresult, 1);
+        // logla_user_grades($loglaresult, 1);
         
         // inicialize mform
         $mform = $this->_form;  
