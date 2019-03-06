@@ -42,13 +42,13 @@ class view_levelstudent_form extends moodleform {
     //Add elements to form
     public function definition() {
 
-        global $DB, $PAGE, $USER, $OUTPUT;
+        global $DB, $PAGE, $USER, $OUTPUT, $COURSE;
         $id = optional_param('id', 0, PARAM_INT);
 
         //create an logla objetct of instance
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
-        //create an logla objetct of instance
+        //create an logla_user_grades objetct of instance
         $logla_user_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
 
         // inicialize mform
@@ -121,10 +121,11 @@ class view_levelstudent_form extends moodleform {
             echo $OUTPUT->box('error: logla_user_grades record found');
         }
 
-        // $mform->addElement('button', 'finish', "Finish");
+        $redirect = '<a href="/course/view.php?id='.$COURSE->id.'">';
+        $mform->addElement('html', $redirect);
+        $mform->addElement('button', 'finish', "Finish");
+        $redirect = '</a>';
+        $mform->addElement('html', $redirect);
         
-        // summit button
-        $this->add_action_buttons();
-
     }
 }
