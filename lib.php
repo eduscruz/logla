@@ -94,7 +94,7 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
     logla_grade_item_update($logla);
 
     // insert grades in logla tables
-    logla_user_grades($logla);
+    logla_user_grades_populate($logla);
 
     return $logla->id;
 }
@@ -130,7 +130,7 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
     logla_grade_item_update($logla);
 
     // update grades in logla tables
-    // logla_user_grades($logla, 1);
+    // logla_user_grades_populate($logla, 1);
     
     return $result;
 }
@@ -688,7 +688,7 @@ function logla_extend_settings_navigation(settings_navigation $settingsnav, navi
 * @param mod_logla_mod_form $mform The form instance itself (if needed)
 * @return boolean Success/Fail
 */
-function old_logla_user_grades(stdClass $logla, $update = null) {
+function logla_user_grades_populate(stdClass $logla, $update = null) {
     global $DB;
 
     $logla_user_grades = new stdClass();
@@ -701,12 +701,12 @@ function old_logla_user_grades(stdClass $logla, $update = null) {
     if($logla->activityquiz){
         
         // insert grades records in logla_user_grades
-        old_logla_user_grades_add($logla, 'assign_grades', 'assignment', 'idactivity');
+        logla_user_grades_populate_add($logla, 'assign_grades', 'assignment', 'idactivity');
     }
     // if logla is set up as quiz
     else{
         // insert grades records in logla_user_grades
-        old_logla_user_grades_add($logla, 'quiz_grades', 'quiz', 'idquiz');    
+        logla_user_grades_populate_add($logla, 'quiz_grades', 'quiz', 'idquiz');    
     }
 }
 
@@ -716,7 +716,7 @@ function old_logla_user_grades(stdClass $logla, $update = null) {
  * @param int $courseid Course ID
  * @return bool
  */
-function old_logla_user_grades_add(stdClass $logla, $tablename, $fieldtable, $fieldlogla){
+function logla_user_grades_populate_add(stdClass $logla, $tablename, $fieldtable, $fieldlogla){
     global $DB;
     
     $rs = $DB->get_recordset($tablename, array($fieldtable=>$logla->$fieldlogla));

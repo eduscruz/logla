@@ -45,7 +45,7 @@ class view_prestudent_form extends moodleform {
     //Add elements to form
     public function definition() {
 
-        global $DB, $PAGE, $USER, $OUTPUT;
+        global $DB, $PAGE, $USER, $OUTPUT, $COURSE;
         $id = optional_param('id', 0, PARAM_INT);
 
         //create an logla objetct of instance
@@ -71,10 +71,6 @@ class view_prestudent_form extends moodleform {
 
         // if pos-feedback is not set show awnser of student and corret result
         if(!$loglaresult->posfeedback){
-
-            //add section header                -------------------  traduzir
-            $header1 = 'Your answer:';
-            $mform->addElement('header', 'loglafieldset', $header1);
 
             // if quiz
             if(!$loglaresult->activityquiz){
@@ -111,15 +107,38 @@ class view_prestudent_form extends moodleform {
                         JOIN mdl_question_attempt_steps qas ON qas.questionattemptid = qa.id
                         LEFT JOIN mdl_question_attempt_step_data qasd ON qasd.attemptstepid = qas.id
                         
-                        WHERE quiza.id = ? AND quiza.userid = ? AND qasd.name LIKE ?
+                        WHERE quiza.quiz = ? AND quiza.userid = ? AND qasd.name LIKE ?
                         
                         ORDER BY quiza.userid, quiza.attempt, qa.slot, qas.sequencenumber, qasd.name';
                 
-                // get results from quiz
-                $quizresult = $DB->get_record_sql($sql, array($loglaresult->idquiz, $USER->id, '-finish'));
-                $question = $quizresult->question;
-                $useranswer = $quizresult->useranswer;
-                $rightanswer = $quizresult->rightanswer;
+                
+                $question = '';
+                $useranswer = '';
+                $rightanswer = '';
+                $interator = 0;
+    
+                $rs = $DB->get_recordset_sql($sql, array($loglaresult->idquiz, $USER->id, '-finish'));
+                foreach ($rs as $record) {
+                    $interator++;
+                    $question .= '<br><p>'.$interator.') '.$record->question;
+                    $useranswer .= '<br><p>'.$interator.') '.$record->useranswer;
+                    $rightanswer .= '<br><p>'.$interator.') '.$record->rightanswer;
+                }
+                $rs->close();
+                
+                //add section header              
+                $header1 = 'The Questions:';
+                $mform->addElement('header', 'loglafieldset', $header1);
+                $mform->addElement('html', '<p>'.$question.'<br>');
+
+                $header1 = 'Your answers:';
+                $mform->addElement('header', 'loglafieldset', $header1);
+                $mform->addElement('html', '<p>'.$useranswer.'<br>');
+
+                $header4 = 'Right answers:';
+                $mform->addElement('header', 'loglafieldset', $header4);
+                $mform->addElement('html', '<p>'.$rightanswer);
+                
             }
             // if activity
             else{
@@ -138,20 +157,15 @@ class view_prestudent_form extends moodleform {
                 $question = $assign->intro;
                 $useranswer = $assignanswer->onlinetext;
                 $rightanswer = $loglaresult->intro;
+
+                $mform->addElement('html', '<p>The question: '.$question);
+                $mform->addElement('html', '<p>'.$useranswer);
+
+                $header4 = 'Right answer:';
+                $mform->addElement('header', 'loglafieldset', $header4);
+                $mform->addElement('html', '<p>'.$rightanswer);
             }
-            
-            $mform->addElement('html', '<p>The question: '.$question);
-            $mform->addElement('html', '<p>'.$useranswer);
-
-            $header4 = 'Right answer:';
-            $mform->addElement('header', 'loglafieldset', $header4);
-            $mform->addElement('html', '<p>'.$rightanswer);
         }
-
-        // // add name logla header
-        // $header1 = $loglaresult->name;
-        // $header1 .= ' Result';
-        // $mform->addElement('header', 'loglafieldset', $header1);
 
         
         $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
@@ -172,39 +186,86 @@ class view_prestudent_form extends moodleform {
         $mform->addElement('header', 'loglafieldset', $header2);
 
         // SQL query to select tables logla_user_grades and user
-        $sql  = 'SELECT AVG(mdl_logla_user_grades.prekmagrade) AS prekmagrade, AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade,';
-        $sql .= ' AVG(mdl_logla_user_grades.prekmbgrade) AS prekmbgrade, AVG(mdl_logla_user_grades.poskmbgrade) AS poskmbgrade';
-        $sql .= ' FROM mdl_logla_user_grades';
-        $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
-        $sql .= ' WHERE mdl_logla_user_grades.userid = ?';
-        $sql .= ' GROUP BY mdl_logla_user_grades.userid';
+        $sql = 'SELECT 
+                    g.id,g.idlogla,g.userid,g.prekmagrade,g.poskmagrade,
+                    g.prekmbgrade,g.poskmbgrade,l.coursemodule,
+                    l.prefeedback,l.posfeedback,l.idprefeedback,
+                    l.idposfeedback,l.activityquiz,l.idactivity,l.idquiz
+               FROM mdl_logla_user_grades AS g
+               INNER JOIN mdl_logla AS l ON g.idlogla = l.id
+               INNER JOIN mdl_course_modules AS c ON  c.id = l.coursemodule 
+               WHERE g.userid = ? AND c.course = ?';
 
-        // print results of sql query
-        $kmageneral = $DB->get_record_sql($sql, array($USER->id));
-
-        // if $kmageneral is not empty
-        if ($kmageneral) {
-            $mform->addElement('html', '<div>');
-            $mform->addElement('html', '<table>');
-            $mform->addElement('html', '<tr>');
-            $mform->addElement('html', '<th>Pre KMA</th>');
-            $mform->addElement('html', '<th>Pos KMA</th>');
-            $mform->addElement('html', '<th>Pre KMA</th>');
-            $mform->addElement('html', '<th>Pos KMA</th>');
-            $mform->addElement('html', '</tr>');
-            $mform->addElement('html', '<tr>');
-            $mform->addElement('html', "<td>$kmageneral->prekmagrade</td>");
-            $mform->addElement('html', "<td>$kmageneral->poskmagrade</td>");
-            $mform->addElement('html', "<td>$kmageneral->prekmbgrade</td>");
-            $mform->addElement('html', "<td>$kmageneral->poskmbgrade</td>");
-            $mform->addElement('html', '</tr>');
+        // insert table results
+        $mform->addElement('html', '<div>');
+        $mform->addElement('html', '<table>');
+        $mform->addElement('html', '<tr>');
+        $mform->addElement('html', '<th>Activity/Quiz</th>');
+        $mform->addElement('html', '<th>Seu Resultado</th>');
+        $mform->addElement('html', '<th>Sua Pre Avaliacao</th>');
+        $mform->addElement('html', '<th>Sua Pos Avaliacao</th>');
+        $mform->addElement('html', '</tr>');
+        
+        $rs = $DB->get_recordset_sql($sql, array($USER->id, $COURSE->id));
+        if ($rs) {
+            foreach ($rs as $record) {
+                
+                $mform->addElement('html', '<tr>');
+                
+                // if recordset is activity
+                if ($record->activityquiz) {
+                    
+                    // get activity result
+                    $activity = $DB->get_record('assign', array('id' => $record->idactivity));
+                    $mform->addElement('html', "<td>$activity->name</td>");
+                    $activityresult = $DB->get_record('assign_grades', array('assignment' => $record->idactivity, 'userid' => $USER->id));
+                    $mform->addElement('html', "<td>$activityresult->grade</td>");
+                    
+                }
+                // if recordset is quiz
+                else {
+                    
+                    $quiz = $DB->get_record('quiz', array('id' => $record->idquiz));
+                    $mform->addElement('html', "<td>$quiz->name</td>");
+                    $quizresult = $DB->get_record('quiz_grades', array('quiz' => $record->idquiz, 'userid' => $USER->id));
+                    $mform->addElement('html', "<td>$quizresult->grade</td>");
+                }
+                
+                // if recordset is set as prefeedback
+                if ($record->prefeedback) {
+                    
+                    // get prefeedback results
+                    $resultprefb = $DB->get_record('feedback_completed', array('feedback'=>$record->idprefeedback, 'userid'=>$USER->id));
+                    $mform->addElement('html', "<td>$resultprefb->anonymous_response</td>");
+                }
+                else {
+                    // insert empty cell
+                    $mform->addElement('html', "<td></td>");
+                }
+                
+                // if recordset is set as prefeedback
+                if ($record->posfeedback) {
+                    
+                    // get posfeedback results
+                    $resultposfb = $DB->get_record('feedback_completed', array('feedback'=>$record->idposfeedback, 'userid'=>$USER->id));
+                    $mform->addElement('html', "<td>$resultposfb->anonymous_response</td>");
+                }
+                else {
+                    // insert empty cell
+                    $mform->addElement('html', "<td></td>");
+                }
+                
+                $mform->addElement('html', '</tr>');
+            }
+            $rs->close();
+            $mform->addElement('html', '</div>');
+            $mform->addElement('html', '</table>');            
+        }
+        else {
+            $mform->addElement('html', '<tr><td>AINDA NAO FEZ NENHUMA AVALIACAO DO LOGLA</td></tr>');
             $mform->addElement('html', '</div>');
             $mform->addElement('html', '</table>');
         }
-        else {
-            $mform->addElement('html', '<p> AINDA NAO FEZ NENHUMA AVALIACAO DO LOGLA');
-        }
-
         
         // add header activity
         $header3 = 'Acitivity';
@@ -239,7 +300,6 @@ class view_prestudent_form extends moodleform {
             $mform->setDefault('realstatus', 2);
         }
         
-
         $mform->addElement('html', '<p>'.get_string('textactivity3', 'logla'));
         
         // add radiobox selfregulation
