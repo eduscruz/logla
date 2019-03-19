@@ -64,3 +64,7 @@ $string['textactivity3'] = 'Checking my prediction history and troubleshooting I
 $string['textactivity4'] = 'That I would perform';
 $string['textactivity5'] = 'My actual performance was';
 $string['textactivity6'] = 'My judgment is';
+$string['textactivity7'] = 'Compare your solution with the teacher solution and tick one of the following options';
+$string['textactivity8'] = 'Your solution is identical, equivalent or different but is correct as well (75% to 100%)';
+$string['textactivity9'] = 'Your solution is different, and is more or less correct (from 50% to 75% correct)';
+$string['textactivity10'] = 'Your solution is different and is more or less correct (from 50% to 75% correct)';

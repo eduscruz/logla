@@ -53,7 +53,7 @@ class view_posstudent_form extends moodleform {
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
         // update results of all instances before show result
-        logla_user_grades($loglaresult, 1);
+        // logla_user_grades($loglaresult, 1);
         
         // inicialize mform
         $mform = $this->_form;  
@@ -116,12 +116,6 @@ class view_posstudent_form extends moodleform {
         $kmageneral = $DB->get_record_sql($sql, array($USER->id));
 
         // print average results from user
-
-        // $texto = "Sua avaliação pre-metacognitiva geral foi:  ";
-        // $mform->addElement('static', 'description', $texto, $kmageneral->prekmagrade);
-        // $texto = "Sua avaliação pos-metacognitiva geral foi:  ";
-        // $mform->addElement('static', 'description', $texto, $kmageneral->poskmagrade);
-
         $mform->addElement('html', '<div>');
         $mform->addElement('html', '<table>');
         $mform->addElement('html', '<tr>');

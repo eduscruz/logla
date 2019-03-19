@@ -51,6 +51,10 @@ class view_prestudent_form extends moodleform {
         //create an logla objetct of instance
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
 
+        //create an logla_user_grades objetct of instance
+        $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
+        $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
+
         // inicialize mform
         $mform = $this->_form;  
         
@@ -69,8 +73,8 @@ class view_prestudent_form extends moodleform {
         $mform->setType('loglaid', PARAM_INT);
         $mform->setDefault('loglaid', $loglaresult->id);
 
-        // if pos-feedback is not set show awnser of student and corret result
-        if(!$loglaresult->posfeedback){
+        // if pos-feedback is set show awnser of student and corret result
+        if($loglaresult->posfeedback){
 
             // if quiz
             if(!$loglaresult->activityquiz){
@@ -165,11 +169,31 @@ class view_prestudent_form extends moodleform {
                 $mform->addElement('header', 'loglafieldset', $header4);
                 $mform->addElement('html', '<p>'.$rightanswer);
             }
+
+
+            // Header self regulation 1
+            $header6 = 'Self-regulation:';
+            $mform->addElement('header', 'loglafieldset', $header6);
+
+            // add radiobox selfregulation
+            $radioarray=array();
+            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity8', 'logla'), 0);
+            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity9', 'logla'), 1);
+            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity10', 'logla'), 2);
+            $mform->addGroup($radioarray, 'sr1', get_string('textactivity7', 'logla'), array(' '), false);
+
+            if($user_grade_result->sr1){
+                $mform->setDefault('selfregulation1', $user_grade_result->sr1);
+            }
+            else{
+                $mform->setDefault('selfregulation1', 1);
+            }
+
         }
 
         
-        $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
-        $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
+        // $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
+        // $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
 
         // binds this instance to the  logla_user_grade id
         $mform->addElement('hidden', 'loglauserid');
@@ -185,6 +209,16 @@ class view_prestudent_form extends moodleform {
         $header2 = 'General Metacognition Results';
         $mform->addElement('header', 'loglafieldset', $header2);
 
+        // insert table results
+        $mform->addElement('html', '<div>');
+        $mform->addElement('html', '<table>');
+        $mform->addElement('html', '<tr>');
+        $mform->addElement('html', '<th>Activity/Quiz</th>');
+        $mform->addElement('html', '<th>Seu Resultado</th>');
+        $mform->addElement('html', '<th>Sua Pre Avaliacao</th>');
+        $mform->addElement('html', '<th>Sua Pos Avaliacao</th>');
+        $mform->addElement('html', '</tr>');
+        
         // SQL query to select tables logla_user_grades and user
         $sql = 'SELECT 
                     g.id,g.idlogla,g.userid,g.prekmagrade,g.poskmagrade,
@@ -195,16 +229,6 @@ class view_prestudent_form extends moodleform {
                INNER JOIN mdl_logla AS l ON g.idlogla = l.id
                INNER JOIN mdl_course_modules AS c ON  c.id = l.coursemodule 
                WHERE g.userid = ? AND c.course = ?';
-
-        // insert table results
-        $mform->addElement('html', '<div>');
-        $mform->addElement('html', '<table>');
-        $mform->addElement('html', '<tr>');
-        $mform->addElement('html', '<th>Activity/Quiz</th>');
-        $mform->addElement('html', '<th>Seu Resultado</th>');
-        $mform->addElement('html', '<th>Sua Pre Avaliacao</th>');
-        $mform->addElement('html', '<th>Sua Pos Avaliacao</th>');
-        $mform->addElement('html', '</tr>');
         
         $rs = $DB->get_recordset_sql($sql, array($USER->id, $COURSE->id));
         if ($rs) {
@@ -219,7 +243,7 @@ class view_prestudent_form extends moodleform {
                     $activity = $DB->get_record('assign', array('id' => $record->idactivity));
                     $mform->addElement('html', "<td>$activity->name</td>");
                     $activityresult = $DB->get_record('assign_grades', array('assignment' => $record->idactivity, 'userid' => $USER->id));
-                    $mform->addElement('html', "<td>$activityresult->grade</td>");
+                    $mform->addElement('html', "<td>".convertgrade($activityresult->grade)."</td>");
                     
                 }
                 // if recordset is quiz
@@ -228,7 +252,7 @@ class view_prestudent_form extends moodleform {
                     $quiz = $DB->get_record('quiz', array('id' => $record->idquiz));
                     $mform->addElement('html', "<td>$quiz->name</td>");
                     $quizresult = $DB->get_record('quiz_grades', array('quiz' => $record->idquiz, 'userid' => $USER->id));
-                    $mform->addElement('html', "<td>$quizresult->grade</td>");
+                    $mform->addElement('html', "<td>".convertquiz($quizresult->grade)."</td>");
                 }
                 
                 // if recordset is set as prefeedback
@@ -236,7 +260,7 @@ class view_prestudent_form extends moodleform {
                     
                     // get prefeedback results
                     $resultprefb = $DB->get_record('feedback_completed', array('feedback'=>$record->idprefeedback, 'userid'=>$USER->id));
-                    $mform->addElement('html', "<td>$resultprefb->anonymous_response</td>");
+                    $mform->addElement('html', "<td>".convertfeedback($resultprefb->anonymous_response)."</td>");
                 }
                 else {
                     // insert empty cell
@@ -248,7 +272,7 @@ class view_prestudent_form extends moodleform {
                     
                     // get posfeedback results
                     $resultposfb = $DB->get_record('feedback_completed', array('feedback'=>$record->idposfeedback, 'userid'=>$USER->id));
-                    $mform->addElement('html', "<td>$resultposfb->anonymous_response</td>");
+                    $mform->addElement('html', "<td>".convertfeedback($resultposfb->anonymous_response)."</td>");
                 }
                 else {
                     // insert empty cell
@@ -259,7 +283,135 @@ class view_prestudent_form extends moodleform {
             }
             $rs->close();
             $mform->addElement('html', '</div>');
-            $mform->addElement('html', '</table>');            
+            $mform->addElement('html', '</table>');   
+            
+            $sql = 'SELECT 	
+                            AVG(g.prekmagrade) AS avgprekma,
+                            AVG(g.poskmagrade) AS avgposkma,
+                            AVG(g.prekmbgrade) AS avgprekmb,
+                            AVG(g.poskmbgrade) AS avgposkmb
+                    FROM mdl_logla_user_grades AS g
+                    INNER JOIN mdl_logla AS l ON g.idlogla = l.id
+                    INNER JOIN mdl_course_modules AS c ON  c.id = l.coursemodule 
+                    WHERE g.userid = ? AND c.course = ?';
+            
+
+            $tableKMA = "<div>
+                            <table>
+                                <tr>
+                                    <th>
+                                        Valor do KMA
+                                    </th>
+                                    <th>
+                                        Classificação
+                                    </th>
+                                    <th>
+                                        Interpretação
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        [-1 , -0,25)
+                                    </td>
+                                    <td>
+                                        KMA Baixo
+                                    </td>
+                                    <td>
+                                        O aluno não estima corretamente seu conhecimento na maioria das situações
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        [-0,25 , 0,50)
+                                    </td>
+                                    <td>
+                                        KMA Médio
+                                    </td>
+                                    <td>
+                                        O aluno às vezes calcula corretamente, mas faz estimativas frequentemente erradas ou completamente erradas
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        [0,50 , 1]
+                                    </td>
+                                    <td>
+                                        KMA Alto
+                                    </td>
+                                    <td>
+                                        Aluno na maioria das vezes faz estimativa correta de seu conhecimento
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>";
+
+            $tableKMB = "<div>
+                            <table>
+                                <tr>
+                                    <th>
+                                        Valor do KMB
+                                    </th>
+                                    <th>
+                                        Classificação
+                                    </th>
+                                    <th>
+                                        Interpretação
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        KMA Alto
+                                    </td>
+                                    <td>
+                                        Realista
+                                    </td>
+                                    <td>
+                                        O aluno faz uma estimativa precisa de seu conhecimento, tendo um alto KMA
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        [0,25 , 1]
+                                    </td>
+                                    <td>
+                                        Otimista
+                                    </td>
+                                    <td>
+                                        O aluno tende a estimar que pode resolver os problemas, mas ele não consegue na maioria das vezes
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        [-1 , -0,25]
+                                    </td>
+                                    <td>
+                                        Pessimista
+                                    </td>
+                                    <td>
+                                        Aluno tende a estimar que não pode resolver os problemas, mas depois ele consegue
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        (-0,25 , 0,25)
+                                    </td>
+                                    <td>
+                                        Aleatório
+                                    </td>
+                                    <td>
+                                        Estimativas do aluno sobre o seu conhecimento são tão otimistas quanto pessimistas
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>";                        
+
+            $mform->addElement('html', '<br><br>'.$tableKMA);            
+            $mform->addElement('html', '<br><br>'.$tableKMB);
+            $muavg = $DB->get_record_sql($sql, array($USER->id, $COURSE->id));
+            $mform->addElement('html', '<br><br><p>Seu pre kma medio é: '.$muavg->avgprekma);
+            $mform->addElement('html', '<p>Seu pos kma medio é: '.$muavg->avgposkma);
+            $mform->addElement('html', '<p>Seu pre kmb medio é: '.$muavg->avgprekmb);
+            $mform->addElement('html', '<p>Seu pos kmb medio é: '.$muavg->avgposkmb);
         }
         else {
             $mform->addElement('html', '<tr><td>AINDA NAO FEZ NENHUMA AVALIACAO DO LOGLA</td></tr>');
@@ -325,4 +477,5 @@ class view_prestudent_form extends moodleform {
     function validation($data, $files) {
         return array();
     }
+
 }

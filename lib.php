@@ -182,11 +182,18 @@ function logla_user_grades_add(stdClass $fromform){
         $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*10.0));          
         $logla_user_grades->poskmagrade = $kma;
         $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*10.0));          
-        $logla_user_grades->poskmbgrade = $kmb; 
+        $logla_user_grades->poskmbgrade = $kmb;
+
+        // if logla is set up as posfeedback then save self regulation 1
+        $logla_user_grades->sr1 = $logla->sr1;
+
     }
     else{
         $logla_user_grades->poskmagrade = null;
         $logla_user_grades->poskmbgrade = null;
+
+        // if logla is not set up as posfeedback then save self regulation 1
+        $logla_user_grades->sr1 = null;
     }
     
     $logla_user_grades->mcp1 = $fromform->selactprevious;
@@ -213,6 +220,16 @@ function logla_user_grades_update(stdClass $logla_user_grade) {
     $temp->mcp1 = $logla_user_grade->selactprevious;
     $temp->performace1 = $logla_user_grade->realstatus;
     $temp->ep1 = $logla_user_grade->selfregulation;
+    
+    $logla = $DB->get_record('logla', array('id' => $logla_user_grade->loglaid));
+    
+    // if activity is set up as posfeedback
+    if($logla->posfeedback){
+        $temp->sr1 = $logla_user_grade->selfregulation1;
+    }
+    else {
+        $temp->sr1 = null;
+    }
 
     $DB->update_record('logla_user_grades', $temp, $bulk=false);
 }
@@ -677,6 +694,47 @@ function logla_extend_settings_navigation(settings_navigation $settingsnav, navi
 }
 
 
+
+function convertquiz($value){
+    return convertgrade($value*10.0);
+}
+
+function convertfeedback($value){
+
+    switch ($value) {
+        case 1:
+            return get_string('high', 'logla');
+            break;
+        
+        case 2:
+            return get_string('medium', 'logla');
+            break;
+
+        case 3:
+            return get_string('low', 'logla');
+            break;
+
+        default:
+            return "Invalid value";
+            break;
+    }
+
+}
+
+function convertgrade($value){
+        // estimate grade by rate 
+        if($value >= 75.0){
+            return get_string('high', 'logla');
+        }
+        // verify if the response is regular
+        else if(($value < 75.0) && ($value >= 50.0)){
+            return get_string('medium', 'logla');
+        }
+        // verify if the response is bad
+        else{
+            return get_string('low', 'logla');
+        }
+}
 
 
 
