@@ -89,6 +89,7 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
     $logla->idquiz =$logla->selectQuiz;
     $logla->prefbkmaavg = 0;
     $logla->posfbkmaavg = 0;
+    $logla->rightanswer = $logla->rightanswertxt;
 
     $logla->id = $DB->insert_record('logla', $logla);
     logla_grade_item_update($logla);
@@ -124,6 +125,7 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
     $logla->activityquiz = $logla->selactivityquiz;
     $logla->idactivity = $logla->selectActivity;
     $logla->idquiz =$logla->selectQuiz;
+    $logla->rightanswer = $logla->rightanswertxt;
    
     $result = $DB->update_record('logla', $logla);
 
@@ -199,6 +201,7 @@ function logla_user_grades_add(stdClass $fromform){
     $logla_user_grades->mcp1 = $fromform->selactprevious;
     $logla_user_grades->performace1 = $fromform->realstatus;
     $logla_user_grades->ep1 = $fromform->selfregulation;
+    $logla_user_grades->timecreated = time();
 
 
     $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
@@ -220,6 +223,7 @@ function logla_user_grades_update(stdClass $logla_user_grade) {
     $temp->mcp1 = $logla_user_grade->selactprevious;
     $temp->performace1 = $logla_user_grade->realstatus;
     $temp->ep1 = $logla_user_grade->selfregulation;
+    $temp->timemodified = time();
     
     $logla = $DB->get_record('logla', array('id' => $logla_user_grade->loglaid));
     
@@ -736,6 +740,20 @@ function convertgrade($value){
         }
 }
 
+function convertgradenum($value){
+    // estimate grade by rate 
+    if($value >= 75.0){
+        return 1;
+    }
+    // verify if the response is regular
+    else if(($value < 75.0) && ($value >= 50.0)){
+        return 2;
+    }
+    // verify if the response is bad
+    else{
+        return 3;
+    }
+}
 
 
 /************************* temp source - delete below */
@@ -816,6 +834,7 @@ function logla_user_grades_populate_add(stdClass $logla, $tablename, $fieldtable
             $logla_user_grades->poskmbgrade = null;
         }
         
+        $logla_user_grades->timecreated = time();
         $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
     }
     $rs->close(); 

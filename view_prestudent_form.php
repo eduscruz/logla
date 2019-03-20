@@ -160,7 +160,7 @@ class view_prestudent_form extends moodleform {
 
                 $question = $assign->intro;
                 $useranswer = $assignanswer->onlinetext;
-                $rightanswer = $loglaresult->intro;
+                $rightanswer = $loglaresult->rightanswer;
 
                 $mform->addElement('html', '<p>The question: '.$question);
                 $mform->addElement('html', '<p>'.$useranswer);
@@ -216,7 +216,9 @@ class view_prestudent_form extends moodleform {
         $mform->addElement('html', '<th>Activity/Quiz</th>');
         $mform->addElement('html', '<th>Seu Resultado</th>');
         $mform->addElement('html', '<th>Sua Pre Avaliacao</th>');
+        $mform->addElement('html', '<th>Diferença na Pre Avaliacao</th>');
         $mform->addElement('html', '<th>Sua Pos Avaliacao</th>');
+        $mform->addElement('html', '<th>Diferença Pos Avaliacao</th>');
         $mform->addElement('html', '</tr>');
         
         // SQL query to select tables logla_user_grades and user
@@ -243,6 +245,7 @@ class view_prestudent_form extends moodleform {
                     $activity = $DB->get_record('assign', array('id' => $record->idactivity));
                     $mform->addElement('html', "<td>$activity->name</td>");
                     $activityresult = $DB->get_record('assign_grades', array('assignment' => $record->idactivity, 'userid' => $USER->id));
+                    $valuegrade = convertgradenum($activityresult->grade);
                     $mform->addElement('html', "<td>".convertgrade($activityresult->grade)."</td>");
                     
                 }
@@ -252,6 +255,7 @@ class view_prestudent_form extends moodleform {
                     $quiz = $DB->get_record('quiz', array('id' => $record->idquiz));
                     $mform->addElement('html', "<td>$quiz->name</td>");
                     $quizresult = $DB->get_record('quiz_grades', array('quiz' => $record->idquiz, 'userid' => $USER->id));
+                    $valuegrade = convertgradenum($quizresult->grade*10.0);
                     $mform->addElement('html', "<td>".convertquiz($quizresult->grade)."</td>");
                 }
                 
@@ -261,10 +265,16 @@ class view_prestudent_form extends moodleform {
                     // get prefeedback results
                     $resultprefb = $DB->get_record('feedback_completed', array('feedback'=>$record->idprefeedback, 'userid'=>$USER->id));
                     $mform->addElement('html', "<td>".convertfeedback($resultprefb->anonymous_response)."</td>");
+                    if ($valuegrade != $resultprefb->anonymous_response) {
+                        $difference = abs(($valuegrade - $resultprefb->anonymous_response)/2)*100.0;
+                    } else {
+                        $difference = 0;
+                    }
+                    $mform->addElement('html', "<td>$difference %</td>");
                 }
                 else {
                     // insert empty cell
-                    $mform->addElement('html', "<td></td>");
+                    $mform->addElement('html', "<td></td><td></td>");
                 }
                 
                 // if recordset is set as prefeedback
@@ -273,10 +283,16 @@ class view_prestudent_form extends moodleform {
                     // get posfeedback results
                     $resultposfb = $DB->get_record('feedback_completed', array('feedback'=>$record->idposfeedback, 'userid'=>$USER->id));
                     $mform->addElement('html', "<td>".convertfeedback($resultposfb->anonymous_response)."</td>");
+                    if ($valuegrade != $resultposfb->anonymous_response) {
+                        $difference = abs(($valuegrade - $resultposfb->anonymous_response)/2)*100.0;
+                    } else {
+                        $difference = 0;
+                    }
+                    $mform->addElement('html', "<td>$difference %</td>");
                 }
                 else {
                     // insert empty cell
-                    $mform->addElement('html', "<td></td>");
+                    $mform->addElement('html', "<td></td><td></td>");
                 }
                 
                 $mform->addElement('html', '</tr>');

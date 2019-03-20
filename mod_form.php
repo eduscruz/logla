@@ -167,9 +167,11 @@ class mod_logla_mod_form extends moodleform_mod {
         if ($loglaresultexist)
             $selectQuiz->setSelected($loglaresult->idquiz);
    
+        $mform->addElement('textarea', 'rightanswertxt', 'Right Answer', 'wrap="virtual" rows="20" cols="50"');
+        if ($loglaresult->rightanswer) {
+            $mform->setDefault('rightanswertxt', $loglaresult->rightanswer); 
+        }
 
-        // test verify
-        // $mform->addElement('text', 'name2', $loglaresultexist);
   
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();
