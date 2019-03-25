@@ -187,8 +187,7 @@ function logla_user_grades_add(stdClass $fromform){
         $logla_user_grades->poskmbgrade = $kmb;
 
         // if logla is set up as posfeedback then save self regulation 1
-        $logla_user_grades->sr1 = $logla->sr1;
-
+        $logla_user_grades->sr1 = $fromform->sr1;
     }
     else{
         $logla_user_grades->poskmagrade = null;

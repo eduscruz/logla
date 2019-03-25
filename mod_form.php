@@ -49,7 +49,11 @@ class mod_logla_mod_form extends moodleform_mod {
         $mform = $this->_form;
 
         // get course module id
+        // $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
+        // $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should be named as the first character of the module. 
+        // $coursemodule = $id;
         $coursemodule = $PAGE->cm->id; 
+
 
         // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -104,7 +108,7 @@ class mod_logla_mod_form extends moodleform_mod {
             
         for($i=1;$i<=$countquiz;$i++){
             $quizname[ ] = $quiz[$i]->name;
-            $quizcombo[$assign[$i]->id] = $quiz[$i]->name;
+            $quizcombo[$quiz[$i]->id] = $quiz[$i]->name;
         }
         asort($quizcombo);
 
@@ -168,7 +172,7 @@ class mod_logla_mod_form extends moodleform_mod {
             $selectQuiz->setSelected($loglaresult->idquiz);
    
         $mform->addElement('textarea', 'rightanswertxt', 'Right Answer', 'wrap="virtual" rows="20" cols="50"');
-        if ($loglaresult->rightanswer) {
+        if ($loglaresult) {
             $mform->setDefault('rightanswertxt', $loglaresult->rightanswer); 
         }
 

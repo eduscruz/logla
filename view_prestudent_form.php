@@ -182,7 +182,8 @@ class view_prestudent_form extends moodleform {
             $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity10', 'logla'), 2);
             $mform->addGroup($radioarray, 'sr1', get_string('textactivity7', 'logla'), array(' '), false);
 
-            if($user_grade_result->sr1){
+            // if($user_grade_result->sr1){
+            if($user_grade_result){
                 $mform->setDefault('selfregulation1', $user_grade_result->sr1);
             }
             else{
