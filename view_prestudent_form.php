@@ -131,16 +131,13 @@ class view_prestudent_form extends moodleform {
                 $rs->close();
                 
                 //add section header              
-                $header1 = 'The Questions:';
-                $mform->addElement('header', 'loglafieldset', $header1);
+                $mform->addElement('header', 'loglafieldset', get_string('header1', 'logla'));
                 $mform->addElement('html', '<p>'.$question.'<br>');
 
-                $header1 = 'Your answers:';
-                $mform->addElement('header', 'loglafieldset', $header1);
+                $mform->addElement('header', 'loglafieldset', get_string('header2', 'logla'));
                 $mform->addElement('html', '<p>'.$useranswer.'<br>');
 
-                $header4 = 'Right answers:';
-                $mform->addElement('header', 'loglafieldset', $header4);
+                $mform->addElement('header', 'loglafieldset', get_string('header3', 'logla'));
                 $mform->addElement('html', '<p>'.$rightanswer);
                 
             }
@@ -162,18 +159,16 @@ class view_prestudent_form extends moodleform {
                 $useranswer = $assignanswer->onlinetext;
                 $rightanswer = $loglaresult->rightanswer;
 
-                $mform->addElement('html', '<p>The question: '.$question);
+                $mform->addElement('html', '<p>'.get_string('question1', 'logla').$question);
                 $mform->addElement('html', '<p>'.$useranswer);
 
-                $header4 = 'Right answer:';
-                $mform->addElement('header', 'loglafieldset', $header4);
+                $mform->addElement('header', 'loglafieldset', get_string('header4', 'logla'));
                 $mform->addElement('html', '<p>'.$rightanswer);
             }
 
 
             // Header self regulation 1
-            $header6 = 'Self-regulation:';
-            $mform->addElement('header', 'loglafieldset', $header6);
+            $mform->addElement('header', 'loglafieldset', get_string('header5', 'logla'));
 
             // add radiobox selfregulation
             $radioarray=array();
@@ -207,19 +202,18 @@ class view_prestudent_form extends moodleform {
         }
   
         //add section header
-        $header2 = 'General Metacognition Results';
-        $mform->addElement('header', 'loglafieldset', $header2);
+        $mform->addElement('header', 'loglafieldset', get_string('header6', 'logla'));
 
         // insert table results
         $mform->addElement('html', '<div>');
         $mform->addElement('html', '<table>');
         $mform->addElement('html', '<tr>');
-        $mform->addElement('html', '<th>Activity/Quiz</th>');
-        $mform->addElement('html', '<th>Seu Resultado</th>');
-        $mform->addElement('html', '<th>Sua Pre Avaliacao</th>');
-        $mform->addElement('html', '<th>Diferença na Pre Avaliacao</th>');
-        $mform->addElement('html', '<th>Sua Pos Avaliacao</th>');
-        $mform->addElement('html', '<th>Diferença Pos Avaliacao</th>');
+        $mform->addElement('html', '<th>'.get_string('table1', 'logla').'</th>');
+        $mform->addElement('html', '<th>'.get_string('table2', 'logla').'</th>');
+        $mform->addElement('html', '<th>'.get_string('table3', 'logla').'</th>');
+        $mform->addElement('html', '<th>'.get_string('table4', 'logla').'</th>');
+        $mform->addElement('html', '<th>'.get_string('table5', 'logla').'</th>');
+        $mform->addElement('html', '<th>'.get_string('table6', 'logla').'</th>');
         $mform->addElement('html', '</tr>');
         
         // SQL query to select tables logla_user_grades and user
@@ -436,9 +430,8 @@ class view_prestudent_form extends moodleform {
             $mform->addElement('html', '</table>');
         }
         
-        // add header activity
-        $header3 = 'Acitivity';
-        $mform->addElement('header', 'loglafieldset', $header3);
+        // add header activity;
+        $mform->addElement('header', 'loglafieldset', get_string('header7', 'logla'));
        
         $mform->addElement('html', '<p>'.get_string('textactivity1', 'logla'));
         $mform->addElement('html', '<p>'.get_string('textactivity2', 'logla'));

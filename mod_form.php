@@ -83,32 +83,23 @@ class mod_logla_mod_form extends moodleform_mod {
         $mform->addElement('header', 'loglafieldset', get_string('loglafieldset', 'logla'));
 
         // get feedback record from database
-        $countfeedback = $DB->count_records('feedback', array('course'=>$COURSE->id)); 
         $feedback = $DB->get_records('feedback', array('course'=>$COURSE->id)); 
-            
-        for($i=1;$i<=$countfeedback;$i++){
-            $feedbackname[ ] = $feedback[$i]->name;
-            $fbcombo[$feedback[$i]->id] = $feedback[$i]->name;
+        foreach ($feedback as $record) {
+            $fbcombo[$record->id] = $record->name;
         }
         asort($fbcombo);
 
         // get assign record from database
-        $countassign = $DB->count_records('assign', array('course'=>$COURSE->id)); 
         $assign = $DB->get_records('assign', array('course'=>$COURSE->id)); 
-            
-        for($i=1;$i<=$countassign;$i++){
-            $assignname[ ] = $assign[$i]->name;
-            $assingcombo[$assign[$i]->id] = $assign[$i]->name;
+        foreach ($assign as $record) {
+            $assingcombo[$record->id] = $record->name;
         }
         asort($assingcombo);
 
         // get quiz record from database
-        $countquiz = $DB->count_records('quiz', array('course'=>$COURSE->id)); 
         $quiz = $DB->get_records('quiz', array('course'=>$COURSE->id)); 
-            
-        for($i=1;$i<=$countquiz;$i++){
-            $quizname[ ] = $quiz[$i]->name;
-            $quizcombo[$quiz[$i]->id] = $quiz[$i]->name;
+        foreach ($quiz as $record) {
+            $quizcombo[$record->id] = $record->name;
         }
         asort($quizcombo);
 
@@ -149,7 +140,7 @@ class mod_logla_mod_form extends moodleform_mod {
         $radioarray=array();
         $radioarray[] = $mform->createElement('radio', 'selactivityquiz', '', get_string('Activity', 'logla'), 1);
         $radioarray[] = $mform->createElement('radio', 'selactivityquiz', '', get_string('Quiz', 'logla'), 0);
-        $mform->addGroup($radioarray, 'radioar', 'ActivityType', array(' '), false);
+        $mform->addGroup($radioarray, 'radioar', get_string('table1', 'logla'), array(' '), false);
         // verify if $loglaresult is not empty and set default value from table
         if ($loglaresultexist)
             $mform->setDefault('selactivityquiz', $loglaresult->activityquiz);
@@ -171,7 +162,7 @@ class mod_logla_mod_form extends moodleform_mod {
         if ($loglaresultexist)
             $selectQuiz->setSelected($loglaresult->idquiz);
    
-        $mform->addElement('textarea', 'rightanswertxt', 'Right Answer', 'wrap="virtual" rows="20" cols="50"');
+        $mform->addElement('textarea', 'rightanswertxt', get_string('header4', 'logla'), 'wrap="virtual" rows="20" cols="50"');
         if ($loglaresult) {
             $mform->setDefault('rightanswertxt', $loglaresult->rightanswer); 
         }

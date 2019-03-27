@@ -47,6 +47,16 @@ $string['PreFeedback'] = 'PreFeedback';
 $string['PosMetacognition'] = 'PosMetacognition';
 $string['PosFeedback'] = 'PosFeedback';
 $string['Activity'] = 'Activity';
+
+// strings from view_prestudent
+$string['header1'] = 'The questions:';
+$string['header2'] = 'Your answers:';
+$string['header3'] = 'Right answers:';
+$string['header4'] = 'Right answer:';
+$string['header5'] = 'Reflection on the solution:';
+$string['header6'] = 'General Metacognition Results';
+$string['header7'] = 'Activity';
+
 $string['Quiz'] = 'Quiz';
 $string['high'] = 'High';
 $string['medium'] = 'Medium';
@@ -57,6 +67,16 @@ $string['increasing'] = 'Increasing';
 $string['constant'] = 'Constant';
 $string['random'] = 'Random';
 $string['undefined'] = 'Undefined';
+
+$string['question1'] = 'The question:';
+
+$string['table1'] = 'Activity/Quiz';
+$string['table2'] = 'Your Result';
+$string['table3'] = 'Your Pre Avaliation';
+$string['table4'] = 'Difference in Pre-Evaluation';
+$string['table5'] = 'Your Post Evaluation';
+$string['table6'] = 'Post Valuation Difference';
+
 $string['textactivity1'] = '<strong>Your task is:</strong><br><br>
 Check the options with your interpretation of the tables presented. The tables present their prediction of performance versus achievement.';
 $string['textactivity2'] = 'In this last problem my FORECAST was: ';
