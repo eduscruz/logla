@@ -56,6 +56,9 @@ $string['header4'] = 'Right answer:';
 $string['header5'] = 'Reflection on the solution:';
 $string['header6'] = 'General Metacognition Results';
 $string['header7'] = 'Activity';
+$string['header8'] = 'SOLUTION ANALYSIS';
+$string['header9'] = 'METACOGNITIVE HISTORY';
+$string['header10'] = 'ANALYSIS OF THE CURRENT STATUS OF MONITORING OWN KNOWLEDGE';
 
 $string['Quiz'] = 'Quiz';
 $string['high'] = 'High';
@@ -88,3 +91,17 @@ $string['textactivity7'] = 'Compare your solution with the teacher solution and 
 $string['textactivity8'] = 'Your solution is identical, equivalent or different but is correct as well (75% to 100%)';
 $string['textactivity9'] = 'Your solution is different, and is more or less correct (from 50% to 75% correct)';
 $string['textactivity10'] = 'Your solution is different and is more or less correct (from 50% to 75% correct)';
+$string['textactivity11'] = "See below the statement, its solution and the solution proposed by the teacher.
+                             The solution provided by the teacher (which may not be the only one) should be used for comparison purposes with your solution.
+                             <strong> YOUR TASK:</ strong> Check the following options, which you consider most appropriate, after comparing YOUR solution with 
+                            that offered by the TEACHER. How close is your solution to the teacher's standard solution?";
+$string['textactivity12'] = 'The following data shows your historical results of performance <strong>FORECASTING and EFFECTIVE </strong>
+                            performance in previous issues. Look at your data, especially the "DIFFERENCES" columns 
+                            (in pre and post evaluation) and reflect on your advances.';
+$string['textactivity13'] = 'Your average KMA is: ';
+$string['textactivity14'] = 'Your average KMB is: ';
+$string['textactivity15'] = 'Your average SAA is: ';
+$string['textactivity16'] = 'Your average SAB is: ';
+$string['textactivity17'] = 'See below your KMA and your average KMB';
+$string['textactivity18'] = 'YOUR TASK: Read and reflect on the evaluation of MePPRe on what you have shown to know about your own level 
+                            of knowledge acquisition.  Try to remember this feedback while performing the next activity (problem).';

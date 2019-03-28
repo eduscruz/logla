@@ -76,6 +76,9 @@ class view_prestudent_form extends moodleform {
         // if pos-feedback is set show awnser of student and corret result
         if($loglaresult->posfeedback){
 
+            echo $OUTPUT->heading(get_string('header8', 'logla'));
+            $mform->addElement('html', '<p>'.get_string('textactivity11', 'logla').'<br>');
+
             // if quiz
             if(!$loglaresult->activityquiz){
                 
@@ -132,7 +135,7 @@ class view_prestudent_form extends moodleform {
                 
                 //add section header              
                 $mform->addElement('header', 'loglafieldset', get_string('header1', 'logla'));
-                $mform->addElement('html', '<p>'.$question.'<br>');
+                $mform->addElement('html', $question.'<br>');
 
                 $mform->addElement('header', 'loglafieldset', get_string('header2', 'logla'));
                 $mform->addElement('html', '<p>'.$useranswer.'<br>');
@@ -204,6 +207,9 @@ class view_prestudent_form extends moodleform {
         //add section header
         $mform->addElement('header', 'loglafieldset', get_string('header6', 'logla'));
 
+        echo $OUTPUT->heading(get_string('header9', 'logla'));
+        $mform->addElement('html', '<p>'.get_string('textactivity12', 'logla').'<br>');
+
         // insert table results
         $mform->addElement('html', '<div>');
         $mform->addElement('html', '<table>');
@@ -228,6 +234,7 @@ class view_prestudent_form extends moodleform {
                WHERE g.userid = ? AND c.course = ?';
         
         $rs = $DB->get_recordset_sql($sql, array($USER->id, $COURSE->id));
+        // if exists any result from rs
         if ($rs) {
             foreach ($rs as $record) {
                 
@@ -279,7 +286,7 @@ class view_prestudent_form extends moodleform {
                             $difference = 0;
                         }
                     } else {
-                        $difference = 'Error prefeedback';
+                        $difference = 'Error: prefeedback empty<td>Error: prefeedback empty</td>';
                     }
                     
                     $mform->addElement('html', "<td>$difference %</td>");
@@ -303,7 +310,7 @@ class view_prestudent_form extends moodleform {
                             $difference = 0;
                         }
                     } else {
-                        $difference = 'Error posfeedback';
+                        $difference = 'Error: posfeedback empty<td>Error: posfeedback empty</td>';
                     }
                     
                     
@@ -319,134 +326,6 @@ class view_prestudent_form extends moodleform {
             $rs->close();
             $mform->addElement('html', '</div>');
             $mform->addElement('html', '</table>');   
-            
-            $sql = 'SELECT 	
-                            AVG(g.prekmagrade) AS avgprekma,
-                            AVG(g.poskmagrade) AS avgposkma,
-                            AVG(g.prekmbgrade) AS avgprekmb,
-                            AVG(g.poskmbgrade) AS avgposkmb
-                    FROM mdl_logla_user_grades AS g
-                    INNER JOIN mdl_logla AS l ON g.idlogla = l.id
-                    INNER JOIN mdl_course_modules AS c ON  c.id = l.coursemodule 
-                    WHERE g.userid = ? AND c.course = ?';
-            
-
-            $tableKMA = "<div>
-                            <table>
-                                <tr>
-                                    <th>
-                                        Valor do KMA
-                                    </th>
-                                    <th>
-                                        Classificação
-                                    </th>
-                                    <th>
-                                        Interpretação
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        [-1 , -0,25)
-                                    </td>
-                                    <td>
-                                        KMA Baixo
-                                    </td>
-                                    <td>
-                                        O aluno não estima corretamente seu conhecimento na maioria das situações
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        [-0,25 , 0,50)
-                                    </td>
-                                    <td>
-                                        KMA Médio
-                                    </td>
-                                    <td>
-                                        O aluno às vezes calcula corretamente, mas faz estimativas frequentemente erradas ou completamente erradas
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        [0,50 , 1]
-                                    </td>
-                                    <td>
-                                        KMA Alto
-                                    </td>
-                                    <td>
-                                        Aluno na maioria das vezes faz estimativa correta de seu conhecimento
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>";
-
-            $tableKMB = "<div>
-                            <table>
-                                <tr>
-                                    <th>
-                                        Valor do KMB
-                                    </th>
-                                    <th>
-                                        Classificação
-                                    </th>
-                                    <th>
-                                        Interpretação
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        KMA Alto
-                                    </td>
-                                    <td>
-                                        Realista
-                                    </td>
-                                    <td>
-                                        O aluno faz uma estimativa precisa de seu conhecimento, tendo um alto KMA
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        [0,25 , 1]
-                                    </td>
-                                    <td>
-                                        Otimista
-                                    </td>
-                                    <td>
-                                        O aluno tende a estimar que pode resolver os problemas, mas ele não consegue na maioria das vezes
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        [-1 , -0,25]
-                                    </td>
-                                    <td>
-                                        Pessimista
-                                    </td>
-                                    <td>
-                                        Aluno tende a estimar que não pode resolver os problemas, mas depois ele consegue
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        (-0,25 , 0,25)
-                                    </td>
-                                    <td>
-                                        Aleatório
-                                    </td>
-                                    <td>
-                                        Estimativas do aluno sobre o seu conhecimento são tão otimistas quanto pessimistas
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>";                        
-
-            $mform->addElement('html', '<br><br>'.$tableKMA);            
-            $mform->addElement('html', '<br><br>'.$tableKMB);
-            $muavg = $DB->get_record_sql($sql, array($USER->id, $COURSE->id));
-            $mform->addElement('html', '<br><br><p>Seu pre kma medio é: '.$muavg->avgprekma);
-            $mform->addElement('html', '<p>Seu pos kma medio é: '.$muavg->avgposkma);
-            $mform->addElement('html', '<p>Seu pre kmb medio é: '.$muavg->avgprekmb);
-            $mform->addElement('html', '<p>Seu pos kmb medio é: '.$muavg->avgposkmb);
         }
         else {
             $mform->addElement('html', '<tr><td>AINDA NAO FEZ NENHUMA AVALIACAO DO LOGLA</td></tr>');
@@ -454,9 +333,140 @@ class view_prestudent_form extends moodleform {
             $mform->addElement('html', '</table>');
         }
         
+        $sql ='SELECT 	
+                    AVG(g.prekmagrade) AS avgprekma,
+                    AVG(g.poskmagrade) AS avgposkma,
+                    AVG(g.prekmbgrade) AS avgprekmb,
+                    AVG(g.poskmbgrade) AS avgposkmb
+                    FROM mdl_logla_user_grades AS g
+                    INNER JOIN mdl_logla AS l ON g.idlogla = l.id
+                    INNER JOIN mdl_course_modules AS c ON  c.id = l.coursemodule 
+                    WHERE g.userid = ? AND c.course = ?';
+
+        $muavg = $DB->get_record_sql($sql, array($USER->id, $COURSE->id));
+        $mform->addElement('html', '<br><br><strong><p>'.get_string('textactivity13', 'logla').$muavg->avgprekma.get_string('textactivity14', 'logla').$muavg->avgprekmb);
+        $mform->addElement('html', '<p>'.get_string('textactivity15', 'logla').$muavg->avgposkma.get_string('textactivity16', 'logla').$muavg->avgposkmb.'</strong>');
+        
+        // add header activity;
+        $mform->addElement('header', 'tablekmakmb','Tabela');
+       
+        $tableKMA = "<div>
+                <table>
+                    <tr>
+                        <th>
+                            Valor do KMA
+                        </th>
+                        <th>
+                            Classificação
+                        </th>
+                        <th>
+                            Interpretação
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            [-1 , -0,25)
+                        </td>
+                        <td>
+                            KMA Baixo
+                        </td>
+                        <td>
+                            O aluno não estima corretamente seu conhecimento na maioria das situações
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            [-0,25 , 0,50)
+                        </td>
+                        <td>
+                            KMA Médio
+                        </td>
+                        <td>
+                            O aluno às vezes calcula corretamente, mas faz estimativas frequentemente erradas ou completamente erradas
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            [0,50 , 1]
+                        </td>
+                        <td>
+                            KMA Alto
+                        </td>
+                        <td>
+                            Aluno na maioria das vezes faz estimativa correta de seu conhecimento
+                        </td>
+                    </tr>
+                </table>
+            </div>";
+
+        $tableKMB = "<div>
+                <table>
+                    <tr>
+                        <th>
+                        Valor do KMB
+                        </th>
+                        <th>
+                            Classificação
+                        </th>
+                        <th>
+                            Interpretação
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            KMA Alto
+                        </td>
+                        <td>
+                            Realista
+                        </td>
+                        <td>
+                            O aluno faz uma estimativa precisa de seu conhecimento, tendo um alto KMA
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            [0,25 , 1]
+                        </td>
+                        <td>
+                            Otimista
+                        </td>
+                        <td>
+                            O aluno tende a estimar que pode resolver os problemas, mas ele não consegue na maioria das vezes
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            [-1 , -0,25]
+                        </td>
+                        <td>
+                            Pessimista
+                        </td>
+                        <td>
+                            Aluno tende a estimar que não pode resolver os problemas, mas depois ele consegue
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            (-0,25 , 0,25)
+                        </td>
+                        <td>
+                            Aleatório
+                        </td>
+                        <td>
+                            Estimativas do aluno sobre o seu conhecimento são tão otimistas quanto pessimistas
+                        </td>
+                    </tr>
+                </table>
+            </div>";                        
+
+        $mform->addElement('html', '<br><br>'.$tableKMA);            
+        $mform->addElement('html', '<br><br>'.$tableKMB);
+       
+        $mform->closeHeaderBefore('tablekmakmb');
+
         // add header activity;
         $mform->addElement('header', 'loglafieldset', get_string('header7', 'logla'));
-       
+
         $mform->addElement('html', '<p>'.get_string('textactivity1', 'logla'));
         $mform->addElement('html', '<p>'.get_string('textactivity2', 'logla'));
         
