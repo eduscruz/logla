@@ -240,8 +240,14 @@ class view_prestudent_form extends moodleform {
                     $activity = $DB->get_record('assign', array('id' => $record->idactivity));
                     $mform->addElement('html', "<td>$activity->name</td>");
                     $activityresult = $DB->get_record('assign_grades', array('assignment' => $record->idactivity, 'userid' => $USER->id));
-                    $valuegrade = convertgradenum($activityresult->grade);
-                    $mform->addElement('html', "<td>".convertgrade($activityresult->grade)."</td>");
+                    // verify is $activityresult is not empty
+                    if ($activityresult) {
+                        $valuegrade = convertgradenum($activityresult->grade);
+                        $mform->addElement('html', "<td>".convertgrade($activityresult->grade)."</td>");
+                    } else {
+                        $mform->addElement('html', "<td>Empty</td>");
+                    }
+                    
                     
                 }
                 // if recordset is quiz
@@ -250,8 +256,13 @@ class view_prestudent_form extends moodleform {
                     $quiz = $DB->get_record('quiz', array('id' => $record->idquiz));
                     $mform->addElement('html', "<td>$quiz->name</td>");
                     $quizresult = $DB->get_record('quiz_grades', array('quiz' => $record->idquiz, 'userid' => $USER->id));
-                    $valuegrade = convertgradenum($quizresult->grade*10.0);
-                    $mform->addElement('html', "<td>".convertquiz($quizresult->grade)."</td>");
+                    if ($quizresult) {
+                        $valuegrade = convertgradenum($quizresult->grade*10.0);
+                        $mform->addElement('html', "<td>".convertquiz($quizresult->grade)."</td>");
+                    } else {
+                        $mform->addElement('html', "<td>Empty</td>");
+                    }
+                    
                 }
                 
                 // if recordset is set as prefeedback
@@ -259,12 +270,18 @@ class view_prestudent_form extends moodleform {
                     
                     // get prefeedback results
                     $resultprefb = $DB->get_record('feedback_completed', array('feedback'=>$record->idprefeedback, 'userid'=>$USER->id));
-                    $mform->addElement('html', "<td>".convertfeedback($resultprefb->anonymous_response)."</td>");
-                    if ($valuegrade != $resultprefb->anonymous_response) {
-                        $difference = abs(($valuegrade - $resultprefb->anonymous_response)/2)*100.0;
+                    // verify if is not empty
+                    if ($resultprefb) {
+                        $mform->addElement('html', "<td>".convertfeedback($resultprefb->anonymous_response)."</td>");
+                        if ($valuegrade != $resultprefb->anonymous_response) {
+                            $difference = abs(($valuegrade - $resultprefb->anonymous_response)/2)*100.0;
+                        } else {
+                            $difference = 0;
+                        }
                     } else {
-                        $difference = 0;
+                        $difference = 'Error prefeedback';
                     }
+                    
                     $mform->addElement('html', "<td>$difference %</td>");
                 }
                 else {
@@ -277,12 +294,19 @@ class view_prestudent_form extends moodleform {
                     
                     // get posfeedback results
                     $resultposfb = $DB->get_record('feedback_completed', array('feedback'=>$record->idposfeedback, 'userid'=>$USER->id));
-                    $mform->addElement('html', "<td>".convertfeedback($resultposfb->anonymous_response)."</td>");
-                    if ($valuegrade != $resultposfb->anonymous_response) {
-                        $difference = abs(($valuegrade - $resultposfb->anonymous_response)/2)*100.0;
+                    // verify if $resultposfb is not empty
+                    if ($resultposfb) {
+                        $mform->addElement('html', "<td>".convertfeedback($resultposfb->anonymous_response)."</td>");
+                        if ($valuegrade != $resultposfb->anonymous_response) {
+                            $difference = abs(($valuegrade - $resultposfb->anonymous_response)/2)*100.0;
+                        } else {
+                            $difference = 0;
+                        }
                     } else {
-                        $difference = 0;
+                        $difference = 'Error posfeedback';
                     }
+                    
+                    
                     $mform->addElement('html', "<td>$difference %</td>");
                 }
                 else {
