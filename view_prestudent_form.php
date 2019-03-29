@@ -276,12 +276,21 @@ class view_prestudent_form extends moodleform {
                 if ($record->prefeedback) {
                     
                     // get prefeedback results
-                    $resultprefb = $DB->get_record('feedback_completed', array('feedback'=>$record->idprefeedback, 'userid'=>$USER->id));
+                    $sql = 'SELECT 
+                                fv.value
+                            FROM mdl_feedback AS f
+                            INNER JOIN mdl_feedback_completed AS fc  ON   f.id = fc.feedback
+                            INNER JOIN mdl_feedback_value AS fv  ON   fc.id = fv.completed
+                            WHERE fc.userid = ? AND f.id = ?';
+
+                    // $resultprefb = $DB->get_record('feedback_completed', array('feedback'=>$record->idprefeedback, 'userid'=>$USER->id));
+                    $resultprefb = $DB->get_record_sql($sql, array($USER->id, $record->idprefeedback));
+                    
                     // verify if is not empty
                     if ($resultprefb) {
-                        $mform->addElement('html', "<td>".convertfeedback($resultprefb->anonymous_response)."</td>");
-                        if ($valuegrade != $resultprefb->anonymous_response) {
-                            $difference = abs(($valuegrade - $resultprefb->anonymous_response)/2)*100.0;
+                        $mform->addElement('html', "<td>".convertfeedback($resultprefb->value)."</td>");
+                        if ($valuegrade != $resultprefb->value) {
+                            $difference = abs(($valuegrade - $resultprefb->value)/2)*100.0;
                         } else {
                             $difference = 0;
                         }
@@ -299,13 +308,22 @@ class view_prestudent_form extends moodleform {
                 // if recordset is set as prefeedback
                 if ($record->posfeedback) {
                     
+                    $sql = 'SELECT 
+                                fv.value
+                            FROM mdl_feedback AS f
+                            INNER JOIN mdl_feedback_completed AS fc  ON   f.id = fc.feedback
+                            INNER JOIN mdl_feedback_value AS fv  ON   fc.id = fv.completed
+                            WHERE fc.userid = ? AND f.id = ?';
+
                     // get posfeedback results
-                    $resultposfb = $DB->get_record('feedback_completed', array('feedback'=>$record->idposfeedback, 'userid'=>$USER->id));
+                    // $resultposfb = $DB->get_record('feedback_completed', array('feedback'=>$record->idposfeedback, 'userid'=>$USER->id));
+                    $resultposfb = $DB->get_record_sql($sql, array($USER->id, $record->idposfeedback));
+                    
                     // verify if $resultposfb is not empty
                     if ($resultposfb) {
-                        $mform->addElement('html', "<td>".convertfeedback($resultposfb->anonymous_response)."</td>");
-                        if ($valuegrade != $resultposfb->anonymous_response) {
-                            $difference = abs(($valuegrade - $resultposfb->anonymous_response)/2)*100.0;
+                        $mform->addElement('html', "<td>".convertfeedback($resultposfb->value)."</td>");
+                        if ($valuegrade != $resultposfb->value) {
+                            $difference = abs(($valuegrade - $resultposfb->value)/2)*100.0;
                         } else {
                             $difference = 0;
                         }
