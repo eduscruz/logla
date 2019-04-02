@@ -101,14 +101,13 @@ class view_levelstudent_form extends moodleform {
                     $kmaknowledge = 'understands very well';
                 }
 
-                $text1 = '<strong>How is your accuracy in estimating your knowledge (metacognition)?</strong><br><br>
-                You demonstrated <strong>';
+                $text1 = "<strong>".get_string('textactivity19', 'logla')."</strong><br><br>";
+                $text1 .= get_string('textactivity20', 'logla')."<strong>";
                 $text1 .= $prekma;
-                $text1 .= ' </strong>accuracy in judging their knowledge in this course.
-                            Keep in mind that this is only an approximate analysis, 
-                            but this suggests that you are <strong>';
-                $text1 .= $kmaknowledge;
-                $text1 .= ' </strong>what you "KNOW" and "DO NOT KNOW". Check the feedback in your solution and try to identify your learning gaps.';
+                $text1 .= " </strong>";
+                $text1 .= get_string('textactivity21', 'logla');
+                $text1 .= "<strong>".get_string('textactivity22', 'logla').$kmaknowledge." </strong>";
+                $text1 .= get_string('textactivity23', 'logla');
                 echo $OUTPUT->box($text1);
             }
             
