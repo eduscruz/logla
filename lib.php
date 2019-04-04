@@ -248,8 +248,15 @@ function calculate_kma($idfeedback, $iduser, $grade){
 
     global $DB;
 
-    $resultfeedback = $DB->get_record('feedback_completed', array('feedback'=>$idfeedback, 'userid'=>$iduser));
-    
+    // $resultfeedback = $DB->get_record('feedback_completed', array('feedback'=>$idfeedback, 'userid'=>$iduser));
+    $sql = 'SELECT 
+                fv.value
+            FROM mdl_feedback AS f
+            INNER JOIN mdl_feedback_completed AS fc  ON   f.id = fc.feedback
+            INNER JOIN mdl_feedback_value AS fv  ON   fc.id = fv.completed
+            WHERE fc.userid = ? AND f.id = ?';
+
+    $resultfeedback = $DB->get_record_sql($sql, array($iduser, $idfeedback));
     $graderate = 0;
 
     // estimate grade by rate 
@@ -266,10 +273,10 @@ function calculate_kma($idfeedback, $iduser, $grade){
     }
 
     // variable aux to calculate kma
-    $auxabs = abs(($resultfeedback->anonymous_response) - $graderate);
+    $auxabs = abs(($resultfeedback->value) - $graderate);
 
     // verify if theauxabs is zero then chage to one
-    if (($resultfeedback->anonymous_response - $graderate)==0){
+    if (($resultfeedback->value - $graderate)==0){
         $kma = 1;
     }
     else {
@@ -291,7 +298,16 @@ function calculate_kmb($idfeedback, $iduser, $grade){
 
     global $DB;
 
-    $resultfeedback = $DB->get_record('feedback_completed', array('feedback'=>$idfeedback, 'userid'=>$iduser));
+    // $resultfeedback = $DB->get_record('feedback_completed', array('feedback'=>$idfeedback, 'userid'=>$iduser));
+    // get prefeedback results
+    $sql = 'SELECT 
+                fv.value
+            FROM mdl_feedback AS f
+            INNER JOIN mdl_feedback_completed AS fc  ON   f.id = fc.feedback
+            INNER JOIN mdl_feedback_value AS fv  ON   fc.id = fv.completed
+            WHERE fc.userid = ? AND f.id = ?';
+
+    $resultfeedback = $DB->get_record_sql($sql, array($iduser, $idfeedback));
     
     $graderate = 0;
 
@@ -309,10 +325,10 @@ function calculate_kmb($idfeedback, $iduser, $grade){
     }
 
     // variable aux to calculate kma
-    $auxabs = ($resultfeedback->anonymous_response) - $graderate;
+    $auxabs = ($resultfeedback->value) - $graderate;
 
     // verify if theauxabs is zero then chage to one
-    if(($resultfeedback->anonymous_response - $graderate) == 0){
+    if(($resultfeedback->value - $graderate) == 0){
         $kmb = 0;
     }
     else{
@@ -796,7 +812,8 @@ function logla_user_grades_populate_add(stdClass $logla, $tablename, $fieldtable
     
     $rs = $DB->get_recordset($tablename, array($fieldtable=>$logla->$fieldlogla));
     
-
+    $logla_user_grades = new stdClass();
+    
     foreach ($rs as $record) {
         // branco na atualizacao  ********************************************************************
         // if (!empty($logla->id)){

@@ -111,3 +111,11 @@ $string['textactivity21'] = 'accuracy in judging their knowledge in this course.
                             but this suggests that you are';
 $string['textactivity22'] = 'You demonstrated ';
 $string['textactivity23'] = 'what you "KNOW" and "DO NOT KNOW". Check the feedback in your solution and try to identify your learning gaps.';
+$string['textactivity24'] = 'Your average SAB is: ';
+$string['textactivity25'] = 'does not understand well';
+$string['textactivity26'] = 'reasonably';
+$string['textactivity27'] = 'understands very well';
+$string['textactivity28'] = 'How is your tendency in estimating your knowledge? Are you being optimistic or pessimistic?';
+$string['textactivity29'] = 'On average you are being';
+$string['textactivity30'] = 'in your assessment of your knowledge your skills in problem solving. This means that you imagine that you know';
+$string['textactivity31'] = 'than you demonstrate.';

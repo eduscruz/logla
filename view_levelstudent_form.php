@@ -88,17 +88,17 @@ class view_levelstudent_form extends moodleform {
 
             if ($logla_user_result->prekmagrade) {
                 if ($logla_user_result->prekmagrade < (-0.25)) {
-                   $prekma = 'low';
-                   $kmaknowledge = 'does not understand well';
+                   $prekma = get_string('low', 'logla');
+                   $kmaknowledge = get_string('textactivity25', 'logla');
                 }
                 elseif (($logla_user_result->prekmagrade >= (-0.25)) && (($logla_user_result->prekmagrade <= (0.5)))) {
-                    $prekma = 'Average';
-                    $kmaknowledge = 'reasonably';
+                    $prekma = get_string('medium', 'logla');
+                    $kmaknowledge = get_string('textactivity26', 'logla');
                     
                 }
                 else {
-                    $prekma = 'High';
-                    $kmaknowledge = 'understands very well';
+                    $prekma = get_string('high', 'logla');
+                    $kmaknowledge = get_string('textactivity27', 'logla');
                 }
 
                 $text1 = "<strong>".get_string('textactivity19', 'logla')."</strong><br><br>";
@@ -125,12 +125,12 @@ class view_levelstudent_form extends moodleform {
                     $kmbknowledge = 'LESS';
                 }
 
-                $text2 = '<strong>How is your tendency in estimating your knowledge? Are you being optimistic or pessimistic?</strong><br><br>';
-                $text2 .= 'On average you are being <strong>';
+                $text2 = '<strong>'.get_string('textactivity28', 'logla').'</strong><br><br>';
+                $text2 .= get_string('textactivity29', 'logla').' <strong>';
                 $text2 .= $prekmb;
-                $text2 .= '</strong> in your assessment of your knowledge your skills in problem solving. This means that you imagine that you know <strong>';
+                $text2 .= '</strong> '.get_string('textactivity30', 'logla').'<strong>';
                 $text2 .= $kmbknowledge;
-                $text2 .= ' </strong>than you demonstrate.';
+                $text2 .= ' </strong> '.get_string('textactivity31', 'logla');
                 echo $OUTPUT->box($text2);
             }
 
