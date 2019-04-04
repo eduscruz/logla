@@ -81,8 +81,8 @@ class view_levelstudent_form extends moodleform {
                         WHERE g.userid = ? AND c.course = ?';
 
             $muavg = $DB->get_record_sql($sql, array($USER->id, $COURSE->id));
-            $mform->addElement('html', '<br><br><strong><p>'.get_string('textactivity13', 'logla').$muavg->avgprekma.get_string('textactivity14', 'logla').$muavg->avgprekmb);
-            $mform->addElement('html', '<p>'.get_string('textactivity15', 'logla').$muavg->avgposkma.get_string('textactivity16', 'logla').$muavg->avgposkmb.'</strong>');
+            $mform->addElement('html', '<br><br><strong><p>'.get_string('textactivity13', 'logla').$muavg->avgprekma.'. '.get_string('textactivity14', 'logla').$muavg->avgprekmb);
+            $mform->addElement('html', '<p>'.get_string('textactivity15', 'logla').$muavg->avgposkma.'. '.get_string('textactivity16', 'logla').$muavg->avgposkmb.'</strong>');
 
             $mform->addElement('html', '<p>'.get_string('textactivity18', 'logla').'<br>');
 
@@ -106,29 +106,29 @@ class view_levelstudent_form extends moodleform {
                 $text1 .= $prekma;
                 $text1 .= " </strong>";
                 $text1 .= get_string('textactivity21', 'logla');
-                $text1 .= "<strong>".get_string('textactivity22', 'logla').$kmaknowledge." </strong>";
+                $text1 .= " <strong>".get_string('textactivity22', 'logla').$kmaknowledge." </strong>";
                 $text1 .= get_string('textactivity23', 'logla');
                 echo $OUTPUT->box($text1);
             }
             
             if ($logla_user_result->prekmbgrade) {
                 if ($logla_user_result->prekmbgrade < (-0.25)) {
-                   $prekmb = 'Pessimistic';
-                   $kmbknowledge = 'MORE';
+                   $prekmb = get_string('textactivity32', 'logla');
+                   $kmbknowledge = get_string('textactivity35', 'logla');
                 }
                 elseif (($logla_user_result->prekmbgrade >= (-0.25)) && (($logla_user_result->prekmbgrade <= (0.25)))) {
-                    $prekmb = 'Random';
-                    $kmbknowledge = 'EXACTLY';
+                    $prekmb = get_string('textactivity33', 'logla');
+                    $kmbknowledge = get_string('textactivity36', 'logla');
                 }
                 else {
-                    $prekmb = 'Optimistic';
-                    $kmbknowledge = 'LESS';
+                    $prekmb = get_string('textactivity34', 'logla');
+                    $kmbknowledge = get_string('textactivity37', 'logla');
                 }
 
                 $text2 = '<strong>'.get_string('textactivity28', 'logla').'</strong><br><br>';
-                $text2 .= get_string('textactivity29', 'logla').' <strong>';
+                $text2 .= get_string('textactivity29', 'logla').' <strong> ';
                 $text2 .= $prekmb;
-                $text2 .= '</strong> '.get_string('textactivity30', 'logla').'<strong>';
+                $text2 .= '</strong> '.get_string('textactivity30', 'logla').'<strong> ';
                 $text2 .= $kmbknowledge;
                 $text2 .= ' </strong> '.get_string('textactivity31', 'logla');
                 echo $OUTPUT->box($text2);
