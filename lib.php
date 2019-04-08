@@ -158,19 +158,21 @@ function logla_user_grades_add(stdClass $fromform){
     if($logla->activityquiz){
         // get recorset from assign_grades
         $record = $DB->get_record('assign_grades', array('assignment' => $logla->idactivity, 'userid' => $fromform->userid));
+        $peso = 1.0;
     }
     // if logla is set up with quiz
     else {
         // get recorset from assign_grades
         $record = $DB->get_record('quiz_grades', array('quiz' => $logla->idquiz, 'userid' => $fromform->userid));
+        $peso = 10.0;
     }
   
     // if logla as set up with prefeback
     if($logla->prefeedback){  
         // Computes the kma by multiplying the activity grade
-        $kma = calculate_kma($logla->idprefeedback, $fromform->userid, $record->grade);          
+        $kma = calculate_kma($logla->idprefeedback, $fromform->userid, $record->grade*$peso);          
         $logla_user_grades->prekmagrade = $kma;
-        $kmb = calculate_kmb($logla->idprefeedback, $fromform->userid, $record->grade);          
+        $kmb = calculate_kmb($logla->idprefeedback, $fromform->userid, $record->grade*$peso);          
         $logla_user_grades->prekmbgrade = $kmb;
     }
     else{
@@ -181,13 +183,13 @@ function logla_user_grades_add(stdClass $fromform){
     // if logla as set up with posfeback
     if($logla->posfeedback){
         // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
-        $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*10.0));          
+        $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$peso));          
         $logla_user_grades->poskmagrade = $kma;
-        $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*10.0));          
+        $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$peso));          
         $logla_user_grades->poskmbgrade = $kmb;
 
         // if logla is set up as posfeedback then save self regulation 1
-        $logla_user_grades->sr1 = $fromform->sr1;
+        $logla_user_grades->sr1 = $fromform->selfregulation1;
     }
     else{
         $logla_user_grades->poskmagrade = null;
@@ -215,26 +217,58 @@ function logla_user_grades_add(stdClass $fromform){
 * @param mod_logla_mod_form $mform The form instance itself (if needed)
 * @return boolean Success/Fail
 */
-function logla_user_grades_update(stdClass $logla_user_grade) {
+function logla_user_grades_update(stdClass $fromform) {
     global $DB;
 
-    $temp = $DB->get_record('logla_user_grades', array('idlogla' => $logla_user_grade->loglaid, 'userid' => $logla_user_grade->userid ));
-    $temp->mcp1 = $logla_user_grade->selactprevious;
-    $temp->performace1 = $logla_user_grade->realstatus;
-    $temp->ep1 = $logla_user_grade->selfregulation;
-    $temp->timemodified = time();
+    // get recorset from logla id
+    $logla = $DB->get_record('logla', array('id' => $fromform->loglaid));
+    // get recorset from logla_user_grades id
+    $logla_user_grades = $DB->get_record('logla_user_grades', array('idlogla' => $fromform->loglaid, 'userid' => $fromform->userid ));
     
-    $logla = $DB->get_record('logla', array('id' => $logla_user_grade->loglaid));
+    $logla_user_grades->mcp1 = $fromform->selactprevious;
+    $logla_user_grades->performace1 = $fromform->realstatus;
+    $logla_user_grades->ep1 = $fromform->selfregulation;
+    $logla_user_grades->timemodified = time();
+    
+    
+    // if logla is set up with activity
+    if($logla->activityquiz){
+        // get recorset from assign_grades
+        $record = $DB->get_record('assign_grades', array('assignment' => $logla->idactivity, 'userid' => $fromform->userid));
+        $peso = 1.0;
+    }
+    // if logla is set up with quiz
+    else {
+        // get recorset from assign_grades
+        $record = $DB->get_record('quiz_grades', array('quiz' => $logla->idquiz, 'userid' => $fromform->userid));
+        $peso = 10.0;
+    }
+
+    // if logla as set up with prefeback
+    if($logla->prefeedback){  
+        // Computes the kma by multiplying the activity grade
+        $kma = calculate_kma($logla->idprefeedback, $fromform->userid, ($record->grade*$peso));          
+        $logla_user_grades->prekmagrade = $kma;
+        $kmb = calculate_kmb($logla->idprefeedback, $fromform->userid, ($record->grade*$peso));          
+        $logla_user_grades->prekmbgrade = $kmb;
+    }
     
     // if activity is set up as posfeedback
     if($logla->posfeedback){
-        $temp->sr1 = $logla_user_grade->selfregulation1;
+
+        // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
+        $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$peso));          
+        $logla_user_grades->poskmagrade = $kma;
+        $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$peso));          
+        $logla_user_grades->poskmbgrade = $kmb;
+
+        $logla_user_grades->sr1 = $fromform->selfregulation1;
     }
     else {
-        $temp->sr1 = null;
+        $logla_user_grades->sr1 = null;
     }
 
-    $DB->update_record('logla_user_grades', $temp, $bulk=false);
+    $DB->update_record('logla_user_grades', $logla_user_grades, $bulk=false);
 }
 
 
@@ -272,17 +306,24 @@ function calculate_kma($idfeedback, $iduser, $grade){
         $graderate = 3;
     }
 
-    // variable aux to calculate kma
-    $auxabs = abs(($resultfeedback->value) - $graderate);
+    
+    if ($resultfeedback) {
+        // variable aux to calculate kma
+        $auxabs = abs($graderate - $resultfeedback->value);
 
-    // verify if theauxabs is zero then chage to one
-    if (($resultfeedback->value - $graderate)==0){
-        $kma = 1;
-    }
-    else {
         // calculate the kma
-        $kma = ($auxabs /2.0) * (-1.0);
+        if ($auxabs == 0){
+            $kma = 1;
+        }
+        elseif ($auxabs == 1) {
+            $kma = -0.5;
+        } else {
+            $kma = -1.0;
+        }
+    } else {
+        $kma = null;
     }
+    
     
     return $kma;
 }
@@ -324,17 +365,22 @@ function calculate_kmb($idfeedback, $iduser, $grade){
         $graderate = 3;
     }
 
-    // variable aux to calculate kma
-    $auxabs = ($resultfeedback->value) - $graderate;
-
+    
     // verify if theauxabs is zero then chage to one
-    if(($resultfeedback->value - $graderate) == 0){
-        $kmb = 0;
+    if ($resultfeedback) {
+        // variable aux to calculate kma
+        $auxabs = $graderate - $resultfeedback->value;
+        
+        if($auxabs == 0){
+            $kmb = 0;
+        } else {
+            $kmb = $auxabs/2.0;
+        }
+
+    } else {
+        $kmb = null;
     }
-    else{
-        // calculate the kmb
-        $kmb = ($auxabs /2.0);
-    }
+    
     
     return $kmb;
 }
@@ -792,12 +838,12 @@ function logla_user_grades_populate(stdClass $logla, $update = null) {
     if($logla->activityquiz){
         
         // insert grades records in logla_user_grades
-        logla_user_grades_populate_add($logla, 'assign_grades', 'assignment', 'idactivity');
+        logla_user_grades_populate_add($logla, 'assign_grades', 'assignment', 'idactivity', 1.0);
     }
     // if logla is set up as quiz
     else{
         // insert grades records in logla_user_grades
-        logla_user_grades_populate_add($logla, 'quiz_grades', 'quiz', 'idquiz');    
+        logla_user_grades_populate_add($logla, 'quiz_grades', 'quiz', 'idquiz', 10.0);    
     }
 }
 
@@ -807,7 +853,7 @@ function logla_user_grades_populate(stdClass $logla, $update = null) {
  * @param int $courseid Course ID
  * @return bool
  */
-function logla_user_grades_populate_add(stdClass $logla, $tablename, $fieldtable, $fieldlogla){
+function logla_user_grades_populate_add(stdClass $logla, $tablename, $fieldtable, $fieldlogla, $peso){
     global $DB;
     
     $rs = $DB->get_recordset($tablename, array($fieldtable=>$logla->$fieldlogla));
@@ -827,9 +873,9 @@ function logla_user_grades_populate_add(stdClass $logla, $tablename, $fieldtable
         // if logla as set up with prefeback
         if($logla->prefeedback){  
             // Computes the kma by multiplying the activity grade
-            $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade);          
+            $kma = calculate_kma($logla->idprefeedback, $record->userid, $record->grade*$peso);          
             $logla_user_grades->prekmagrade = $kma;
-            $kmb = calculate_kmb($logla->idprefeedback, $record->userid, $record->grade);          
+            $kmb = calculate_kmb($logla->idprefeedback, $record->userid, $record->grade*$peso);          
             $logla_user_grades->prekmbgrade = $kmb;
         }
         else{
@@ -840,9 +886,9 @@ function logla_user_grades_populate_add(stdClass $logla, $tablename, $fieldtable
         // if logla as set up with posfeback
         if($logla->posfeedback){
             // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
-            $kma = calculate_kma($logla->idposfeedback, $record->userid, ($record->grade*10.0));          
+            $kma = calculate_kma($logla->idposfeedback, $record->userid, ($record->grade*$peso));          
             $logla_user_grades->poskmagrade = $kma;
-            $kmb = calculate_kmb($logla->idposfeedback, $record->userid, ($record->grade*10.0));          
+            $kmb = calculate_kmb($logla->idposfeedback, $record->userid, ($record->grade*$peso));          
             $logla_user_grades->poskmbgrade = $kmb; 
         }
         else{

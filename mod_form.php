@@ -48,13 +48,6 @@ class mod_logla_mod_form extends moodleform_mod {
 
         $mform = $this->_form;
 
-        // get course module id
-        // $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
-        // $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should be named as the first character of the module. 
-        // $coursemodule = $id;
-        $coursemodule = $PAGE->cm->id; 
-
-
         // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
@@ -103,71 +96,63 @@ class mod_logla_mod_form extends moodleform_mod {
         }
         asort($quizcombo);
 
-        //create an object from logla table
-        $loglaresult = $DB->get_record('logla', array('coursemodule'=>$coursemodule));
-        
-        // check if loglaresult is not empty
-        $loglaresultexist = $DB->count_records('logla', array('coursemodule'=>$coursemodule));
-
         // add pre PreMetacognition checkbox
         $mform->addElement('advcheckbox', 'PreMetacognition', get_string('PreMetacognition', 'logla'), 'Enable Pre-Metacognition', array(0,1)) ;
-        // verify if $loglaresult is not empty and set default value from table
-        if ($loglaresultexist)
-            $mform->setDefault('PreMetacognition', $loglaresult->prefeedback);
 
         // add pre selectPreMetacognition 
         $selectPre = $mform->addElement('select', 'selectPreMetacognition', get_string('PreFeedback', 'logla'), $fbcombo);
         $selectPre->setMultiple(false);
-        // verify if $loglaresult is not empty and set default value from table
-        if ($loglaresultexist)
-            $selectPre->setSelected($loglaresult->idprefeedback);
         
         // add pos PosMetacognition checkbox
         $mform->addElement('advcheckbox', 'PosMetacognition', get_string('PosMetacognition', 'logla'), 'Enable Pos-Metacognition', array(0,1)) ;
-        // verify if $loglaresult is not empty and set default value from table
-        if ($loglaresultexist)
-            $mform->setDefault('PosMetacognition', $loglaresult->posfeedback);
 
         // add pre selectPosMetacognition
         $selectPos = $mform->addElement('select', 'selectPosMetacognition', get_string('PosFeedback', 'logla'), $fbcombo);
         $selectPos->setMultiple(false);
-        // verify if $loglaresult is not empty and set default value from table
-        if ($loglaresultexist)
-            $selectPos->setSelected($loglaresult->idposfeedback);
-        
 
         // add radiobox activity or quiz
         $radioarray=array();
         $radioarray[] = $mform->createElement('radio', 'selactivityquiz', '', get_string('Activity', 'logla'), 1);
         $radioarray[] = $mform->createElement('radio', 'selactivityquiz', '', get_string('Quiz', 'logla'), 0);
         $mform->addGroup($radioarray, 'radioar', get_string('table1', 'logla'), array(' '), false);
-        // verify if $loglaresult is not empty and set default value from table
-        if ($loglaresultexist)
-            $mform->setDefault('selactivityquiz', $loglaresult->activityquiz);
-        else
-            $mform->setDefault('selactivityquiz', 1);
-      
+
         // add assign activity
         $selectActivity = $mform->addElement('select', 'selectActivity', get_string('Activity', 'logla'), $assingcombo);
         $selectActivity->setMultiple(false);  
-        // verify if $loglaresult is not empty and set default value from table
-        if ($loglaresultexist)
-            $selectActivity->setSelected($loglaresult->idactivity);
-              
 
         // add quiz activity
         $selectQuiz = $mform->addElement('select', 'selectQuiz', get_string('Quiz', 'logla'), $quizcombo);
         $selectQuiz->setMultiple(false);     
-        // verify if $loglaresult is not empty and set default value from table
-        if ($loglaresultexist)
-            $selectQuiz->setSelected($loglaresult->idquiz);
    
         $mform->addElement('textarea', 'rightanswertxt', get_string('header4', 'logla'), 'wrap="virtual" rows="20" cols="50"');
-        if ($loglaresult) {
-            $mform->setDefault('rightanswertxt', $loglaresult->rightanswer); 
-        }
 
-  
+        // get course module id
+        if ($PAGE->cm) {
+            $coursemodule = $PAGE->cm->id; 
+            //create an object from logla table
+            $loglaresult = $DB->get_record('logla', array('coursemodule'=>$coursemodule));
+
+            $mform->setDefault('PreMetacognition', $loglaresult->prefeedback);
+
+            // verify if $loglaresult is not empty and set default value from table
+            $selectPre->setSelected($loglaresult->idprefeedback);
+
+            // verify if $loglaresult is not empty and set default value from table
+            $mform->setDefault('PosMetacognition', $loglaresult->posfeedback);
+
+            // verify if $loglaresult is not empty and set default value from table
+            $selectActivity->setSelected($loglaresult->idactivity);    
+
+            $selectQuiz->setSelected($loglaresult->idquiz);
+
+            $mform->setDefault('rightanswertxt', $loglaresult->rightanswer); 
+
+            // verify if $loglaresult is not empty and set default value from table
+            $selectPos->setSelected($loglaresult->idposfeedback);
+
+            $mform->setDefault('selactivityquiz', $loglaresult->activityquiz);
+        }        
+
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();
 
