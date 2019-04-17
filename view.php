@@ -90,8 +90,9 @@ else{
     // if prefeedback is set on logla settings 
     if(($logla->prefeedback) && ($logla->posfeedback)){
 
-        $toform = array('posfeedback' => true);
-        $pre_student_form = new pre_student(null, $toform);
+        // $toform = array('posfeedback' => true);
+        // $pre_student_form = new pre_student(null, $toform);
+        $pre_student_form = new pre_student();
 
         //Form processing and displaying is done here
         if ($pre_student_form->is_cancelled()) {
@@ -99,7 +100,8 @@ else{
             $returnurl = '/course/view.php?id='.$course->id;
             redirect($returnurl);
         } else if ($fromform = $pre_student_form->get_data()) {
-            $post_student_form = new post_student('/mod/logla/view_post_student.php');
+            $toform = array('selfregulation1'=>$fromform->selfregulation1);
+            $post_student_form = new post_student('/mod/logla/view_post_student.php', $toform);
             $post_student_form->display();
         } else if ($pre_student_form->is_submitted()) {
             echo $OUTPUT->box('submitido');
@@ -117,6 +119,15 @@ else{
             redirect($returnurl);
         } else if ($fromform = $post_student_form->get_data()) {
             //In this case you process validated data. $mform->get_data() returns data posted in form.
+            // insert new record in logla_user_grades
+            $fromform->selfregulation1 = null;
+            if($fromform->loglauserid == 0){
+                logla_user_grades_add($fromform);
+            }
+            // update record in logla_user_grades
+            else{
+                logla_user_grades_update($fromform);
+            }
             $levelstudent = new view_levelstudent_form();
             $levelstudent->display();
         } else if ($post_student_form->is_submitted()) {

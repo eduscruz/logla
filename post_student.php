@@ -409,6 +409,15 @@ class post_student extends moodleform {
             $mform->setDefault('selfregulation', 4);
         }
         
+        $data = $this->_customdata;
+        $mform->addElement('hidden', 'selfregulation1');
+        $mform->setType('selfregulation1', PARAM_INT);
+        if (!empty($data['selfregulation1'])) {
+            $mform->setDefault('selfregulation1', $data['selfregulation1']);
+        } else {
+            $mform->setDefault('selfregulation1', null);
+        }
+
         // summit button
         $this->add_action_buttons();
 

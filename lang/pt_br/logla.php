@@ -69,7 +69,7 @@ $string['decreasing'] = 'Decrescendo';
 $string['increasing'] = 'Aumentando';
 $string['constant'] = 'Constante';
 $string['random'] = 'Aleatório';
-$string['undefined'] = 'Indevido';
+$string['undefined'] = 'Indefinido';
 
 $string['question1'] = 'A questão:';
 

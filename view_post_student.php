@@ -80,11 +80,23 @@ $PAGE->set_cacheable(false);
 // Output starts here.
 echo $OUTPUT->header();
 
+// $data = $this->_customdata;
+// $toform = $data;
+// $post_student_form = new post_student(null, $toform);
 $post_student_form = new post_student();
 if ($post_student_form->is_cancelled()) {
     $returnurl = '/course/view.php?id='.$course->id;
     redirect($returnurl);
 } elseif ($fromform = $post_student_form->get_data()) {
+
+    if($fromform->loglauserid == 0){
+        logla_user_grades_add($fromform);
+    }
+    // update record in logla_user_grades
+    else{
+        logla_user_grades_update($fromform);
+    }
+
     $levelstudent = new view_levelstudent_form();
     $levelstudent->display();
 } elseif ($post_student_form->is_submitted()) {

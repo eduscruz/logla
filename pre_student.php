@@ -191,10 +191,10 @@ class pre_student extends moodleform {
             $mform->setDefault('selfregulation1', 1);
         }
 
-        $data = $this->_customdata;
+        /* $data = $this->_customdata;
         if ($data['posfeedback']) {
             
-            /* $mform->addElement('button', 'next1', 'proximo');
+            $mform->addElement('button', 'next1', 'proximo');
             // $this->add_action_buttons(); 
 
             $toform = array('prefeedback' => true);
@@ -204,17 +204,13 @@ class pre_student extends moodleform {
                 echo $OUTPUT->box('Pegou dados pos');
                 // $post_student_form = new post_student(null, $toform);
                 // $post_student_form->display();
-            } */
-
-            $this->add_action_buttons(); 
-
+            }
         } else {
-            # code...
-            
             // summit button
             // $this->add_action_buttons();  
-        }
+        } */
         
+        $this->add_action_buttons(); 
 
 
         
