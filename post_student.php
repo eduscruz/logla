@@ -37,7 +37,7 @@ $style = '/mod/logla/style.css';
 $PAGE->requires->css($style);
 
 
-class view_prestudent_form extends moodleform {
+class post_student extends moodleform {
 
     /** @var stdClass the logla record that contains */
     public $logla;
@@ -53,7 +53,6 @@ class view_prestudent_form extends moodleform {
 
         //create an logla_user_grades objetct of instance
         $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
-        $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
 
         // inicialize mform
         $mform = $this->_form;  
@@ -72,128 +71,7 @@ class view_prestudent_form extends moodleform {
         $mform->addElement('hidden', 'loglaid');
         $mform->setType('loglaid', PARAM_INT);
         $mform->setDefault('loglaid', $loglaresult->id);
-
-        // if pos-feedback is set show awnser of student and corret result
-        if($loglaresult->posfeedback){
-
-            echo $OUTPUT->heading(get_string('header8', 'logla'));
-            $mform->addElement('html', '<p>'.get_string('textactivity11', 'logla').'<br>');
-
-            // if quiz
-            if(!$loglaresult->activityquiz){
-                
-                // get quiz answer, right answer, grade, etc
-                $sql = 'SELECT
-                            quiza.userid,
-                            quiza.quiz,
-                            quiza.id AS quizattemptid,
-                            quiza.attempt,
-                            quiza.sumgrades,
-                            qu.preferredbehaviour,
-                            qa.slot,
-                            qa.behaviour,
-                            qa.questionid,
-                            qa.variant,
-                            qa.maxmark,
-                            qa.minfraction,
-                            qa.flagged,
-                            qas.sequencenumber,
-                            qas.state,
-                            qas.fraction,
-                            FROM_UNIXTIME(qas.timecreated) AS timecreated,
-                            qas.userid,
-                            qasd.name,
-                            qasd.value,
-                            qa.questionsummary AS question,
-                            qa.rightanswer AS rightanswer,
-                            qa.responsesummary AS useranswer
-                        
-                        FROM mdl_quiz_attempts quiza
-                        JOIN mdl_question_usages qu ON qu.id = quiza.uniqueid
-                        JOIN mdl_question_attempts qa ON qa.questionusageid = qu.id
-                        JOIN mdl_question_attempt_steps qas ON qas.questionattemptid = qa.id
-                        LEFT JOIN mdl_question_attempt_step_data qasd ON qasd.attemptstepid = qas.id
-                        
-                        WHERE quiza.quiz = ? AND quiza.userid = ? AND qasd.name LIKE ?
-                        
-                        ORDER BY quiza.userid, quiza.attempt, qa.slot, qas.sequencenumber, qasd.name';
-                
-                
-                $question = '';
-                $useranswer = '';
-                $rightanswer = '';
-                $interator = 0;
-    
-                $rs = $DB->get_recordset_sql($sql, array($loglaresult->idquiz, $USER->id, '-finish'));
-                foreach ($rs as $record) {
-                    $interator++;
-                    $question .= '<br><p>'.$interator.') '.$record->question;
-                    $useranswer .= '<br><p>'.$interator.') '.$record->useranswer;
-                    $rightanswer .= '<br><p>'.$interator.') '.$record->rightanswer;
-                }
-                $rs->close();
-                
-                //add section header              
-                $mform->addElement('header', 'loglafieldset', get_string('header1', 'logla'));
-                $mform->addElement('html', $question.'<br>');
-
-                $mform->addElement('header', 'loglafieldset', get_string('header2', 'logla'));
-                $mform->addElement('html', '<p>'.$useranswer.'<br>');
-
-                $mform->addElement('header', 'loglafieldset', get_string('header3', 'logla'));
-                $mform->addElement('html', '<p>'.$rightanswer);
-                
-            }
-            // if activity
-            else{
-                // get information about assignment
-                $assign = $DB->get_record('assign', array('id'=>$loglaresult->idactivity));
-                
-                $sql =  'SELECT	grade.id, grade.assignment, grade.userid, grade.timecreated, 
-                        grade.timemodified, grade.grader,grade. grade, grade.attemptnumber,
-                        submission.assignment, submission.submission, submission.onlinetext, submission.onlineformat
-                        FROM mdl_assign_grades AS grade
-                        INNER JOIN mdl_assignsubmission_onlinetext AS submission
-                        WHERE grade.assignment = ? AND grade.userid = ?';
-
-                $assignanswer = $DB->get_record_sql($sql, array($loglaresult->idactivity, $USER->id)); 
-
-                $question = $assign->intro;
-                $useranswer = $assignanswer->onlinetext;
-                $rightanswer = $loglaresult->rightanswer;
-
-                $mform->addElement('html', '<p>'.get_string('question1', 'logla').$question);
-                $mform->addElement('html', '<p>'.$useranswer);
-
-                $mform->addElement('header', 'loglafieldset', get_string('header4', 'logla'));
-                $mform->addElement('html', '<p>'.$rightanswer);
-            }
-
-
-            // Header self regulation 1
-            $mform->addElement('header', 'loglafieldset', get_string('header5', 'logla'));
-
-            // add radiobox selfregulation
-            $radioarray=array();
-            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity8', 'logla'), 0);
-            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity9', 'logla'), 1);
-            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity10', 'logla'), 2);
-            $mform->addGroup($radioarray, 'sr1', get_string('textactivity7', 'logla'), array(' '), false);
-
-            // if($user_grade_result->sr1){
-            if($user_grade_result){
-                $mform->setDefault('selfregulation1', $user_grade_result->sr1);
-            }
-            else{
-                $mform->setDefault('selfregulation1', 1);
-            }
-
-        }
-
-        
-        // $user_grade_result = $DB->get_record('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
-        // $user_grade_resultcount = $DB->count_records('logla_user_grades', array('idlogla'=>$loglaresult->id, 'userid'=>$USER->id));
-
+       
         // binds this instance to the  logla_user_grade id
         $mform->addElement('hidden', 'loglauserid');
         $mform->setType('loglauserid', PARAM_INT);
@@ -207,7 +85,7 @@ class view_prestudent_form extends moodleform {
         //add section header
         $mform->addElement('header', 'loglafieldset', get_string('header6', 'logla'));
 
-        echo $OUTPUT->heading(get_string('header9', 'logla'));
+        // echo $OUTPUT->heading(get_string('header9', 'logla'));
         $mform->addElement('html', '<p>'.get_string('textactivity12', 'logla').'<br>');
 
         // insert table results
@@ -532,7 +410,8 @@ class view_prestudent_form extends moodleform {
         }
         
         // summit button
-        $this->add_action_buttons();    
+        $this->add_action_buttons();
+
     }
     
     //Custom validation should be added here

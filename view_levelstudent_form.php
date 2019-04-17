@@ -37,13 +37,17 @@ $style = '/mod/logla/style.css';
 $PAGE->requires->css($style);
 
 
+
+
 class view_levelstudent_form extends moodleform {
 
     //Add elements to form
     public function definition() {
 
-        global $DB, $PAGE, $USER, $OUTPUT, $COURSE;
+        global $COURSE, $USER, $DB, $OUTPUT, $PAGE;
+
         $id = optional_param('id', 0, PARAM_INT);
+
 
         //create an logla objetct of instance
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
