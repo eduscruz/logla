@@ -40,6 +40,7 @@ $string['loglaname_help'] = 'Este é o conteúdo da dica de ferramenta de ajuda 
 $string['logla'] = 'logla';
 $string['pluginadministration'] = 'Administração do logla';
 $string['pluginname'] = 'logla';
+$string['finish'] = 'Finalizar';
 
 // Strings from mod_form
 $string['PreMetacognition'] = 'Pré-Metacognição';

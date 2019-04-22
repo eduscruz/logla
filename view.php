@@ -89,21 +89,22 @@ else{
        
     // if prefeedback is set on logla settings 
     if(($logla->prefeedback) && ($logla->posfeedback)){
-
-        // $toform = array('posfeedback' => true);
-        // $pre_student_form = new pre_student(null, $toform);
+        // new pre student form instance 
         $pre_student_form = new pre_student();
 
         //Form processing and displaying is done here
         if ($pre_student_form->is_cancelled()) {
-            //Handle form cancel operation, if cancel button is present on form
+            //Handle form cancel operation, redirect to page course
             $returnurl = '/course/view.php?id='.$course->id;
             redirect($returnurl);
         } else if ($fromform = $pre_student_form->get_data()) {
+            // get selfregulation data from pre student form
             $toform = array('selfregulation1'=>$fromform->selfregulation1);
+            // new post student form instance with selfregulation data
             $post_student_form = new post_student('/mod/logla/view_post_student.php', $toform);
             $post_student_form->display();
         } else if ($pre_student_form->is_submitted()) {
+            // just a test
             echo $OUTPUT->box('submitido');
         } else {
             $pre_student_form->display();
@@ -111,10 +112,11 @@ else{
     }
     // if posfeedback is only set on logla settings
     else if (($logla->prefeedback) && (!$logla->posfeedback)){
+        // new pre student form instance 
         $post_student_form = new post_student();
         //Form processing and displaying is done here
         if ($post_student_form->is_cancelled()) {
-            //Handle form cancel operation, if cancel button is present on form
+            //Handle form cancel operation, redirect to page course
             $returnurl = '/course/view.php?id='.$course->id;
             redirect($returnurl);
         } else if ($fromform = $post_student_form->get_data()) {

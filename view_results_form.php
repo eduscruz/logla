@@ -46,7 +46,7 @@ class view_results_form extends moodleform {
     //Add elements to form
     public function definition() {
 
-        global $DB, $PAGE, $USER, $OUTPUT;
+        global $DB, $PAGE, $USER, $OUTPUT, $COURSE;
         $id = optional_param('id', 0, PARAM_INT);
 
         //create an logla objetct of instance
@@ -233,6 +233,12 @@ class view_results_form extends moodleform {
             $mform->addElement('html', '</tfoot>');
             $mform->addElement('html', '</table>');
             $mform->addElement('html', '</div>');
+
+            $redirect = '<a href="/course/view.php?id='.$COURSE->id.'">';
+            $mform->addElement('html', $redirect);
+            $mform->addElement('button', 'finish', get_string('finish', 'logla'));
+            $redirect = '</a>';
+            $mform->addElement('html', $redirect);
  
         } 
     }

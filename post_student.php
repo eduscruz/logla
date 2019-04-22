@@ -240,8 +240,8 @@ class post_student extends moodleform {
                     WHERE g.userid = ? AND c.course = ?';
 
         $muavg = $DB->get_record_sql($sql, array($USER->id, $COURSE->id));
-        $mform->addElement('html', '<br><br><strong><p>'.get_string('textactivity13', 'logla').$muavg->avgprekma.get_string('textactivity14', 'logla').$muavg->avgprekmb);
-        $mform->addElement('html', '<p>'.get_string('textactivity15', 'logla').$muavg->avgposkma.get_string('textactivity16', 'logla').$muavg->avgposkmb.'</strong>');
+        $mform->addElement('html', '<br><br><strong><p>'.get_string('textactivity13', 'logla').$muavg->avgprekma.'. '.get_string('textactivity14', 'logla').$muavg->avgprekmb);
+        $mform->addElement('html', '<p>'.get_string('textactivity15', 'logla').$muavg->avgposkma.'. '.get_string('textactivity16', 'logla').$muavg->avgposkmb.'</strong>');
         
         // add header activity;
         $mform->addElement('header', 'tablekmakmb','Tabela');

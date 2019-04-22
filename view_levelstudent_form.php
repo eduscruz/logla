@@ -72,7 +72,7 @@ class view_levelstudent_form extends moodleform {
         if ($logla_user_result) {
 
             echo $OUTPUT->heading(get_string('header10', 'logla'));
-            $mform->addElement('html', '<p>'.get_string('textactivity17', 'logla').'<br>');
+            $mform->addElement('html', '<p>'.get_string('textactivity17', 'logla').': ');
 
             $sql ='SELECT 	
                         AVG(g.prekmagrade) AS avgprekma,
@@ -85,7 +85,7 @@ class view_levelstudent_form extends moodleform {
                         WHERE g.userid = ? AND c.course = ?';
 
             $muavg = $DB->get_record_sql($sql, array($USER->id, $COURSE->id));
-            $mform->addElement('html', '<br><br><strong><p>'.get_string('textactivity13', 'logla').$muavg->avgprekma.'. '.get_string('textactivity14', 'logla').$muavg->avgprekmb);
+            $mform->addElement('html', '<br><strong><p>'.get_string('textactivity13', 'logla').$muavg->avgprekma.'. '.get_string('textactivity14', 'logla').$muavg->avgprekmb);
             $mform->addElement('html', '<p>'.get_string('textactivity15', 'logla').$muavg->avgposkma.'. '.get_string('textactivity16', 'logla').$muavg->avgposkmb.'</strong>');
 
             $mform->addElement('html', '<p>'.get_string('textactivity18', 'logla').'<br>');
@@ -143,9 +143,9 @@ class view_levelstudent_form extends moodleform {
             echo $OUTPUT->box('error: logla_user_grades record found');
         }
 
-        $redirect = '<a href="/course/view.php?id='.$COURSE->id.'">';
+        $redirect = '<p><a href="/course/view.php?id='.$COURSE->id.'">';
         $mform->addElement('html', $redirect);
-        $mform->addElement('button', 'finish', "Finish");
+        $mform->addElement('button', 'finish', get_string('finish', 'logla'));
         $redirect = '</a>';
         $mform->addElement('html', $redirect);
         

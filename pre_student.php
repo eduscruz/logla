@@ -131,21 +131,21 @@ class pre_student extends moodleform {
             $rs = $DB->get_recordset_sql($sql, array($loglaresult->idquiz, $USER->id, '-finish'));
             foreach ($rs as $record) {
                 $interator++;
-                $question .= '<br><p>'.$interator.') '.$record->question;
-                $useranswer .= '<br><p>'.$interator.') '.$record->useranswer;
-                $rightanswer .= '<br><p>'.$interator.') '.$record->rightanswer;
+                $question .= '<p>'.$interator.') '.$record->question.'<br>';
+                $useranswer .= '<p>'.$interator.') '.$record->useranswer.'<br>';
+                $rightanswer .= '<p>'.$interator.') '.$record->rightanswer.'<br>';
             }
             $rs->close();
             
             //add section header              
             $mform->addElement('header', 'loglafieldset', get_string('header1', 'logla'));
-            $mform->addElement('html', $question.'<br>');
+            $mform->addElement('html', $question);
 
             $mform->addElement('header', 'loglafieldset', get_string('header2', 'logla'));
-            $mform->addElement('html', '<p>'.$useranswer.'<br>');
+            $mform->addElement('html', $useranswer);
 
             $mform->addElement('header', 'loglafieldset', get_string('header3', 'logla'));
-            $mform->addElement('html', '<p>'.$rightanswer);
+            $mform->addElement('html', $rightanswer);
             
         }
         // if activity
