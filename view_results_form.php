@@ -88,8 +88,8 @@ class view_results_form extends moodleform {
 
             // SQL query to select tables logla_user_grades and user
             $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
-            $sql .= ' mdl_user.email, mdl_logla_user_grades.prekmagrade, mdl_logla_user_grades.poskmagrade,';
-            $sql .= ' mdl_logla_user_grades.prekmbgrade, mdl_logla_user_grades.poskmbgrade';
+            $sql .= ' mdl_user.email, mdl_logla_user_grades.kmagrade, mdl_logla_user_grades.saagrade,';
+            $sql .= ' mdl_logla_user_grades.kmbgrade, mdl_logla_user_grades.sabgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
             $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
@@ -102,19 +102,19 @@ class view_results_form extends moodleform {
                 $mform->addElement('html', "<td>$record->firstname</td>");
                 $mform->addElement('html', "<td>$record->lastname</td>");
                 $mform->addElement('html', "<td>$record->email</td>");
-                $mform->addElement('html', "<td>$record->prekmagrade</td>");
-                $mform->addElement('html', "<td>$record->poskmagrade</td>");
-                $mform->addElement('html', "<td>$record->prekmbgrade</td>");
-                $mform->addElement('html', "<td>$record->poskmbgrade</td>");
+                $mform->addElement('html', "<td>$record->kmagrade</td>");
+                $mform->addElement('html', "<td>$record->saagrade</td>");
+                $mform->addElement('html', "<td>$record->kmbgrade</td>");
+                $mform->addElement('html', "<td>$record->sabgrade</td>");
                 $mform->addElement('html', '</tr>');
             }
             $rs->close();
             
             // SQL query to average pre-kma and pos-kma grade per user on this logla instance
-            $sql  = 'SELECT AVG(mdl_logla_user_grades.prekmagrade) AS prekmagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.prekmbgrade) AS prekmbgrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.poskmbgrade) AS poskmbgrade';
+            $sql  = 'SELECT AVG(mdl_logla_user_grades.kmagrade) AS kmagrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.saagrade) AS saagrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.kmbgrade) AS kmbgrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.sabgrade) AS sabgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
             $kmaavg = $DB->get_record_sql($sql, array($loglaresult->id));
@@ -124,10 +124,10 @@ class view_results_form extends moodleform {
             $mform->addElement('html', '<tr>');
             $mform->addElement('html', "<td>Average</td>");
             $mform->addElement('html', "<td></td><td></td><td></td><td></td>");
-            $mform->addElement('html', "<td>$kmaavg->prekmagrade</td>");
-            $mform->addElement('html', "<td>$kmaavg->poskmagrade</td>");
-            $mform->addElement('html', "<td>$kmaavg->prekmbgrade</td>");
-            $mform->addElement('html', "<td>$kmaavg->poskmbgrade</td>");
+            $mform->addElement('html', "<td>$kmaavg->kmagrade</td>");
+            $mform->addElement('html', "<td>$kmaavg->saagrade</td>");
+            $mform->addElement('html', "<td>$kmaavg->kmbgrade</td>");
+            $mform->addElement('html', "<td>$kmaavg->sabgrade</td>");
             $mform->addElement('html', '</tr>');
             $mform->addElement('html', '</tfoot>');
             $mform->addElement('html', '</table>');
@@ -139,10 +139,10 @@ class view_results_form extends moodleform {
 
             // SQL query to average pre-kma and pos-kma grade per user on all logla instances
             $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname,';
-            $sql .= ' mdl_user.lastname,  mdl_user.email, AVG(mdl_logla_user_grades.prekmagrade) AS prekmagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.poskmagrade) AS poskmagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.prekmbgrade) AS prekmbgrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.poskmbgrade) AS poskmbgrade';
+            $sql .= ' mdl_user.lastname,  mdl_user.email, AVG(mdl_logla_user_grades.kmagrade) AS kmagrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.saagrade) AS saagrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.kmbgrade) AS kmbgrade,';
+            $sql .= ' AVG(mdl_logla_user_grades.sabgrade) AS sabgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
             $sql .= ' GROUP BY mdl_logla_user_grades.userid';
@@ -179,27 +179,27 @@ class view_results_form extends moodleform {
                 $mform->addElement('html', "<td>$record->firstname</td>");
                 $mform->addElement('html', "<td>$record->lastname</td>");
                 $mform->addElement('html', "<td>$record->email</td>");
-                $mform->addElement('html', "<td>$record->prekmagrade</td>");
-                $mform->addElement('html', "<td>$record->poskmagrade</td>");
-                $mform->addElement('html', "<td>$record->prekmbgrade</td>");
-                $mform->addElement('html', "<td>$record->poskmbgrade</td>");
+                $mform->addElement('html', "<td>$record->kmagrade</td>");
+                $mform->addElement('html', "<td>$record->saagrade</td>");
+                $mform->addElement('html', "<td>$record->kmbgrade</td>");
+                $mform->addElement('html', "<td>$record->sabgrade</td>");
                 $mform->addElement('html', '</tr>');
 
                 // Checks if result is not null
-                if ($record->prekmagrade != null){
-                    $prekmaavg += $record->prekmagrade;
+                if ($record->kmagrade != null){
+                    $prekmaavg += $record->kmagrade;
                     ++$iprekmaavg;
                 }
-                if ($record->poskmagrade != null){
-                    $poskmaavg += $record->poskmagrade;  
+                if ($record->saagrade != null){
+                    $poskmaavg += $record->saagrade;  
                     ++$iposkmaavg;        
                 }
-                if ($record->prekmbgrade != null){
-                    $prekmbavg += $record->prekmbgrade;
+                if ($record->kmbgrade != null){
+                    $prekmbavg += $record->kmbgrade;
                     ++$iprekmbavg;
                 }
-                if ($record->poskmbgrade != null){
-                    $poskmbavg += $record->poskmbgrade;  
+                if ($record->sabgrade != null){
+                    $poskmbavg += $record->sabgrade;  
                     ++$iposkmbavg;        
                 }
             }

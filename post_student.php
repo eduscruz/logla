@@ -102,8 +102,8 @@ class post_student extends moodleform {
         
         // SQL query to select tables logla_user_grades and user
         $sql = 'SELECT 
-                    g.id,g.idlogla,g.userid,g.prekmagrade,g.poskmagrade,
-                    g.prekmbgrade,g.poskmbgrade,l.coursemodule,
+                    g.id,g.idlogla,g.userid,g.kmagrade,g.saagrade,
+                    g.kmbgrade,g.sabgrade,l.coursemodule,
                     l.prefeedback,l.posfeedback,l.idprefeedback,
                     l.idposfeedback,l.activityquiz,l.idactivity,l.idquiz
                FROM mdl_logla_user_grades AS g
@@ -230,10 +230,10 @@ class post_student extends moodleform {
         }
         
         $sql ='SELECT 	
-                    AVG(g.prekmagrade) AS avgprekma,
-                    AVG(g.poskmagrade) AS avgposkma,
-                    AVG(g.prekmbgrade) AS avgprekmb,
-                    AVG(g.poskmbgrade) AS avgposkmb
+                    AVG(g.kmagrade) AS avgprekma,
+                    AVG(g.saagrade) AS avgposkma,
+                    AVG(g.kmbgrade) AS avgprekmb,
+                    AVG(g.sabgrade) AS avgposkmb
                     FROM mdl_logla_user_grades AS g
                     INNER JOIN mdl_logla AS l ON g.idlogla = l.id
                     INNER JOIN mdl_course_modules AS c ON  c.id = l.coursemodule 

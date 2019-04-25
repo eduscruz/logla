@@ -20,10 +20,7 @@
         <FIELD NAME="activityquiz" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="include pre feedback"/>
         <FIELD NAME="idactivity" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="id activity"/>
         <FIELD NAME="idquiz" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="id quiz"/>
-        <FIELD NAME="prefbkmaavg" TYPE="number" LENGTH="4" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="pre feedback average"/>
-        <FIELD NAME="posfbkmaavg" TYPE="number" LENGTH="4" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="pos feedback average"/>
-        <FIELD NAME="prefbkmbavg" TYPE="number" LENGTH="4" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="pre feedback average"/>
-        <FIELD NAME="posfbkmbavg" TYPE="number" LENGTH="4" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="pos feedback average"/>
+        <FIELD NAME="showrightans" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Show right answer"/>
         <FIELD NAME="rightanswer" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Right Answer of activity"/>
       </FIELDS>
       <KEYS>
@@ -36,13 +33,13 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="idlogla" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="user id"/>
-        <FIELD NAME="prekmagrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pre metacognition grade"/>
-        <FIELD NAME="poskmagrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
-        <FIELD NAME="prekmbgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pre metacognition grade"/>
-        <FIELD NAME="poskmbgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
+        <FIELD NAME="kmagrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pre metacognition grade"/>
+        <FIELD NAME="saagrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
+        <FIELD NAME="kmbgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pre metacognition grade"/>
+        <FIELD NAME="sabgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
         <FIELD NAME="mcp1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Metacognition pre self-regulation"/>
         <FIELD NAME="performace1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Self performace"/>
-        <FIELD NAME="prediction" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Self performace"/>
+        <FIELD NAME="postpred" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Self performace"/>
         <FIELD NAME="ep1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Estimation pos performace"/>
         <FIELD NAME="sr1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Selfregulation"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

@@ -75,10 +75,10 @@ class view_levelstudent_form extends moodleform {
             $mform->addElement('html', '<p>'.get_string('textactivity17', 'logla').': ');
 
             $sql ='SELECT 	
-                        AVG(g.prekmagrade) AS avgprekma,
-                        AVG(g.poskmagrade) AS avgposkma,
-                        AVG(g.prekmbgrade) AS avgprekmb,
-                        AVG(g.poskmbgrade) AS avgposkmb
+                        AVG(g.kmagrade) AS avgprekma,
+                        AVG(g.saagrade) AS avgposkma,
+                        AVG(g.kmbgrade) AS avgprekmb,
+                        AVG(g.sabgrade) AS avgposkmb
                         FROM mdl_logla_user_grades AS g
                         INNER JOIN mdl_logla AS l ON g.idlogla = l.id
                         INNER JOIN mdl_course_modules AS c ON  c.id = l.coursemodule 
@@ -90,12 +90,12 @@ class view_levelstudent_form extends moodleform {
 
             $mform->addElement('html', '<p>'.get_string('textactivity18', 'logla').'<br>');
 
-            if ($logla_user_result->prekmagrade) {
-                if ($logla_user_result->prekmagrade < (-0.25)) {
+            if ($logla_user_result->kmagrade) {
+                if ($logla_user_result->kmagrade < (-0.25)) {
                    $prekma = get_string('low', 'logla');
                    $kmaknowledge = get_string('textactivity25', 'logla');
                 }
-                elseif (($logla_user_result->prekmagrade >= (-0.25)) && (($logla_user_result->prekmagrade <= (0.5)))) {
+                elseif (($logla_user_result->kmagrade >= (-0.25)) && (($logla_user_result->kmagrade <= (0.5)))) {
                     $prekma = get_string('medium', 'logla');
                     $kmaknowledge = get_string('textactivity26', 'logla');
                     
@@ -115,12 +115,12 @@ class view_levelstudent_form extends moodleform {
                 echo $OUTPUT->box($text1);
             }
             
-            if ($logla_user_result->prekmbgrade) {
-                if ($logla_user_result->prekmbgrade < (-0.25)) {
+            if ($logla_user_result->kmbgrade) {
+                if ($logla_user_result->kmbgrade < (-0.25)) {
                    $prekmb = get_string('textactivity32', 'logla');
                    $kmbknowledge = get_string('textactivity35', 'logla');
                 }
-                elseif (($logla_user_result->prekmbgrade >= (-0.25)) && (($logla_user_result->prekmbgrade <= (0.25)))) {
+                elseif (($logla_user_result->kmbgrade >= (-0.25)) && (($logla_user_result->kmbgrade <= (0.25)))) {
                     $prekmb = get_string('textactivity33', 'logla');
                     $kmbknowledge = get_string('textactivity36', 'logla');
                 }
