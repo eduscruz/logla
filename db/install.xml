@@ -31,8 +31,8 @@
     <TABLE NAME="logla_user_grades" COMMENT="Metacognitive user grades">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="idlogla" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="user id"/>
+        <FIELD NAME="idlogla" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="user id"/>
         <FIELD NAME="kmagrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pre metacognition grade"/>
         <FIELD NAME="saagrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
         <FIELD NAME="kmbgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pre metacognition grade"/>
@@ -44,6 +44,7 @@
         <FIELD NAME="sr1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Selfregulation"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="enable" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="enable"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
