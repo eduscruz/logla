@@ -80,10 +80,10 @@ class view_results_form extends moodleform {
             $mform->addElement('html', '<th>Firstname</th>');
             $mform->addElement('html', '<th>Lastname</th>');
             $mform->addElement('html', '<th>E-mail</th>');
-            $mform->addElement('html', '<th>PreKMA</th>');
-            $mform->addElement('html', '<th>PosKMA</th>');
-            $mform->addElement('html', '<th>PreKMB</th>');
-            $mform->addElement('html', '<th>PosKMB</th>');
+            $mform->addElement('html', '<th>KMA</th>');
+            $mform->addElement('html', '<th>SAA</th>');
+            $mform->addElement('html', '<th>KMB</th>');
+            $mform->addElement('html', '<th>SAB</th>');
             $mform->addElement('html', '</tr>');
 
             // SQL query to select tables logla_user_grades and user
@@ -116,7 +116,7 @@ class view_results_form extends moodleform {
             $sql .= ' AVG(mdl_logla_user_grades.kmbgrade) AS kmbgrade,';
             $sql .= ' AVG(mdl_logla_user_grades.sabgrade) AS sabgrade';
             $sql .= ' FROM mdl_logla_user_grades';
-            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
+            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ? AND mdl_logla_user_grades.enable = 1';
             $kmaavg = $DB->get_record_sql($sql, array($loglaresult->id));
 
             // print results in the table 
@@ -145,6 +145,7 @@ class view_results_form extends moodleform {
             $sql .= ' AVG(mdl_logla_user_grades.sabgrade) AS sabgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
+            $sql .= ' WHERE mdl_logla_user_grades.enable = 1';
             $sql .= ' GROUP BY mdl_logla_user_grades.userid';
    
             // Auxiliary variables
@@ -166,10 +167,10 @@ class view_results_form extends moodleform {
             $mform->addElement('html', '<th>Firstname</th>');
             $mform->addElement('html', '<th>Lastname</th>');
             $mform->addElement('html', '<th>E-mail</th>');
-            $mform->addElement('html', '<th>PreKMA</th>');
-            $mform->addElement('html', '<th>PosKMA</th>');
-            $mform->addElement('html', '<th>PreKMB</th>');
-            $mform->addElement('html', '<th>PosKMB</th>');
+            $mform->addElement('html', '<th>KMA</th>');
+            $mform->addElement('html', '<th>SAA</th>');
+            $mform->addElement('html', '<th>KMB</th>');
+            $mform->addElement('html', '<th>SAB</th>');
             $mform->addElement('html', '</tr>');
             $rs = $DB->get_recordset_sql($sql);
             foreach ($rs as $record) {

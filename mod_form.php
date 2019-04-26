@@ -102,38 +102,47 @@ class mod_logla_mod_form extends moodleform_mod {
         // add pre selectPreMetacognition 
         $selectPre = $mform->addElement('select', 'selectPreMetacognition', get_string('PreFeedback', 'logla'), $fbcombo);
         $selectPre->setMultiple(false);
+        $mform->disabledIf('selectPreMetacognition', 'PreMetacognition');
+        
         
         // add pos PosMetacognition checkbox
         $mform->addElement('advcheckbox', 'PosMetacognition', get_string('PosMetacognition', 'logla'), 'Enable Pos-Metacognition', array(0,1)) ;
-
+        
         // add pre selectPosMetacognition
         $selectPos = $mform->addElement('select', 'selectPosMetacognition', get_string('PosFeedback', 'logla'), $fbcombo);
         $selectPos->setMultiple(false);
+        $mform->disabledIf('selectPosMetacognition', 'PosMetacognition');
 
         // add radiobox activity or quiz
         $radioarray=array();
         $radioarray[] = $mform->createElement('radio', 'selactivityquiz', '', get_string('Activity', 'logla'), 1);
         $radioarray[] = $mform->createElement('radio', 'selactivityquiz', '', get_string('Quiz', 'logla'), 0);
         $mform->addGroup($radioarray, 'radioar', get_string('table1', 'logla'), array(' '), false);
-
+        
         // add assign activity
         $selectActivity = $mform->addElement('select', 'selectActivity', get_string('Activity', 'logla'), $assingcombo);
         $selectActivity->setMultiple(false);  
-
+        $mform->hideIf('selectActivity', 'selactivityquiz', 'neq', 1);
+        
         // add quiz activity
         $selectQuiz = $mform->addElement('select', 'selectQuiz', get_string('Quiz', 'logla'), $quizcombo);
-        $selectQuiz->setMultiple(false);     
-   
-        $mform->addElement('textarea', 'rightanswertxt', get_string('header4', 'logla'), 'wrap="virtual" rows="20" cols="50"');
+        $selectQuiz->setMultiple(false); 
+        $mform->hideIf('selectQuiz', 'selactivityquiz', 'neq', 0);
 
+        // add right answer checkbox
+        $mform->addElement('advcheckbox', 'rightanswerchk', 'Mostrar resposta correta', 'Mostrar resposta correta', array(0,1)) ;
+        
+        $mform->addElement('textarea', 'rightanswertxt', get_string('header4', 'logla'), 'wrap="virtual" rows="20" cols="50"');
+        $mform->hideIf('rightanswertxt', 'rightanswerchk');
+        
         // get course module id
         if ($PAGE->cm) {
             $coursemodule = $PAGE->cm->id; 
             //create an object from logla table
             $loglaresult = $DB->get_record('logla', array('coursemodule'=>$coursemodule));
-
+            
             $mform->setDefault('PreMetacognition', $loglaresult->prefeedback);
-
+            
             // verify if $loglaresult is not empty and set default value from table
             $selectPre->setSelected($loglaresult->idprefeedback);
 
@@ -144,7 +153,7 @@ class mod_logla_mod_form extends moodleform_mod {
             $selectActivity->setSelected($loglaresult->idactivity);    
 
             $selectQuiz->setSelected($loglaresult->idquiz);
-
+            
             $mform->setDefault('rightanswertxt', $loglaresult->rightanswer); 
 
             // verify if $loglaresult is not empty and set default value from table
@@ -152,13 +161,13 @@ class mod_logla_mod_form extends moodleform_mod {
 
             $mform->setDefault('selactivityquiz', $loglaresult->activityquiz);
         }        
-
+        
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();
-
+        
         // Add standard elements, common to all modules.	
         $this->standard_coursemodule_elements();
-
+        
         // Add standard buttons, common to all modules.
         $this->add_action_buttons();
     }

@@ -21,7 +21,7 @@
         <FIELD NAME="idactivity" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="id activity"/>
         <FIELD NAME="idquiz" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="id quiz"/>
         <FIELD NAME="showrightans" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Show right answer"/>
-        <FIELD NAME="rightanswer" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Right Answer of activity"/>
+        <FIELD NAME="rightanswer" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Right Answer of activity"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>

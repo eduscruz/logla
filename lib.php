@@ -859,7 +859,7 @@ function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable,
     
     $sql  = 'UPDATE mdl_logla_user_grades
             SET mdl_logla_user_grades.enable = null
-            WHERE loglaid = ?';
+            WHERE idlogla = ?';
     $DB->execute($sql, array($logla->id));
 
 
@@ -915,14 +915,15 @@ function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable,
                 $logla_user_grades->enable = 1;
                 $DB->update_record('logla_user_grades', $logla_user_grades);
             } else {
-                $logla_user_grades->enable = 1;
                 $logla_user_grades->timecreated = time();
+                $logla_user_grades->enable = 1;
                 $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
             }
             
         } else {
             // if update = null then populate with new registers
             $logla_user_grades->timecreated = time();
+            $logla_user_grades->enable = 1;
             $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
         }
         
