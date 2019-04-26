@@ -203,6 +203,7 @@ function logla_user_grades_add(stdClass $fromform){
     $logla_user_grades->performace1 = $fromform->realstatus;
     $logla_user_grades->ep1 = $fromform->selfregulation;
     $logla_user_grades->timecreated = time();
+    $logla_user_grades->enable = 1;
 
 
     $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
@@ -856,6 +857,13 @@ function logla_user_grades_populate(stdClass $logla, $update = null) {
 function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable, $fieldlogla, $wfactor, $update){
     global $DB;
     
+    $sql  = 'UPDATE mdl_logla_user_grades
+            SET mdl_logla_user_grades.enable = null
+            WHERE loglaid = ?';
+    $DB->execute($sql, array($logla->id));
+
+
+
     // get all answers from activity or quiz table
     $rs = $DB->get_recordset($tablename, array($fieldtable=>$logla->$fieldlogla));
         
@@ -904,8 +912,10 @@ function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable,
             if ($logla_user_grades_exists) {
                 $logla_user_grades->id = $logla_user_grades_exists->id;
                 $logla_user_grades->timemodified = time();
+                $logla_user_grades->enable = 1;
                 $DB->update_record('logla_user_grades', $logla_user_grades);
             } else {
+                $logla_user_grades->enable = 1;
                 $logla_user_grades->timecreated = time();
                 $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
             }

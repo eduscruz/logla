@@ -92,7 +92,7 @@ class view_results_form extends moodleform {
             $sql .= ' mdl_logla_user_grades.kmbgrade, mdl_logla_user_grades.sabgrade';
             $sql .= ' FROM mdl_logla_user_grades';
             $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
-            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ?';
+            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ? AND mdl_logla_user_grades.enable = 1';
             $rs = $DB->get_recordset_sql($sql, array($loglaresult->id));
             // print results in the table      
             foreach ($rs as $record) {
