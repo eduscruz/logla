@@ -87,8 +87,8 @@ if ($PAGE->user_allowed_editing()){
 //if user is student 
 else{ 
        
-    // if prefeedback is set on logla settings 
-    if(($logla->prefeedback) && ($logla->posfeedback)){
+    // if showrightans is set on logla settings 
+    if($logla->showrightans){
         // new pre student form instance 
         $pre_student_form = new pre_student();
 
@@ -111,7 +111,7 @@ else{
         }
     }
     // if posfeedback is only set on logla settings
-    else if (($logla->prefeedback) && (!$logla->posfeedback)){
+    else {
         // new pre student form instance 
         $post_student_form = new post_student();
         //Form processing and displaying is done here
@@ -122,7 +122,7 @@ else{
         } else if ($fromform = $post_student_form->get_data()) {
             //In this case you process validated data. $mform->get_data() returns data posted in form.
             // insert new record in logla_user_grades
-            $fromform->selfregulation1 = null;
+            // $fromform->selfregulation1 = null;
             if($fromform->loglauserid == 0){
                 logla_user_grades_add($fromform);
             }
@@ -140,8 +140,6 @@ else{
             // or on the first display of the form.
             $post_student_form->display();
         }
-    } else{
-        echo $OUTPUT->box('atividade sem configuracao');  
     }
 
 }

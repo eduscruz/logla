@@ -362,8 +362,36 @@ class post_student extends moodleform {
 
         // add header activity;
         $mform->addElement('header', 'loglafieldset', get_string('header7', 'logla'));
-
         $mform->addElement('html', '<p>'.get_string('textactivity1', 'logla'));
+
+        if (!$loglaresult->showrightans) {
+            # code...
+            // add radiobox selfregulation
+            $radioarray=array();
+            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity8', 'logla'), 0);
+            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity9', 'logla'), 1);
+            $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity10', 'logla'), 2);
+            $mform->addGroup($radioarray, 'sr1', get_string('textactivity7', 'logla'), array(' '), false);
+
+            // if($user_grade_result->sr1){
+            if($user_grade_result){
+                $mform->setDefault('selfregulation1', $user_grade_result->sr1);
+            }
+            else{
+                $mform->setDefault('selfregulation1', 1);
+            }
+        } else {
+            $data = $this->_customdata;
+            $mform->addElement('hidden', 'selfregulation1');
+            $mform->setType('selfregulation1', PARAM_INT);
+            if (!empty($data['selfregulation1'])) {
+                $mform->setDefault('selfregulation1', $data['selfregulation1']);
+            } else {
+                $mform->setDefault('selfregulation1', null);
+            }
+        }
+
+
         $mform->addElement('html', '<p>'.get_string('textactivity2', 'logla'));
         
         // add radiobox previous avaliation
@@ -409,14 +437,6 @@ class post_student extends moodleform {
             $mform->setDefault('selfregulation', 4);
         }
         
-        $data = $this->_customdata;
-        $mform->addElement('hidden', 'selfregulation1');
-        $mform->setType('selfregulation1', PARAM_INT);
-        if (!empty($data['selfregulation1'])) {
-            $mform->setDefault('selfregulation1', $data['selfregulation1']);
-        } else {
-            $mform->setDefault('selfregulation1', null);
-        }
 
         // summit button
         $this->add_action_buttons();

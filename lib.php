@@ -76,20 +76,67 @@ function logla_supports($feature) {
  */
 function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
     global $DB;
-
+    
     $logla->timecreated = time();
-
-    // You may have to add extra stuff in here.
-    $logla->prefeedback =$logla->PreMetacognition;
-    $logla->posfeedback =$logla->PosMetacognition;
-    $logla->idprefeedback =$logla->selectPreMetacognition;
-    $logla->idposfeedback =$logla->selectPosMetacognition;
-    $logla->activityquiz = $logla->selactivityquiz;
-    $logla->idactivity = $logla->selectActivity;
-    $logla->idquiz =$logla->selectQuiz;
+    
     $logla->prefbkmaavg = 0;
     $logla->posfbkmaavg = 0;
-    $logla->rightanswer = $logla->rightanswertxt;
+    
+    // Get data from form.
+    if (isset($logla->PreMetacognition)) {
+        $logla->prefeedback = $logla->PreMetacognition;
+    } else {
+        $logla->prefeedback = null;
+    }
+    
+    if (isset($logla->PosMetacognition)) {
+        $logla->posfeedback = $logla->PosMetacognition;
+    } else {
+        $logla->posfeedback = null;
+    }
+    
+    if (isset($logla->selactivityquiz)) {
+        $logla->activityquiz = $logla->selactivityquiz;
+    } else {
+        $logla->activityquiz = null;
+    }
+    
+    if (isset($logla->selectActivity)) {
+        $logla->idactivity = $logla->selectActivity;
+    } else {
+        $logla->idactivity = null;
+    }
+    
+    if (isset($logla->selectQuiz)) {
+        $logla->idquiz = $logla->selectQuiz;
+    } else {
+        $logla->idquiz = null;
+    }
+    
+    if (isset($logla->rightanswerchk)) {
+        $logla->showrightans = $logla->rightanswerchk;
+    } else {
+        $logla->showrightans = null;
+    }
+    
+    if (isset($logla->selectPreMetacognition)) {
+        $logla->idprefeedback = $logla->selectPreMetacognition;
+    } else {
+        $logla->idprefeedback = null;
+    }
+    
+    if (isset($logla->selectPosMetacognition)) {
+        $logla->idposfeedback = $logla->selectPosMetacognition;
+    } else {
+        $logla->idposfeedback = null;
+    }
+    
+    if (isset($logla->rightanswertxt)) {
+        $logla->rightanswer = $logla->rightanswertxt;
+    } else {
+        $logla->rightanswer = null;
+    }
+    
 
     $logla->id = $DB->insert_record('logla', $logla);
     logla_grade_item_update($logla);
@@ -117,15 +164,60 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
     $logla->timemodified = time();
     $logla->id = $logla->instance;
 
-    // You may have to add extra stuff in here.
-    $logla->prefeedback =$logla->PreMetacognition;
-    $logla->posfeedback =$logla->PosMetacognition;
-    $logla->idprefeedback =$logla->selectPreMetacognition;
-    $logla->idposfeedback =$logla->selectPosMetacognition;
-    $logla->activityquiz = $logla->selactivityquiz;
-    $logla->idactivity = $logla->selectActivity;
-    $logla->idquiz =$logla->selectQuiz;
-    $logla->rightanswer = $logla->rightanswertxt;
+    // Get data from form.
+    if (isset($logla->PreMetacognition)) {
+        $logla->prefeedback = $logla->PreMetacognition;
+    } else {
+        $logla->prefeedback = null;
+    }
+    
+    if (isset($logla->PosMetacognition)) {
+        $logla->posfeedback = $logla->PosMetacognition;
+    } else {
+        $logla->posfeedback = null;
+    }
+    
+    if (isset($logla->selactivityquiz)) {
+        $logla->activityquiz = $logla->selactivityquiz;
+    } else {
+        $logla->activityquiz = null;
+    }
+    
+    if (isset($logla->selectActivity)) {
+        $logla->idactivity = $logla->selectActivity;
+    } else {
+        $logla->idactivity = null;
+    }
+    
+    if (isset($logla->selectQuiz)) {
+        $logla->idquiz = $logla->selectQuiz;
+    } else {
+        $logla->idquiz = null;
+    }
+    
+    if (isset($logla->rightanswerchk)) {
+        $logla->showrightans = $logla->rightanswerchk;
+    } else {
+        $logla->showrightans = null;
+    }
+    
+    if (isset($logla->selectPreMetacognition)) {
+        $logla->idprefeedback = $logla->selectPreMetacognition;
+    } else {
+        $logla->idprefeedback = null;
+    }
+    
+    if (isset($logla->selectPosMetacognition)) {
+        $logla->idposfeedback = $logla->selectPosMetacognition;
+    } else {
+        $logla->idposfeedback = null;
+    }
+    
+    if (isset($logla->rightanswertxt)) {
+        $logla->rightanswer = $logla->rightanswertxt;
+    } else {
+        $logla->rightanswer = null;
+    }
    
     $result = $DB->update_record('logla', $logla);
 
@@ -168,7 +260,7 @@ function logla_user_grades_add(stdClass $fromform){
     }
   
     // if logla as set up with prefeback
-    if($logla->prefeedback){  
+    if(($logla->prefeedback) && isset($record->grade)){  
         // Computes the kma by multiplying the activity grade
         $kma = calculate_kma($logla->idprefeedback, $fromform->userid, $record->grade*$wfactor);          
         $logla_user_grades->kmagrade = $kma;
@@ -181,27 +273,22 @@ function logla_user_grades_add(stdClass $fromform){
     }
 
     // if logla as set up with posfeback
-    if($logla->posfeedback){
+    if(($logla->posfeedback) && isset($record->grade)){
         // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
         $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
         $logla_user_grades->saagrade = $kma;
         $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
         $logla_user_grades->sabgrade = $kmb;
-
-        // if logla is set up as posfeedback then save self regulation 1
-        $logla_user_grades->sr1 = $fromform->selfregulation1;
     }
     else{
         $logla_user_grades->saagrade = null;
         $logla_user_grades->sabgrade = null;
-
-        // if logla is not set up as posfeedback then save self regulation 1
-        $logla_user_grades->sr1 = null;
     }
     
     $logla_user_grades->mcp1 = $fromform->selactprevious;
     $logla_user_grades->performace1 = $fromform->realstatus;
     $logla_user_grades->ep1 = $fromform->selfregulation;
+    $logla_user_grades->sr1 = $fromform->selfregulation1;
     $logla_user_grades->timecreated = time();
     $logla_user_grades->enable = 1;
 
@@ -229,6 +316,7 @@ function logla_user_grades_update(stdClass $fromform) {
     $logla_user_grades->mcp1 = $fromform->selactprevious;
     $logla_user_grades->performace1 = $fromform->realstatus;
     $logla_user_grades->ep1 = $fromform->selfregulation;
+    $logla_user_grades->sr1 = $fromform->selfregulation1;
     $logla_user_grades->timemodified = time();
     
     
@@ -246,27 +334,29 @@ function logla_user_grades_update(stdClass $fromform) {
     }
 
     // if logla as set up with prefeback
-    if($logla->prefeedback){  
+    if(($logla->prefeedback) && isset($record->grade)){  
         // Computes the kma by multiplying the activity grade
         $kma = calculate_kma($logla->idprefeedback, $fromform->userid, ($record->grade*$wfactor));          
         $logla_user_grades->kmagrade = $kma;
         $kmb = calculate_kmb($logla->idprefeedback, $fromform->userid, ($record->grade*$wfactor));          
         $logla_user_grades->kmbgrade = $kmb;
+    } else {
+        $logla_user_grades->kmagrade = null;
+        $logla_user_grades->kmbgrade = null;
     }
     
     // if activity is set up as posfeedback
-    if($logla->posfeedback){
+    if(($logla->posfeedback) && isset($record->grade)){
 
         // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
         $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
         $logla_user_grades->saagrade = $kma;
         $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
         $logla_user_grades->sabgrade = $kmb;
-
-        $logla_user_grades->sr1 = $fromform->selfregulation1;
     }
     else {
-        $logla_user_grades->sr1 = null;
+        $logla_user_grades->saagrade = null;
+        $logla_user_grades->sabgrade = null;
     }
 
     $DB->update_record('logla_user_grades', $logla_user_grades, $bulk=false);
