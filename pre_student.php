@@ -178,9 +178,9 @@ class pre_student extends moodleform {
 
         // add radiobox selfregulation
         $radioarray=array();
-        $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity8', 'logla'), 0);
-        $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity9', 'logla'), 1);
-        $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity10', 'logla'), 2);
+        $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity8', 'logla'), 1);
+        $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity9', 'logla'), 2);
+        $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity10', 'logla'), 3);
         $mform->addGroup($radioarray, 'sr1', get_string('textactivity7', 'logla'), array(' '), false);
 
         // if($user_grade_result->sr1){

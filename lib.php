@@ -272,19 +272,22 @@ function logla_user_grades_add(stdClass $fromform){
         $logla_user_grades->kmbgrade = null;
     }
 
-    // if logla as set up with posfeback
-    if(($logla->posfeedback) && isset($record->grade)){
-        // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
-        $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
-        $logla_user_grades->saagrade = $kma;
-        $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
-        $logla_user_grades->sabgrade = $kmb;
-    }
-    else{
-        $logla_user_grades->saagrade = null;
-        $logla_user_grades->sabgrade = null;
-    }
+    // // if logla as set up with posfeback
+    // if(($logla->posfeedback) && isset($record->grade)){
+    //     // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
+    //     $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
+    //     $logla_user_grades->saagrade = $kma;
+    //     $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
+    //     $logla_user_grades->sabgrade = $kmb;
+    // }
+    // else{
+    //     $logla_user_grades->saagrade = null;
+    //     $logla_user_grades->sabgrade = null;
+    // }
     
+    $logla_user_grades->saagrade = calculate_saa($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor), $fromform->selfregulation1);
+    $logla_user_grades->sabgrade = calculate_sab($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor), $fromform->selfregulation1);          
+
     $logla_user_grades->mcp1 = $fromform->selactprevious;
     $logla_user_grades->performace1 = $fromform->realstatus;
     $logla_user_grades->ep1 = $fromform->selfregulation;
@@ -345,19 +348,21 @@ function logla_user_grades_update(stdClass $fromform) {
         $logla_user_grades->kmbgrade = null;
     }
     
-    // if activity is set up as posfeedback
-    if(($logla->posfeedback) && isset($record->grade)){
+    // // if activity is set up as posfeedback
+    // if(($logla->posfeedback) && isset($record->grade)){
 
-        // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
-        $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
-        $logla_user_grades->saagrade = $kma;
-        $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
-        $logla_user_grades->sabgrade = $kmb;
-    }
-    else {
-        $logla_user_grades->saagrade = null;
-        $logla_user_grades->sabgrade = null;
-    }
+    //     // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
+    //     $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
+    //     $logla_user_grades->saagrade = $kma;
+    //     $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
+    //     $logla_user_grades->sabgrade = $kmb;
+    // }
+    // else {
+    //     $logla_user_grades->saagrade = null;
+    //     $logla_user_grades->sabgrade = null;
+    // }
+    $logla_user_grades->saagrade = calculate_saa($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor), $fromform->selfregulation1);
+    $logla_user_grades->sabgrade = calculate_sab($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor), $fromform->selfregulation1);
 
     $DB->update_record('logla_user_grades', $logla_user_grades, $bulk=false);
 }
@@ -476,6 +481,93 @@ function calculate_kmb($idfeedback, $iduser, $grade){
     return $kmb;
 }
 
+
+/**
+ * This function will calculte all instances of this module
+ *  *
+ * @param int $courseid Course ID
+ * @return bool
+ */
+function calculate_saa($idfeedback, $iduser, $grade, $answer){
+
+    global $DB;
+
+    // estimate grade by rate 
+    if($grade >= 75.0){
+        $graderate = 1;
+    }
+    // verify if the response is regular
+    else if(($grade < 75.0) && ($grade >= 50.0)){
+        $graderate = 2;
+    }
+    // verify if the response is bad
+    else{
+        $graderate = 3;
+    }
+
+    
+    if (($answer>=1) && ($answer<=3)) {
+        // variable aux to calculate kma
+        $auxabs = abs($graderate - $answer);
+
+        // calculate the kma
+        if ($auxabs == 0){
+            $kma = 1;
+        }
+        elseif ($auxabs == 1) {
+            $kma = -0.5;
+        } else {
+            $kma = -1.0;
+        }
+    } else {
+        $kma = null;
+    }
+    
+    
+    return $kma;
+}
+
+
+/**
+ * This function will calculte all instances of this module
+ *  *
+ * @param int $courseid Course ID
+ * @return bool
+ */
+function calculate_sab($idfeedback, $iduser, $grade, $answer){
+
+    // estimate grade by rate 
+    if($grade >= 75.0){
+        $graderate = 1;
+    }
+    // verify if the response is regular
+    else if(($grade < 75.0) && ($grade >= 50.0)){
+        $graderate = 2;
+    }
+    // verify if the response is bad
+    else{
+        $graderate = 3;
+    }
+
+    
+    // verify if theauxabs is zero then chage to one
+    if (($answer>=1) && ($answer<=3)) {
+        // variable aux to calculate kma
+        $auxabs = $graderate - $answer;
+        
+        if($auxabs == 0){
+            $kmb = 0;
+        } else {
+            $kmb = $auxabs/2.0;
+        }
+
+    } else {
+        $kmb = null;
+    }
+    
+    
+    return $kmb;
+}
 
 function logla_user_grades_delete(stdClass $logla){
     global $DB;
