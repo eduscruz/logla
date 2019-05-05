@@ -272,18 +272,16 @@ function logla_user_grades_add(stdClass $fromform){
         $logla_user_grades->kmbgrade = null;
     }
 
-    // // if logla as set up with posfeback
-    // if(($logla->posfeedback) && isset($record->grade)){
-    //     // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
-    //     $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
-    //     $logla_user_grades->saagrade = $kma;
-    //     $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
-    //     $logla_user_grades->sabgrade = $kmb;
-    // }
-    // else{
-    //     $logla_user_grades->saagrade = null;
-    //     $logla_user_grades->sabgrade = null;
-    // }
+    // if logla as set up with posfeback
+    if(($logla->posfeedback) && isset($record->grade)){
+        // Computes the eds1 and eds2      
+        $logla_user_grades->eds1 = calculate_eds1($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));
+        $logla_user_grades->eds2 = calculate_eds2($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));
+    }
+    else {
+        $logla_user_grades->eds1 = null;
+        $logla_user_grades->eds2 = null;
+    }
     
     $logla_user_grades->saagrade = calculate_saa($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor), $fromform->selfregulation1);
     $logla_user_grades->sabgrade = calculate_sab($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor), $fromform->selfregulation1);          
@@ -348,19 +346,16 @@ function logla_user_grades_update(stdClass $fromform) {
         $logla_user_grades->kmbgrade = null;
     }
     
-    // // if activity is set up as posfeedback
-    // if(($logla->posfeedback) && isset($record->grade)){
-
-    //     // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
-    //     $kma = calculate_kma($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
-    //     $logla_user_grades->saagrade = $kma;
-    //     $kmb = calculate_kmb($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));          
-    //     $logla_user_grades->sabgrade = $kmb;
-    // }
-    // else {
-    //     $logla_user_grades->saagrade = null;
-    //     $logla_user_grades->sabgrade = null;
-    // }
+    // if activity is set up as posfeedback
+    if(($logla->posfeedback) && isset($record->grade)){
+        // Computes the eds1 and eds2      
+        $logla_user_grades->eds1 = calculate_eds1($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));
+        $logla_user_grades->eds2 = calculate_eds2($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor));
+    }
+    else {
+        $logla_user_grades->eds1 = null;
+        $logla_user_grades->eds2 = null;
+    }
     $logla_user_grades->saagrade = calculate_saa($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor), $fromform->selfregulation1);
     $logla_user_grades->sabgrade = calculate_sab($logla->idposfeedback, $fromform->userid, ($record->grade*$wfactor), $fromform->selfregulation1);
 
@@ -576,6 +571,100 @@ function logla_user_grades_delete(stdClass $logla){
 }
 
 
+/**
+ * This function will calculte all instances of this module
+ *  *
+ * @param int $courseid Course ID
+ * @return bool
+ */
+function calculate_eds1($idfeedback, $iduser, $grade){
+
+    global $DB;
+
+    // $resultfeedback = $DB->get_record('feedback_completed', array('feedback'=>$idfeedback, 'userid'=>$iduser));
+    $sql = 'SELECT 
+                fv.value
+            FROM mdl_feedback AS f
+            INNER JOIN mdl_feedback_completed AS fc  ON   f.id = fc.feedback
+            INNER JOIN mdl_feedback_value AS fv  ON   fc.id = fv.completed
+            WHERE fc.userid = ? AND f.id = ?';
+
+    $resultfeedback = $DB->get_record_sql($sql, array($iduser, $idfeedback));
+    $graderate = 0;
+
+    // estimate grade by rate 
+    if($grade >= 75.0){
+        $graderate = 1;
+    }
+    // verify if the response is regular
+    else if(($grade < 75.0) && ($grade >= 50.0)){
+        $graderate = 2;
+    }
+    // verify if the response is bad
+    else{
+        $graderate = 3;
+    }
+
+    
+    if ($resultfeedback) {
+        // variable aux to calculate kma
+        $eds1 = ((($graderate - $resultfeedback->value)+2)*0.5)-1;
+    } else {
+        $eds1 = null;
+    }
+    
+    
+    return $eds1;
+}
+
+
+/**
+ * This function will calculte all instances of this module
+ *  *
+ * @param int $courseid Course ID
+ * @return bool
+ */
+function calculate_eds2($idfeedback, $iduser, $grade){
+
+    global $DB;
+
+    // $resultfeedback = $DB->get_record('feedback_completed', array('feedback'=>$idfeedback, 'userid'=>$iduser));
+    $sql = 'SELECT 
+                fv.value
+            FROM mdl_feedback AS f
+            INNER JOIN mdl_feedback_completed AS fc  ON   f.id = fc.feedback
+            INNER JOIN mdl_feedback_value AS fv  ON   fc.id = fv.completed
+            WHERE fc.userid = ? AND f.id = ?';
+
+    $resultfeedback = $DB->get_record_sql($sql, array($iduser, $idfeedback));
+    $graderate = 0;
+
+    // estimate grade by rate 
+    if($grade >= 75.0){
+        $graderate = 1;
+    }
+    // verify if the response is regular
+    else if(($grade < 75.0) && ($grade >= 50.0)){
+        $graderate = 2;
+    }
+    // verify if the response is bad
+    else{
+        $graderate = 3;
+    }
+
+    
+    if ($resultfeedback) {
+        // variable aux to calculate eds2
+        $aux1 = pow((4-$graderate),2);
+        $aux2 = abs($graderate - $resultfeedback->value - 0.1);
+        $eds2 = $aux1 - $aux2 - 1.1;
+    } else {
+        $eds2 = null;
+    }
+    
+    
+    return $eds2;
+}
 /**
  * This standard function will check all instances of this module
  * and make sure there are up-to-date events created for each of them.

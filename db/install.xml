@@ -39,9 +39,10 @@
         <FIELD NAME="sabgrade" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
         <FIELD NAME="mcp1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Metacognition pre self-regulation"/>
         <FIELD NAME="performace1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Self performace"/>
-        <FIELD NAME="postpred" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Self performace"/>
         <FIELD NAME="ep1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Estimation pos performace"/>
         <FIELD NAME="sr1" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Selfregulation"/>
+        <FIELD NAME="eds1" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
+        <FIELD NAME="eds2" TYPE="number" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" DECIMALS="1" COMMENT="Pos metacognition grade"/> 
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="enable" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="enable"/>
