@@ -43,10 +43,10 @@ $string['pluginname'] = 'logla';
 $string['finish'] = 'Finish';
 
 // Strings of mod_form
-$string['PreMetacognition'] = 'PreMetacognition';
-$string['PreFeedback'] = 'PreFeedback';
-$string['PosMetacognition'] = 'PosMetacognition';
-$string['PosFeedback'] = 'PosFeedback';
+$string['PreMetacognition'] = 'KMA/KMB';
+$string['PreFeedback'] = 'Feedback KMA/KMB';
+$string['PosMetacognition'] = 'EDS1/EDS2';
+$string['PosFeedback'] = 'Feedback EDS1/EDS2';;
 $string['Activity'] = 'Activity';
 
 // strings from view_prestudent
