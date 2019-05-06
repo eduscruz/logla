@@ -154,6 +154,8 @@ class mod_logla_mod_form extends moodleform_mod {
 
             $selectQuiz->setSelected($loglaresult->idquiz);
             
+            $mform->setDefault('rightanswerchk', $loglaresult->showrightans); 
+            
             $mform->setDefault('rightanswertxt', $loglaresult->rightanswer); 
 
             // verify if $loglaresult is not empty and set default value from table

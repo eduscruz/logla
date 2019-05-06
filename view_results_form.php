@@ -84,15 +84,18 @@ class view_results_form extends moodleform {
             $mform->addElement('html', '<th>SAA</th>');
             $mform->addElement('html', '<th>KMB</th>');
             $mform->addElement('html', '<th>SAB</th>');
+            $mform->addElement('html', '<th>EDS1</th>');
+            $mform->addElement('html', '<th>EDS2</th>');
             $mform->addElement('html', '</tr>');
 
             // SQL query to select tables logla_user_grades and user
-            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,';
-            $sql .= ' mdl_user.email, mdl_logla_user_grades.kmagrade, mdl_logla_user_grades.saagrade,';
-            $sql .= ' mdl_logla_user_grades.kmbgrade, mdl_logla_user_grades.sabgrade';
-            $sql .= ' FROM mdl_logla_user_grades';
-            $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
-            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ? AND mdl_logla_user_grades.enable = 1';
+            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname, mdl_user.lastname,
+                    mdl_user.email, mdl_logla_user_grades.kmagrade, mdl_logla_user_grades.saagrade,
+                    mdl_logla_user_grades.kmbgrade, mdl_logla_user_grades.sabgrade,
+                    mdl_logla_user_grades.eds1, mdl_logla_user_grades.eds2
+                    FROM mdl_logla_user_grades
+                    INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID
+                    WHERE mdl_logla_user_grades.idlogla = ? AND mdl_logla_user_grades.enable = 1';
             $rs = $DB->get_recordset_sql($sql, array($loglaresult->id));
             // print results in the table      
             foreach ($rs as $record) {
@@ -106,17 +109,21 @@ class view_results_form extends moodleform {
                 $mform->addElement('html', "<td>$record->saagrade</td>");
                 $mform->addElement('html', "<td>$record->kmbgrade</td>");
                 $mform->addElement('html', "<td>$record->sabgrade</td>");
+                $mform->addElement('html', "<td>$record->eds1</td>");
+                $mform->addElement('html', "<td>$record->eds2</td>");
                 $mform->addElement('html', '</tr>');
             }
             $rs->close();
             
             // SQL query to average pre-kma and pos-kma grade per user on this logla instance
-            $sql  = 'SELECT AVG(mdl_logla_user_grades.kmagrade) AS kmagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.saagrade) AS saagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.kmbgrade) AS kmbgrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.sabgrade) AS sabgrade';
-            $sql .= ' FROM mdl_logla_user_grades';
-            $sql .= ' WHERE mdl_logla_user_grades.idlogla = ? AND mdl_logla_user_grades.enable = 1';
+            $sql  = 'SELECT AVG(mdl_logla_user_grades.kmagrade) AS kmagrade,
+                    AVG(mdl_logla_user_grades.saagrade) AS saagrade,
+                    AVG(mdl_logla_user_grades.kmbgrade) AS kmbgrade,
+                    AVG(mdl_logla_user_grades.sabgrade) AS sabgrade,
+                    AVG(mdl_logla_user_grades.eds1) AS eds1,
+                    AVG(mdl_logla_user_grades.eds2) AS eds2
+                    FROM mdl_logla_user_grades
+                    WHERE mdl_logla_user_grades.idlogla = ? AND mdl_logla_user_grades.enable = 1';
             $kmaavg = $DB->get_record_sql($sql, array($loglaresult->id));
 
             // print results in the table 
@@ -128,6 +135,8 @@ class view_results_form extends moodleform {
             $mform->addElement('html', "<td>$kmaavg->saagrade</td>");
             $mform->addElement('html', "<td>$kmaavg->kmbgrade</td>");
             $mform->addElement('html', "<td>$kmaavg->sabgrade</td>");
+            $mform->addElement('html', "<td>$kmaavg->eds1</td>");
+            $mform->addElement('html', "<td>$kmaavg->eds2</td>");
             $mform->addElement('html', '</tr>');
             $mform->addElement('html', '</tfoot>');
             $mform->addElement('html', '</table>');
@@ -138,25 +147,31 @@ class view_results_form extends moodleform {
             $mform->addElement('header', 'loglafieldset', $header2);
 
             // SQL query to average pre-kma and pos-kma grade per user on all logla instances
-            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname,';
-            $sql .= ' mdl_user.lastname,  mdl_user.email, AVG(mdl_logla_user_grades.kmagrade) AS kmagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.saagrade) AS saagrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.kmbgrade) AS kmbgrade,';
-            $sql .= ' AVG(mdl_logla_user_grades.sabgrade) AS sabgrade';
-            $sql .= ' FROM mdl_logla_user_grades';
-            $sql .= ' INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID';
-            $sql .= ' WHERE mdl_logla_user_grades.enable = 1';
-            $sql .= ' GROUP BY mdl_logla_user_grades.userid';
+            $sql  = 'SELECT mdl_logla_user_grades.userid, mdl_user.username, mdl_user.firstname,
+                    mdl_user.lastname,  mdl_user.email, AVG(mdl_logla_user_grades.kmagrade) AS kmagrade,
+                    AVG(mdl_logla_user_grades.saagrade) AS saagrade,
+                    AVG(mdl_logla_user_grades.kmbgrade) AS kmbgrade,
+                    AVG(mdl_logla_user_grades.sabgrade) AS sabgrade,
+                    AVG(mdl_logla_user_grades.eds1) AS eds1,
+                    AVG(mdl_logla_user_grades.eds2) AS eds2
+                    FROM mdl_logla_user_grades
+                    INNER JOIN mdl_user ON mdl_logla_user_grades.userid = mdl_user.ID
+                    WHERE mdl_logla_user_grades.enable = 1
+                    GROUP BY mdl_logla_user_grades.userid';
    
             // Auxiliary variables
             $prekmaavg = 0;
             $poskmaavg = 0;
             $prekmbavg = 0;
             $poskmbavg = 0;
+            $eds1avg = 0;
+            $eds2avg = 0;
             $iprekmaavg = 0;
             $iposkmaavg = 0;
             $iprekmbavg = 0;
             $iposkmbavg = 0;
+            $ieds1avg = 0;
+            $ieds2avg = 0;
 
             // print results in the table 
             $mform->addElement('html', '<div>');
@@ -171,6 +186,8 @@ class view_results_form extends moodleform {
             $mform->addElement('html', '<th>SAA</th>');
             $mform->addElement('html', '<th>KMB</th>');
             $mform->addElement('html', '<th>SAB</th>');
+            $mform->addElement('html', '<th>EDS1</th>');
+            $mform->addElement('html', '<th>EDS2</th>');
             $mform->addElement('html', '</tr>');
             $rs = $DB->get_recordset_sql($sql);
             foreach ($rs as $record) {
@@ -184,6 +201,8 @@ class view_results_form extends moodleform {
                 $mform->addElement('html', "<td>$record->saagrade</td>");
                 $mform->addElement('html', "<td>$record->kmbgrade</td>");
                 $mform->addElement('html', "<td>$record->sabgrade</td>");
+                $mform->addElement('html', "<td>$record->eds1</td>");
+                $mform->addElement('html', "<td>$record->eds2</td>");
                 $mform->addElement('html', '</tr>');
 
                 // Checks if result is not null
@@ -203,6 +222,14 @@ class view_results_form extends moodleform {
                     $poskmbavg += $record->sabgrade;  
                     ++$iposkmbavg;        
                 }
+                if ($record->eds1 != null){
+                    $eds1avg += $record->eds1;  
+                    ++$ieds1avg;        
+                }
+                if ($record->eds2 != null){
+                    $eds2avg += $record->eds2;  
+                    ++$ieds2avg;        
+                }
             }
             
             $rs->close();
@@ -217,9 +244,13 @@ class view_results_form extends moodleform {
             if($prekmbavg != 0){
                 $prekmbavg = $prekmbavg / $iprekmbavg;
             }
-            if($poskmbavg != 0){
-                $poskmbavg = $poskmbavg / $iposkmbavg;
+            if($eds1avg != 0){
+                $eds1avg = $eds1avg / $ieds1avg;
             }
+            if($eds2avg != 0){
+                $eds2avg = $eds2avg / $ieds2avg;
+            }
+
 
             // print results in the table 
             $mform->addElement('html', '<tfoot>');
@@ -230,6 +261,8 @@ class view_results_form extends moodleform {
             $mform->addElement('html', "<td>$poskmaavg</td>");
             $mform->addElement('html', "<td>$prekmbavg</td>");
             $mform->addElement('html', "<td>$poskmbavg</td>");
+            $mform->addElement('html', "<td>$eds1avg</td>");
+            $mform->addElement('html', "<td>$eds2avg</td>");
             $mform->addElement('html', '</tr>');
             $mform->addElement('html', '</tfoot>');
             $mform->addElement('html', '</table>');

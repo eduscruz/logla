@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_logla';
 $plugin->version = 1;
-$plugin->release = 'v0.912';
+$plugin->release = 'v0.913';
 $plugin->requires = 2014051200;
 $plugin->maturity = MATURITY_ALPHA;
 $plugin->cron = 0;

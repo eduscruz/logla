@@ -657,7 +657,7 @@ function calculate_eds2($idfeedback, $iduser, $grade){
         // variable aux to calculate eds2
         $aux1 = pow((4-$graderate),2);
         $aux2 = abs($graderate - $resultfeedback->value - 0.1);
-        $eds2 = $aux1 - $aux2 - 1.1;
+        $eds2 = $aux1 - $aux2 + 1.1;
     } else {
         $eds2 = null;
     }
@@ -1166,16 +1166,17 @@ function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable,
         // if logla as set up with posfeback
         if($logla->posfeedback){
             // Computes the kma by multiplying the quiz grade by 10 because the range goes from 0 to 10 instead of 0 to 100
-            $kma = calculate_kma($logla->idposfeedback, $record->userid, ($record->grade*$wfactor));          
-            $logla_user_grades->saagrade = $kma;
-            $kmb = calculate_kmb($logla->idposfeedback, $record->userid, ($record->grade*$wfactor));          
-            $logla_user_grades->sabgrade = $kmb; 
+            $logla_user_grades->eds1 = calculate_eds1($logla->idposfeedback, $record->userid, ($record->grade*$wfactor));          
+            $logla_user_grades->eds2 = calculate_eds2($logla->idposfeedback, $record->userid, ($record->grade*$wfactor));          
         }
         else{
-            $logla_user_grades->saagrade = null;
-            $logla_user_grades->sabgrade = null;
+            $logla_user_grades->eds1 = null;
+            $logla_user_grades->eds2 = null;
         }
         
+        $logla_user_grades->saagrade = calculate_kma($logla->idprefeedback, $record->userid, $record->grade*$wfactor);
+        $logla_user_grades->sabgrade = calculate_kmb($logla->idprefeedback, $record->userid, $record->grade*$wfactor);
+
         if ($update) {
 
             // get recorset from logla_user_grades id
