@@ -90,7 +90,7 @@ class view_levelstudent_form extends moodleform {
 
             $mform->addElement('html', '<p>'.get_string('textactivity18', 'logla').'<br>');
 
-            if ($logla_user_result->kmagrade) {
+            if ($logla_user_result->kmagrade != null) {
                 if ($logla_user_result->kmagrade < (-0.25)) {
                    $prekma = get_string('low', 'logla');
                    $kmaknowledge = get_string('textactivity25', 'logla');
@@ -115,7 +115,7 @@ class view_levelstudent_form extends moodleform {
                 echo $OUTPUT->box($text1);
             }
             
-            if ($logla_user_result->kmbgrade) {
+            if ($logla_user_result->kmbgrade  != null) {
                 if ($logla_user_result->kmbgrade < (-0.25)) {
                    $prekmb = get_string('textactivity32', 'logla');
                    $kmbknowledge = get_string('textactivity35', 'logla');
