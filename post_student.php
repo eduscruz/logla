@@ -120,7 +120,6 @@ class post_student extends moodleform {
                 
                 // if recordset is activity
                 if ($record->activityquiz) {
-                    
                     // get activity result
                     $activity = $DB->get_record('assign', array('id' => $record->idactivity));
                     $mform->addElement('html', "<td>$activity->name</td>");
@@ -132,12 +131,9 @@ class post_student extends moodleform {
                     } else {
                         $mform->addElement('html', "<td>Empty</td>");
                     }
-                    
-                    
                 }
                 // if recordset is quiz
                 else {
-                    
                     $quiz = $DB->get_record('quiz', array('id' => $record->idquiz));
                     $mform->addElement('html', "<td>$quiz->name</td>");
                     $quizresult = $DB->get_record('quiz_grades', array('quiz' => $record->idquiz, 'userid' => $USER->id));
@@ -147,7 +143,6 @@ class post_student extends moodleform {
                     } else {
                         $mform->addElement('html', "<td>Empty</td>");
                     }
-                    
                 }
                 
                 // if recordset is set as prefeedback
@@ -209,7 +204,6 @@ class post_student extends moodleform {
                         $difference = 'Error: posfeedback empty<td>Error: posfeedback empty</td>';
                     }
                     
-                    
                     $mform->addElement('html', "<td>$difference %</td>");
                 }
                 else {
@@ -249,111 +243,111 @@ class post_student extends moodleform {
         $tableKMA = "<div>
                 <table>
                     <tr>
-                        <th>
-                            Valor do KMA
-                        </th>
-                        <th>
-                            Classificação
-                        </th>
-                        <th>
-                            Interpretação
-                        </th>
+                        <th>"
+                        .get_string('kmavalue', 'kmatable').
+                        "</th>
+                        <th>"
+                        .get_string('classification', 'kmatable').
+                        "</th>
+                        <th>"
+                        .get_string('interpretation', 'kmatable').
+                        "</th>
                     </tr>
                     <tr>
                         <td>
                             [-1 , -0,25)
                         </td>
-                        <td>
-                            KMA Baixo
-                        </td>
-                        <td>
-                            O aluno não estima corretamente seu conhecimento na maioria das situações
-                        </td>
+                        <td>"
+                        .get_string('lowkma', 'kmatable').
+                        "</td>
+                        <td>"
+                        .get_string('text1', 'kmatable').
+                        "</td>
                     </tr>
                     <tr>
                         <td>
                             [-0,25 , 0,50)
                         </td>
+                        <td>"
+                        .get_string('intermkma', 'kmatable').
+                        "</td>
+                        <td>"
+                        .get_string('text2', 'kmatable').    
+                        "</td>
+                        </tr>
+                        <tr>
                         <td>
-                            KMA Médio
+                        [0,50 , 1]
                         </td>
-                        <td>
-                            O aluno às vezes calcula corretamente, mas faz estimativas frequentemente erradas ou completamente erradas
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            [0,50 , 1]
-                        </td>
-                        <td>
-                            KMA Alto
-                        </td>
-                        <td>
-                            Aluno na maioria das vezes faz estimativa correta de seu conhecimento
-                        </td>
+                        <td>"
+                        .get_string('highkma', 'kmatable').    
+                        "</td>
+                        <td>"
+                        .get_string('text3', 'kmatable').    
+                        "</td>
                     </tr>
                 </table>
             </div>";
 
         $tableKMB = "<div>
-                <table>
-                    <tr>
-                        <th>
-                        Valor do KMB
-                        </th>
-                        <th>
-                            Classificação
-                        </th>
-                        <th>
-                            Interpretação
-                        </th>
-                    </tr>
-                    <tr>
-                        <td>
-                            KMA Alto
-                        </td>
-                        <td>
-                            Realista
-                        </td>
-                        <td>
-                            O aluno faz uma estimativa precisa de seu conhecimento, tendo um alto KMA
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            [0,25 , 1]
-                        </td>
-                        <td>
-                            Otimista
-                        </td>
-                        <td>
-                            O aluno tende a estimar que pode resolver os problemas, mas ele não consegue na maioria das vezes
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            [-1 , -0,25]
-                        </td>
-                        <td>
-                            Pessimista
-                        </td>
-                        <td>
-                            Aluno tende a estimar que não pode resolver os problemas, mas depois ele consegue
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            (-0,25 , 0,25)
-                        </td>
-                        <td>
-                            Aleatório
-                        </td>
-                        <td>
-                            Estimativas do aluno sobre o seu conhecimento são tão otimistas quanto pessimistas
-                        </td>
-                    </tr>
-                </table>
-            </div>";                        
+                        <table>
+                            <tr>
+                                <th>"
+                                    .get_string('kmavalue', 'kmatable').
+                                "</th>
+                                <th>"
+                                    .get_string('classification', 'kmatable').
+                                "</th>
+                                <th>"
+                                    .get_string('interpretation', 'kmatable').
+                                "</th>
+                                </tr>
+                                <tr>
+                                <td>"
+                                    .get_string('highkma', 'kmatable').
+                                "</td>
+                                <td>"
+                                    .get_string('realist', 'kmatable').
+                                "</td>
+                                <td>"
+                                    .get_string('text4', 'kmatable').   
+                                "</td>
+                                </tr>
+                                <tr>
+                                <td>
+                                    [0,25 , 1]
+                                </td>
+                                <td>"
+                                    .get_string('optimistic', 'kmatable').
+                                "</td>
+                                <td>"
+                                    .get_string('text5', 'kmatable').
+                                "</td>
+                                </tr>
+                                <tr>
+                                <td>
+                                    [-1 , -0,25]
+                                </td>
+                                <td>"
+                                    .get_string('pessimistic', 'kmatable').
+                                "</td>
+                                <td>"
+                                    .get_string('text6', 'kmatable').
+                                "</td>
+                                </tr>
+                                <tr>
+                                <td>
+                                    (-0,25 , 0,25)
+                                </td>
+                                <td>"
+                                    .get_string('random', 'kmatable').
+                                "</td>
+                                <td>"
+                                    .get_string('text7', 'kmatable').
+                                "</td>
+                            </tr>
+                        </table>
+                    </div>";                        
 
         $mform->addElement('html', '<br><br>'.$tableKMA);            
         $mform->addElement('html', '<br><br>'.$tableKMB);
@@ -365,7 +359,6 @@ class post_student extends moodleform {
         $mform->addElement('html', '<p>'.get_string('textactivity1', 'logla'));
 
         if (!$loglaresult->showrightans) {
-            # code...
             // add radiobox selfregulation
             $radioarray=array();
             $radioarray[] = $mform->createElement('radio', 'selfregulation1', '', get_string('textactivity8', 'logla'), 1);
@@ -436,13 +429,11 @@ class post_student extends moodleform {
         else{
             $mform->setDefault('selfregulation', 4);
         }
-        
 
         // summit button
         $this->add_action_buttons();
-
     }
-    
+  
     //Custom validation should be added here
     function validation($data, $files) {
         return array();

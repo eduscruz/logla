@@ -147,9 +147,8 @@ class pre_student extends moodleform {
             $mform->addElement('header', 'loglafieldset', get_string('header3', 'logla'));
             $mform->addElement('html', $rightanswer);
             
-        }
-        // if activity
-        else{
+        } else{ // if activity
+
             // get information about assignment
             $assign = $DB->get_record('assign', array('id'=>$loglaresult->idactivity));
             
@@ -190,35 +189,11 @@ class pre_student extends moodleform {
         else{
             $mform->setDefault('selfregulation1', 1);
         }
-
-        /* $data = $this->_customdata;
-        if ($data['posfeedback']) {
-            
-            $mform->addElement('button', 'next1', 'proximo');
-            // $this->add_action_buttons(); 
-
-            $toform = array('prefeedback' => true);
-            //Form processing and displaying is done here
-            if ($this->next1) {
-                //In this case you process validated data. $mform->get_data() returns data posted in form.
-                echo $OUTPUT->box('Pegou dados pos');
-                // $post_student_form = new post_student(null, $toform);
-                // $post_student_form->display();
-            }
-        } else {
-            // summit button
-            // $this->add_action_buttons();  
-        } */
-        
         $this->add_action_buttons(); 
-
-
-        
     }
     
     //Custom validation should be added here
     function validation($data, $files) {
         return array();
     }
-
 }

@@ -22,7 +22,7 @@
  * if you like, and it can span multiple lines.
  *
  * @package    mod_logla
- * @copyright  2016 Your Name <your@email.address>
+ * @copyright  2019 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -63,9 +63,9 @@ $string['header10'] = 'ANÁLISE DO ESTADO ATUAL DE MONITORAMENTO PRÓPRIO CONHEC
 
 
 $string['Quiz'] = 'Quiz';
-$string['high'] = 'Alto(a)';
-$string['medium'] = 'Médio(a)';
-$string['low'] = 'Baixo(a)';
+$string['high'] = 'Alta';
+$string['medium'] = 'Média';
+$string['low'] = 'Baixa';
 $string['decreasing'] = 'Decrescendo';
 $string['increasing'] = 'Aumentando';
 $string['constant'] = 'Constante';
@@ -99,10 +99,10 @@ $string['textactivity11'] = 'Veja abaixo o enunciado, a sua solução e a soluç
 $string['textactivity12'] = 'Os dados a seguir mostram seus resultados históricos de <strong>PREVISÃO de desempenho e EFETIVO </strong>
                             desempenho em problemas anteriores.  Olhe para seus dados, especialmente as colunas “DIFERENÇAS” (na pré e pós avaliação) 
                             e reflita sobre seus avanços.';
-$string['textactivity13'] = 'Seu KMA medio é: ';
-$string['textactivity14'] = 'Seu KMB medio é: ';
-$string['textactivity15'] = 'Seu SAA medio é: ';
-$string['textactivity16'] = 'Seu SAB medio é: ';
+$string['textactivity13'] = 'Seu KMA é: ';
+$string['textactivity14'] = 'Seu KMB é: ';
+$string['textactivity15'] = 'Seu SAA é: ';
+$string['textactivity16'] = 'Seu SAB é: ';
 $string['textactivity17'] = 'Veja abaixo o seu KMA e o seu KMB médio';
 $string['textactivity18'] = 'SUA TAREFA:  Leia e reflita sobre a avaliação do MePPRe sobre o que você tem demonstrado saber sobre o seu próprio 
                             nível de aquisição de conhecimentos.  Tente se lembrar desse feedback durante a realização da próxima atividade (problema).';

@@ -25,7 +25,7 @@
  * Moodle is performing actions across all modules.
  *
  * @package    mod_logla
- * @copyright  2016 Your Name <your@email.address>
+ * @copyright  2019 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -155,7 +155,7 @@ function logla_add_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
  * will update an existing instance with new data.
  *
  * @param stdClass $logla An object from the form in mod_form.php
- * @param mod_logla_mod_form $mform The form instance itself (if needed)
+ * @param mod_logla_mod_form $mform The form instance itself 
  * @return boolean Success/Fail
  */
 function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null) {
@@ -231,10 +231,9 @@ function logla_update_instance(stdClass $logla, mod_logla_mod_form $mform = null
 
 
 /**
- * This function will insert all results of this module in the 
+ * This function will insert results of this module in the 
  * table logla_user_grade
- * @param int $courseid Course ID
- * @return bool
+ * @param stdClass $logla An object from the form in mod_form.php
  */
 function logla_user_grades_add(stdClass $fromform){
     global $DB;
@@ -300,12 +299,11 @@ function logla_user_grades_add(stdClass $fromform){
 
 
 
-/*
-* This function add user results in logla_user_grades
-* @param stdClass $logla_user An object from the form in view.php
-* @param mod_logla_mod_form $mform The form instance itself (if needed)
-* @return boolean Success/Fail
-*/
+/**
+ * This function will update results of this module in the 
+ * table logla_user_grade
+ * @param stdClass $logla An object from the form in mod_form.php
+ */
 function logla_user_grades_update(stdClass $fromform) {
     global $DB;
 
@@ -364,10 +362,12 @@ function logla_user_grades_update(stdClass $fromform) {
 
 
 /**
- * This function will calculte all instances of this module
+ * This function will calculate the kma
  *  *
- * @param int $courseid Course ID
- * @return bool
+ * @param int $idfeedback 
+ * @param int $iduser 
+ * @param double $grade 
+ * @return double
  */
 function calculate_kma($idfeedback, $iduser, $grade){
 
@@ -421,10 +421,12 @@ function calculate_kma($idfeedback, $iduser, $grade){
 
 
 /**
- * This function will calculte all instances of this module
+ * This function will calculate the kmb
  *  *
- * @param int $courseid Course ID
- * @return bool
+ * @param int $idfeedback 
+ * @param int $iduser 
+ * @param double $grade 
+ * @return double
  */
 function calculate_kmb($idfeedback, $iduser, $grade){
 
@@ -478,10 +480,13 @@ function calculate_kmb($idfeedback, $iduser, $grade){
 
 
 /**
- * This function will calculte all instances of this module
+ * This function will calculate the saa
  *  *
- * @param int $courseid Course ID
- * @return bool
+ * @param int $idfeedback 
+ * @param int $iduser 
+ * @param double $grade 
+ * @param int $answer 
+ * @return double
  */
 function calculate_saa($idfeedback, $iduser, $grade, $answer){
 
@@ -524,10 +529,13 @@ function calculate_saa($idfeedback, $iduser, $grade, $answer){
 
 
 /**
- * This function will calculte all instances of this module
+ * This function will calculate the sab
  *  *
- * @param int $courseid Course ID
- * @return bool
+ * @param int $idfeedback 
+ * @param int $iduser 
+ * @param double $grade 
+ * @param int $answer 
+ * @return double
  */
 function calculate_sab($idfeedback, $iduser, $grade, $answer){
 
@@ -564,6 +572,12 @@ function calculate_sab($idfeedback, $iduser, $grade, $answer){
     return $kmb;
 }
 
+
+/**
+ * This function will delete a record from logla_user_grades_delete
+ *  *
+ * @param stdClass $idfeedback 
+ */
 function logla_user_grades_delete(stdClass $logla){
     global $DB;
     
@@ -572,10 +586,12 @@ function logla_user_grades_delete(stdClass $logla){
 
 
 /**
- * This function will calculte all instances of this module
+ * This function will calculate the eds1
  *  *
- * @param int $courseid Course ID
- * @return bool
+ * @param int $idfeedback 
+ * @param int $iduser 
+ * @param double $grade 
+ * @return double
  */
 function calculate_eds1($idfeedback, $iduser, $grade){
 
@@ -619,10 +635,12 @@ function calculate_eds1($idfeedback, $iduser, $grade){
 
 
 /**
- * This function will calculte all instances of this module
+ * This function will calculate the eds2
  *  *
- * @param int $courseid Course ID
- * @return bool
+ * @param int $idfeedback 
+ * @param int $iduser 
+ * @param double $grade 
+ * @return double
  */
 function calculate_eds2($idfeedback, $iduser, $grade){
 
@@ -1031,11 +1049,23 @@ function logla_extend_settings_navigation(settings_navigation $settingsnav, navi
 }
 
 
-
+/**
+ * This function will convert and multiply the grade of quiz 
+ *  *
+ * @param double $value 
+ * @return double
+ */
 function convertquiz($value){
     return convertgrade($value*10.0);
 }
 
+
+/**
+ * This function will convert the feedback
+ *  *
+ * @param double $value 
+ * @return int
+ */
 function convertfeedback($value){
 
     switch ($value) {
@@ -1058,6 +1088,12 @@ function convertfeedback($value){
 
 }
 
+/**
+ * This function will convert the grade in a string
+ *  *
+ * @param double $value 
+ * @return string
+ */
 function convertgrade($value){
         // estimate grade by rate 
         if($value >= 75.0){
@@ -1073,6 +1109,12 @@ function convertgrade($value){
         }
 }
 
+/**
+ * This function will convert the grade in a int
+ *  *
+ * @param double $value 
+ * @return int
+ */
 function convertgradenum($value){
     // estimate grade by rate 
     if($value >= 75.0){
@@ -1089,23 +1131,11 @@ function convertgradenum($value){
 }
 
 
-/************************* temp source - delete below */
-
 /*
-* This function add user results in logla_user_grades
+* This function add all users results in logla_user_grades
 * @param stdClass $logla An object from the form in mod_form.php
-* @param mod_logla_mod_form $mform The form instance itself (if needed)
-* @return boolean Success/Fail
 */
-function logla_user_grades_populate(stdClass $logla, $update = null) {
-    // global $DB;
-
-    // $logla_user_grades = new stdClass();
-
-    // if($update){
-    //     logla_user_grades_delete($logla);
-    // }
-    
+function logla_user_grades_populate(stdClass $logla, $update = null) {   
     // if logla is set up as activity
     if($logla->activityquiz){
         
@@ -1119,12 +1149,15 @@ function logla_user_grades_populate(stdClass $logla, $update = null) {
     }
 }
 
-/**
- * This function will insert all results of this module in the 
- * table logla_user_grade
- * @param int $courseid Course ID
- * @return bool
- */
+/*
+* This function add all users results in logla_user_grades
+* @param stdClass $logla is an object from the form in mod_form.php
+* @param string $tablename is the name of a table 
+* @param string $fieldtable is the name of a field of table 
+* @param string $fieldlogla is the id of a field of table 
+* @param double $wfactor is the factor of multiplying  
+* @param boolean $wfactor indate if this operation is update
+*/
 function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable, $fieldlogla, $wfactor, $update){
     global $DB;
     
@@ -1133,16 +1166,12 @@ function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable,
             WHERE idlogla = ?';
     $DB->execute($sql, array($logla->id));
 
-
-
     // get all answers from activity or quiz table
     $rs = $DB->get_recordset($tablename, array($fieldtable=>$logla->$fieldlogla));
         
     $logla_user_grades = new stdClass();
     
     foreach ($rs as $record) {
-        // branco na atualizacao  ********************************************************************
-        // if (!empty($logla->id)){
         if ($logla->id){    
             $logla_user_grades->idlogla = $logla->id;
         }
@@ -1178,7 +1207,6 @@ function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable,
         $logla_user_grades->sabgrade = calculate_kmb($logla->idprefeedback, $record->userid, $record->grade*$wfactor);
 
         if ($update) {
-
             // get recorset from logla_user_grades id
             $logla_user_grades_exists = $DB->get_record('logla_user_grades', array('idlogla'=>$logla->id, 'userid'=>$record->userid));
             if ($logla_user_grades_exists) {
@@ -1191,14 +1219,12 @@ function logla_user_grades_popul_indiv(stdClass $logla, $tablename, $fieldtable,
                 $logla_user_grades->enable = 1;
                 $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
             }
-            
         } else {
             // if update = null then populate with new registers
             $logla_user_grades->timecreated = time();
             $logla_user_grades->enable = 1;
             $logla_user_grades->id = $DB->insert_record('logla_user_grades', $logla_user_grades);
         }
-        
     }
     $rs->close(); 
 }

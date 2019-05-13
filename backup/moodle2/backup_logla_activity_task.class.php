@@ -19,7 +19,7 @@
  *
  * @package   mod_logla
  * @category  backup
- * @copyright 2016 Your Name <your@email.address>
+ * @copyright 2019 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/mod/logla/backup/moodle2/backup_logla_stepslib.ph
  *
  * @package   mod_logla
  * @category  backup
- * @copyright 2016 Your Name <your@email.address>
+ * @copyright 2019 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_logla_activity_task extends backup_activity_task {

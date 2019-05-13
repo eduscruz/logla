@@ -29,19 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 
-/**
- * Module instance settings form
- *
- * @package    mod_logla
- * @copyright  2018 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 class mod_logla_mod_form extends moodleform_mod {
-
-    /**
-     * Defines forms elements
-     */
 
     public function definition() {
         global $CFG,$DB,$COURSE,$PAGE;
@@ -68,9 +56,6 @@ class mod_logla_mod_form extends moodleform_mod {
         } else {
             $this->add_intro_editor();
         }
-
-        // Adding the rest of logla settings, spreading all them into this fieldset
-        // ... or adding more fieldsets ('header' elements) if needed for better logic.
 
         //add section header
         $mform->addElement('header', 'loglafieldset', get_string('loglafieldset', 'logla'));

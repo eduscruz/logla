@@ -36,7 +36,6 @@ require_once(dirname(__FILE__).'/view_results_form.php');
 require_once(dirname(__FILE__).'/pre_student.php');
 require_once(dirname(__FILE__).'/post_student.php');
 
-
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should be named as the first character of the module.
 
@@ -52,7 +51,6 @@ if ($id) {
     error('You must specify a course_module ID or an instance ID');
 }
 
-
 require_login($course, true, $cm);
 
 $event = \mod_logla\event\course_module_viewed::create(array(
@@ -67,13 +65,6 @@ $event->trigger();
 $PAGE->set_url('/mod/logla/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($logla->name));
 $PAGE->set_heading(format_string($course->fullname));
-
-/*
- * Other things you may want to set - remove if not needed.
- * $PAGE->set_cacheable(false);
- * $PAGE->set_focuscontrol('some-html-id');
- * $PAGE->add_body_class('logla-'.$somevar);
- */
 
 // Output starts here.
 echo $OUTPUT->header();
@@ -121,8 +112,6 @@ else{
             redirect($returnurl);
         } else if ($fromform = $post_student_form->get_data()) {
             //In this case you process validated data. $mform->get_data() returns data posted in form.
-            // insert new record in logla_user_grades
-            // $fromform->selfregulation1 = null;
             if($fromform->loglauserid == 0){
                 logla_user_grades_add($fromform);
             }
@@ -141,7 +130,6 @@ else{
             $post_student_form->display();
         }
     }
-
 }
 
 // Finish the page.

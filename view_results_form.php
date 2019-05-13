@@ -25,7 +25,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 
@@ -36,12 +35,10 @@ require_once("$CFG->libdir/formslib.php");
 $style = '/mod/logla/style.css';
 $PAGE->requires->css($style);
 
-
 class view_results_form extends moodleform {
 
     /** @var stdClass the logla record that contains */
     public $logla;
-
 
     //Add elements to form
     public function definition() {
@@ -51,9 +48,6 @@ class view_results_form extends moodleform {
 
         //create an logla objetct of instance
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
-
-        // update results of all instances before show result
-        // logla_user_grades($loglaresult, 1);
         
         // inicialize mform
         $mform = $this->_form;  

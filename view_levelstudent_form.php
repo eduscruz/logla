@@ -36,9 +36,6 @@ require_once("$CFG->libdir/formslib.php");
 $style = '/mod/logla/style.css';
 $PAGE->requires->css($style);
 
-
-
-
 class view_levelstudent_form extends moodleform {
 
     //Add elements to form
@@ -47,7 +44,6 @@ class view_levelstudent_form extends moodleform {
         global $COURSE, $USER, $DB, $OUTPUT, $PAGE;
 
         $id = optional_param('id', 0, PARAM_INT);
-
 
         //create an logla objetct of instance
         $loglaresult = $DB->get_record('logla', array('coursemodule'=>$id));
@@ -94,13 +90,11 @@ class view_levelstudent_form extends moodleform {
                 if ($logla_user_result->kmagrade < (-0.25)) {
                    $prekma = get_string('low', 'logla');
                    $kmaknowledge = get_string('textactivity25', 'logla');
-                }
-                elseif (($logla_user_result->kmagrade >= (-0.25)) && (($logla_user_result->kmagrade <= (0.5)))) {
+                } elseif (($logla_user_result->kmagrade >= (-0.25)) && (($logla_user_result->kmagrade <= (0.5)))) {
                     $prekma = get_string('medium', 'logla');
                     $kmaknowledge = get_string('textactivity26', 'logla');
                     
-                }
-                else {
+                } else {
                     $prekma = get_string('high', 'logla');
                     $kmaknowledge = get_string('textactivity27', 'logla');
                 }
@@ -119,12 +113,10 @@ class view_levelstudent_form extends moodleform {
                 if ($logla_user_result->kmbgrade < (-0.25)) {
                    $prekmb = get_string('textactivity32', 'logla');
                    $kmbknowledge = get_string('textactivity35', 'logla');
-                }
-                elseif (($logla_user_result->kmbgrade >= (-0.25)) && (($logla_user_result->kmbgrade <= (0.25)))) {
+                } elseif (($logla_user_result->kmbgrade >= (-0.25)) && (($logla_user_result->kmbgrade <= (0.25)))) {
                     $prekmb = get_string('textactivity33', 'logla');
                     $kmbknowledge = get_string('textactivity36', 'logla');
-                }
-                else {
+                } else {
                     $prekmb = get_string('textactivity34', 'logla');
                     $kmbknowledge = get_string('textactivity37', 'logla');
                 }
@@ -137,7 +129,6 @@ class view_levelstudent_form extends moodleform {
                 $text2 .= ' </strong> '.get_string('textactivity31', 'logla');
                 echo $OUTPUT->box($text2);
             }
-
         }
         else{
             echo $OUTPUT->box('error: logla_user_grades record found');
@@ -148,6 +139,5 @@ class view_levelstudent_form extends moodleform {
         $mform->addElement('button', 'finish', get_string('finish', 'logla'));
         $redirect = '</a>';
         $mform->addElement('html', $redirect);
-        
     }
 }

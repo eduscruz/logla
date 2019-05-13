@@ -20,7 +20,7 @@
  * @see uninstall_plugin()
  *
  * @package    mod_logla
- * @copyright  2016 Your Name <your@email.address>
+ * @copyright  2019 Eduardo Cruz <eduardo.cruz@ufabc.edu.br>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

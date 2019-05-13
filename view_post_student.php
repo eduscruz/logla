@@ -27,7 +27,6 @@
 
 // Replace logla with the name of your module and remove this line.
 
-
 global $COURSE, $USER, $DB;
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
@@ -36,7 +35,6 @@ require_once(dirname(__FILE__).'/view_results_form.php');
 require_once(dirname(__FILE__).'/view_levelstudent_form.php');
 require_once(dirname(__FILE__).'/pre_student.php');
 require_once(dirname(__FILE__).'/post_student.php');
-
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // ... logla instance ID - it should be named as the first character of the module.
@@ -68,21 +66,11 @@ $event->trigger();
 $PAGE->set_url('/mod/logla/view_post_student.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($logla->name));
 $PAGE->set_heading(format_string($course->fullname));
-
-/*
- * Other things you may want to set - remove if not needed.
- * $PAGE->set_cacheable(false);
- * $PAGE->set_focuscontrol('some-html-id');
- * $PAGE->add_body_class('logla-'.$somevar);
- */
 $PAGE->set_cacheable(false);
 
 // Output starts here.
 echo $OUTPUT->header();
 
-// $data = $this->_customdata;
-// $toform = $data;
-// $post_student_form = new post_student(null, $toform);
 $post_student_form = new post_student();
 if ($post_student_form->is_cancelled()) {
     $returnurl = '/course/view.php?id='.$course->id;
