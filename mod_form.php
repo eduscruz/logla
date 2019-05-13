@@ -82,7 +82,7 @@ class mod_logla_mod_form extends moodleform_mod {
         asort($quizcombo);
 
         // add pre PreMetacognition checkbox
-        $mform->addElement('advcheckbox', 'PreMetacognition', get_string('PreMetacognition', 'logla'), 'Enable Pre-Metacognition', array(0,1)) ;
+        $mform->addElement('advcheckbox', 'PreMetacognition', get_string('PreMetacognition', 'logla'), 'Enable kma/kmb', array(0,1)) ;
 
         // add pre selectPreMetacognition 
         $selectPre = $mform->addElement('select', 'selectPreMetacognition', get_string('PreFeedback', 'logla'), $fbcombo);
@@ -91,7 +91,7 @@ class mod_logla_mod_form extends moodleform_mod {
         
         
         // add pos PosMetacognition checkbox
-        $mform->addElement('advcheckbox', 'PosMetacognition', get_string('PosMetacognition', 'logla'), 'Enable Pos-Metacognition', array(0,1)) ;
+        $mform->addElement('advcheckbox', 'PosMetacognition', get_string('PosMetacognition', 'logla'), 'Enable eds1/eds2', array(0,1)) ;
         
         // add pre selectPosMetacognition
         $selectPos = $mform->addElement('select', 'selectPosMetacognition', get_string('PosFeedback', 'logla'), $fbcombo);

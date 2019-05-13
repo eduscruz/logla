@@ -125,3 +125,22 @@ $string ['textactivity34'] = 'Otimista';
 $string ['textactivity35'] = 'MAIS';
 $string ['textactivity36'] = 'EXATAMENTE';
 $string ['textactivity37'] = 'MENOS';
+
+// post_student
+$string['kmavalue'] = 'Valor do KMA';
+$string['classification'] = 'Classificação';
+$string['interpretation'] = 'Interpretação';
+$string['lowkma'] = 'KMA Baixo';
+$string['texttable1'] = 'O aluno não estima corretamente seu conhecimento na maioria das situações';
+$string['intermkma'] = 'KMA Médio';
+$string['texttable2'] = 'O aluno às vezes calcula corretamente, mas faz estimativas frequentemente erradas ou completamente erradas';
+$string['highkma'] = 'KMA Alto';
+$string['texttable3'] = 'Aluno na maioria das vezes faz estimativa correta de seu conhecimento';
+$string['realist'] = 'Realista';
+$string['texttable4'] = 'O aluno faz uma estimativa precisa de seu conhecimento, tendo um alto KMA';
+$string['optimistic'] = 'Otimista';
+$string['texttable5'] = 'O aluno tende a estimar que pode resolver os problemas, mas ele não consegue na maioria das vezes';
+$string['pessimistic'] = 'Pessimista';
+$string['texttable6'] = 'Aluno tende a estimar que não pode resolver os problemas, mas depois ele consegue';
+$string['random'] = 'Aleatório';
+$string['texttable7'] = 'Estimativas do aluno sobre o seu conhecimento são tão otimistas quanto pessimistas';

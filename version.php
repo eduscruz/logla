@@ -29,9 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_logla';
 $plugin->version = 1;
-$plugin->release = 'v0.92';
-$plugin->requires = 2014051200;
-$plugin->maturity = MATURITY_ALPHA;
+$plugin->release = 'v0.921';
+$plugin->requires = 2018051700;
+$plugin->maturity = MATURITY_STABLE;
 $plugin->cron = 0;
 $plugin->dependencies = array();
 $plugin->component = 'mod_logla';

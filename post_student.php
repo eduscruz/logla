@@ -244,13 +244,13 @@ class post_student extends moodleform {
                 <table>
                     <tr>
                         <th>"
-                        .get_string('kmavalue', 'kmatable').
+                        .get_string('kmavalue', 'logla').
                         "</th>
                         <th>"
-                        .get_string('classification', 'kmatable').
+                        .get_string('classification', 'logla').
                         "</th>
                         <th>"
-                        .get_string('interpretation', 'kmatable').
+                        .get_string('interpretation', 'logla').
                         "</th>
                     </tr>
                     <tr>
@@ -258,10 +258,10 @@ class post_student extends moodleform {
                             [-1 , -0,25)
                         </td>
                         <td>"
-                        .get_string('lowkma', 'kmatable').
+                        .get_string('lowkma', 'logla').
                         "</td>
                         <td>"
-                        .get_string('text1', 'kmatable').
+                        .get_string('texttable1', 'logla').
                         "</td>
                     </tr>
                     <tr>
@@ -269,10 +269,10 @@ class post_student extends moodleform {
                             [-0,25 , 0,50)
                         </td>
                         <td>"
-                        .get_string('intermkma', 'kmatable').
+                        .get_string('intermkma', 'logla').
                         "</td>
                         <td>"
-                        .get_string('text2', 'kmatable').    
+                        .get_string('texttable2', 'logla').    
                         "</td>
                         </tr>
                         <tr>
@@ -280,10 +280,10 @@ class post_student extends moodleform {
                         [0,50 , 1]
                         </td>
                         <td>"
-                        .get_string('highkma', 'kmatable').    
+                        .get_string('highkma', 'logla').    
                         "</td>
                         <td>"
-                        .get_string('text3', 'kmatable').    
+                        .get_string('texttable3', 'logla').    
                         "</td>
                     </tr>
                 </table>
@@ -293,24 +293,24 @@ class post_student extends moodleform {
                         <table>
                             <tr>
                                 <th>"
-                                    .get_string('kmavalue', 'kmatable').
+                                    .get_string('kmavalue', 'logla').
                                 "</th>
                                 <th>"
-                                    .get_string('classification', 'kmatable').
+                                    .get_string('classification', 'logla').
                                 "</th>
                                 <th>"
-                                    .get_string('interpretation', 'kmatable').
+                                    .get_string('interpretation', 'logla').
                                 "</th>
                                 </tr>
                                 <tr>
                                 <td>"
-                                    .get_string('highkma', 'kmatable').
+                                    .get_string('highkma', 'logla').
                                 "</td>
                                 <td>"
-                                    .get_string('realist', 'kmatable').
+                                    .get_string('realist', 'logla').
                                 "</td>
                                 <td>"
-                                    .get_string('text4', 'kmatable').   
+                                    .get_string('texttable4', 'logla').   
                                 "</td>
                                 </tr>
                                 <tr>
@@ -318,10 +318,10 @@ class post_student extends moodleform {
                                     [0,25 , 1]
                                 </td>
                                 <td>"
-                                    .get_string('optimistic', 'kmatable').
+                                    .get_string('optimistic', 'logla').
                                 "</td>
                                 <td>"
-                                    .get_string('text5', 'kmatable').
+                                    .get_string('texttable5', 'logla').
                                 "</td>
                                 </tr>
                                 <tr>
@@ -329,10 +329,10 @@ class post_student extends moodleform {
                                     [-1 , -0,25]
                                 </td>
                                 <td>"
-                                    .get_string('pessimistic', 'kmatable').
+                                    .get_string('pessimistic', 'logla').
                                 "</td>
                                 <td>"
-                                    .get_string('text6', 'kmatable').
+                                    .get_string('texttable6', 'logla').
                                 "</td>
                                 </tr>
                                 <tr>
@@ -340,10 +340,10 @@ class post_student extends moodleform {
                                     (-0,25 , 0,25)
                                 </td>
                                 <td>"
-                                    .get_string('random', 'kmatable').
+                                    .get_string('random', 'logla').
                                 "</td>
                                 <td>"
-                                    .get_string('text7', 'kmatable').
+                                    .get_string('texttable7', 'logla').
                                 "</td>
                             </tr>
                         </table>
