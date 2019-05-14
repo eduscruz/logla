@@ -67,7 +67,6 @@ $string['medium'] = 'Medium';
 $string['low'] = 'Low';
 $string['decreasing'] = 'Decreasing';
 $string['increasing'] = 'Increasing';
-$string['increasing'] = 'Increasing';
 $string['constant'] = 'Constant';
 $string['random'] = 'Random';
 $string['undefined'] = 'Undefined';

@@ -66,8 +66,8 @@ $string ['Quiz'] = 'Quiz';
 $string ['high'] = 'Alta';
 $string ['medium'] = 'Media';
 $string ['low'] = 'Baja';
-$string ['decreasing'] = 'decreciendo';
-$string ['creciente'] = 'Aumentando';
+$string ['decreasing'] = 'Decreciendo';
+$string ['increasing'] = 'Creciendo';
 $string ['constant'] = 'Constante';
 $string ['random'] = 'Aleatorio';
 $string ['undefined'] = 'Indefinido';
@@ -81,7 +81,7 @@ $string ['table4'] = 'Diferencia en la pre-evaluación';
 $string ['table5'] = 'Su post evaluación';
 $string ['table6'] = 'Diferencia post-evaluación';
 
-$string ['textactivity1'] = '<strong> Su tarea es: </ strong> <br> <br>
+$string ['textactivity1'] = '<strong> Su tarea es: </strong><br><br>
                             Compruebe las opciones con su interpretación de las tablas presentadas. Las tablas presentan su previsión de desempeño versus realización. ';
 $string ['textactivity2'] = 'En este último problema, mi previsión era:';
 $string ['textactivity3'] = 'Comprobando mi historial de previsión y solución de problemas Creo que mi juicio sobre mi propio conocimiento en este ámbito es:';
@@ -92,24 +92,21 @@ $string ['textactivity7'] = 'Compare su solución con la solución del profesor 
 $string ['textactivity8'] = 'Su solución es idéntica, equivalente o diferente, pero también es correcta (75% a 100%)';
 $string ['textactivity9'] = 'Su solución es diferente y está más o menos correcta (de 50% a 75% correcta)';
 $string ['textactivity10'] = 'Su solución es diferente y está más o menos correcta (de 50% a 75% correcta)';
-$string ['textactivity11'] = 'Vea abajo el enunciado, su solución y la solución propuesta por el profesor.
-                            La solución ofrecida por el profesor (que puede no ser la única) debe ser usada para fines de comparación con su solución.
-                            <strong> SU TAREA: </ strong> Marque entre las opciones siguientes que considere más apropiadas, después de comparar SU solución con
-                            la puesta a disposición del PROFESOR. ¿Cuán próxima su solución está de la solución estándar del profesor? ';
-$string ['textactivity12'] = 'Los datos siguientes muestran sus resultados históricos de <strong> PREVISIÓN de rendimiento y EFECTIVO </ strong>
-                            rendimiento en problemas anteriores. Mire sus datos, especialmente las columnas "DIFERENCIAS" (en la pre y post evaluación)
-                            y reflexiona sobre sus avances. ';
+$string ['textactivity11'] = 'Vea abajo el enunciado, su solución y la solución propuesta por el profesor. La solución ofrecida por el profesor (que puede no ser la única) debe ser usada para fines de comparación con su solución.<br><strong> SU TAREA: </strong> Marque entre las opciones siguientes que considere más apropiadas, después de comparar SU solución con la puesta a disposición del PROFESOR. ¿Cuán próxima su solución está de la solución estándar del profesor? ';
+$string ['textactivity12'] = 'Los datos siguientes muestran sus resultados históricos de <strong> PREVISIÓN de rendimiento y EFECTIVO </strong>
+rendimiento en problemas anteriores. Mire sus datos, especialmente las columnas "DIFERENCIAS" (en la pre y post evaluación)
+ reflexiona sobre sus avances. ';
 $string ['textactivity13'] = 'Su KMA es:';
 $string ['textactivity14'] = 'Su KMB es:';
 $string ['textactivity15'] = 'Su SAA es:';
 $string ['textactivity16'] = 'Su SAB es:';
 $string ['textactivity17'] = 'Vea abajo su KMA y su KMB medio';
 $string ['textactivity18'] = 'SU TAREA: Lea y reflexione sobre la evaluación de MePPRe sobre lo que usted ha demostrado saber acerca de su propio
-                            nivel de adquisición de conocimientos. Intenta recordar ese feedback durante la realización de la próxima actividad (problema). ';
+ de adquisición de conocimientos. Intenta recordar ese feedback durante la realización de la próxima actividad (problema). ';
 $string ['textactivity19'] = '¿Cómo está su precisión en estimar su conocimiento (metacognición)?';
-$string ['textactivity20'] = 'Usted demostró';
+$string ['textactivity20'] = 'Usted demostró ';
 $string ['textactivity21'] = 'precisión en juzgar sus conocimientos en este curso. Tenga en cuenta que esto es sólo un análisis aproximado, esto sugiere que usted es ';
-$string ['textactivity22'] = 'Usted demostró';
+$string ['textactivity22'] = 'Usted demostró ';
 $string ['textactivity23'] = 'lo que usted "sabe" y "no sabe". Compruebe la retroalimentación en su solución e intente identificar sus lagunas de aprendizaje. ';
 $string ['textactivity24'] = 'Su SAB promedio es:';
 $string ['textactivity25'] = 'no entiende bien';
